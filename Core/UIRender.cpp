@@ -223,7 +223,7 @@ namespace DuiLib {
 	/////////////////////////////////////////////////////////////////////////////////////
 	//
 	//
-	
+
 	bool DrawImage(HDC hDC, CPaintManagerUI* pManager, const RECT& rc, const RECT& rcPaint, const CDuiString& sImageName, \
 		const CDuiString& sImageResType, RECT rcItem, RECT rcBmpPart, RECT rcCorner, DWORD dwMask, BYTE bFade, \
 		bool bHole, bool bTiledX, bool bTiledY, HINSTANCE instance = NULL)
@@ -315,8 +315,10 @@ namespace DuiLib {
 					}
 					if( hz == NULL ) break;
 					ZIPENTRY ze; 
-					int i; 
-					if( FindZipItem(hz, bitmap.m_lpstr, true, &i, &ze) != 0 ) break;
+					int i = 0; 
+					CDuiString key = bitmap.m_lpstr;
+					key.Replace(_T("\\"), _T("/"));
+					if( FindZipItem(hz, key, true, &i, &ze) != 0 ) break;
 					dwSize = ze.unc_size;
 					if( dwSize == 0 ) break;
 					pData = new BYTE[ dwSize ];
@@ -490,8 +492,10 @@ namespace DuiLib {
 				}
 				if( hz == NULL ) break;
 				ZIPENTRY ze; 
-				int i; 
-				if( FindZipItem(hz, pstrPath, true, &i, &ze) != 0 ) break;
+				int i = 0; 
+				CDuiString key = pstrPath;
+				key.Replace(_T("\\"), _T("/"));
+				if( FindZipItem(hz, key, true, &i, &ze) != 0 ) break;
 				dwSize = ze.unc_size;
 				if( dwSize == 0 ) break;
 				pData = new BYTE[ dwSize ];
@@ -770,9 +774,9 @@ namespace DuiLib {
 			if (sStrPath.IsEmpty()) sStrPath = pStrImage;
 			else {
 				/*if (CResourceManager::GetInstance()->GetScale() != 100) {
-					CDuiString sScale;
-					sScale.Format(_T("@%d."), CResourceManager::GetInstance()->GetScale());
-					sStrPath.Replace(_T("."), sScale);
+				CDuiString sScale;
+				sScale.Format(_T("@%d."), CResourceManager::GetInstance()->GetScale());
+				sStrPath.Replace(_T("."), sScale);
 				}*/
 			}
 		}
@@ -1257,7 +1261,7 @@ namespace DuiLib {
 		}
 		bool bRet = DuiLib::DrawImage(hDC, pManager, rcItem, rcPaint, pDrawInfo->sImageName, pDrawInfo->sResType, rcDest, \
 			pDrawInfo->rcSource, pDrawInfo->rcCorner, pDrawInfo->dwMask, pDrawInfo->uFade, pDrawInfo->bHole, pDrawInfo->bTiledX, pDrawInfo->bTiledY, instance);
-		
+
 		return bRet;
 	}
 

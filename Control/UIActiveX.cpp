@@ -916,7 +916,7 @@ namespace DuiLib {
 	//
 	IMPLEMENT_DUICONTROL(CActiveXUI)
 
-	CActiveXUI::CActiveXUI() : m_pUnk(NULL), m_pControl(NULL), m_hwndHost(NULL), m_bCreated(false), m_bDelayCreate(true), m_bMFC(false)
+		CActiveXUI::CActiveXUI() : m_pUnk(NULL), m_pControl(NULL), m_hwndHost(NULL), m_bCreated(false), m_bDelayCreate(true), m_bMFC(false)
 	{
 		m_clsid = IID_NULL;
 	}
@@ -1084,7 +1084,7 @@ namespace DuiLib {
 		}
 		m_bDelayCreate = bDelayCreate;
 	}
-	
+
 	bool CActiveXUI::IsMFC() const
 	{
 		return m_bMFC;

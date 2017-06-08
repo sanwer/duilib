@@ -10,7 +10,7 @@ namespace DuiLib
 {
 	IMPLEMENT_DUICONTROL(CFlashUI)
 
-	CFlashUI::CFlashUI(void)
+		CFlashUI::CFlashUI(void)
 		: m_dwRef(0)
 		, m_dwCookie(0)
 		, m_pFlash(NULL)
@@ -248,7 +248,7 @@ namespace DuiLib
 		HRESULT hr=S_FALSE;
 		CComPtr<IConnectionPointContainer>  pCPC;
 		CComPtr<IConnectionPoint> pCP;
-		
+
 		hr=m_pFlash->QueryInterface(IID_IConnectionPointContainer,(void **)&pCPC);
 		if (FAILED(hr))
 			return hr;

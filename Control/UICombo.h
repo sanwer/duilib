@@ -37,6 +37,8 @@ namespace DuiLib {
 		void SetTextPadding(RECT rc);
 		bool IsShowHtml();
 		void SetShowHtml(bool bShowHtml = true);
+		bool IsShowShadow();
+		void SetShowShadow(bool bShow = true);
 
 		CDuiString GetDropBoxAttributeList();
 		void SetDropBoxAttributeList(LPCTSTR pstrList);
@@ -45,7 +47,7 @@ namespace DuiLib {
 
 		UINT GetListType();
 		TListInfoUI* GetListInfo();
-		int GetCurSel() const;  
+		int GetCurSel() const;
 		bool SelectItem(int iIndex, bool bTakeFocus = false);
 		bool SelectMultiItem(int iIndex, bool bTakeFocus = false);
 		bool UnSelectItem(int iIndex, bool bOthers = false);
@@ -72,7 +74,7 @@ namespace DuiLib {
 
 		bool GetScrollSelect();
 		void SetScrollSelect(bool bScrollSelect);
-		
+
 		void SetItemFont(int index);
 		void SetItemTextStyle(UINT uStyle);
 		RECT GetItemTextPadding() const;
@@ -128,6 +130,7 @@ namespace DuiLib {
 		UINT	m_uTextStyle;
 		RECT	m_rcTextPadding;
 		bool	m_bShowHtml;
+		bool	m_bShowShadow;
 		CDuiString m_sDropBoxAttributes;
 		SIZE m_szDropBox;
 		UINT m_uButtonState;

@@ -7,8 +7,9 @@ namespace DuiLib {
 	//
 	IMPLEMENT_DUICONTROL(CListUI)
 
-	CListUI::CListUI() : m_pCallback(NULL), m_bScrollSelect(false), m_iCurSel(-1), m_iExpandedItem(-1), m_bMultiSel(false)
+		CListUI::CListUI() : m_pCallback(NULL), m_bScrollSelect(false), m_iCurSel(-1), m_iExpandedItem(-1), m_bMultiSel(false)
 	{
+		m_bFixedScrollbar = false;
 		m_pList = new CListBodyUI(this);
 		m_pHeader = new CListHeaderUI;
 
@@ -32,6 +33,7 @@ namespace DuiLib {
 		m_ListInfo.bShowColumnLine = false;
 		m_ListInfo.bShowHtml = false;
 		m_ListInfo.bMultiExpandable = false;
+		m_ListInfo.bRSelected = false;
 		::ZeroMemory(&m_ListInfo.rcTextPadding, sizeof(m_ListInfo.rcTextPadding));
 		::ZeroMemory(&m_ListInfo.rcColumn, sizeof(m_ListInfo.rcColumn));
 	}
@@ -371,6 +373,17 @@ namespace DuiLib {
 		CVerticalLayoutUI::DoEvent(event);
 	}
 
+	bool CListUI::IsFixedScrollbar()
+	{
+		return m_bFixedScrollbar;
+	}
+
+	void CListUI::SetFixedScrollbar(bool bFixed)
+	{
+		m_bFixedScrollbar = bFixed;
+		Invalidate();
+	}
+
 	CListHeaderUI* CListUI::GetHeader() const
 	{
 		return m_pHeader;
@@ -442,7 +455,7 @@ namespace DuiLib {
 
 		return true;
 	}
-	
+
 	bool CListUI::SelectMultiItem(int iIndex, bool bTakeFocus)
 	{
 		if(!IsMultiSelect()) return SelectItem(iIndex, bTakeFocus);
@@ -789,6 +802,19 @@ namespace DuiLib {
 		NeedUpdate();
 	}
 
+	bool CListUI::IsItemRSelected()
+	{
+		return m_ListInfo.bRSelected;
+	}
+
+	void CListUI::SetItemRSelected(bool bSelected)
+	{
+		if( m_ListInfo.bRSelected == bSelected ) return;
+
+		m_ListInfo.bRSelected = bSelected;
+		NeedUpdate();
+	}
+
 	void CListUI::SetMultiExpanding(bool bMultiExpandable)
 	{
 		m_ListInfo.bMultiExpandable = bMultiExpandable;
@@ -860,6 +886,7 @@ namespace DuiLib {
 		if( _tcsicmp(pstrName, _T("header")) == 0 ) GetHeader()->SetVisible(_tcsicmp(pstrValue, _T("hidden")) != 0);
 		else if( _tcsicmp(pstrName, _T("headerbkimage")) == 0 ) GetHeader()->SetBkImage(pstrValue);
 		else if( _tcsicmp(pstrName, _T("scrollselect")) == 0 ) SetScrollSelect(_tcsicmp(pstrValue, _T("true")) == 0);
+		else if( _tcsicmp(pstrName, _T("fixedscrollbar")) == 0 ) SetFixedScrollbar(_tcsicmp(pstrValue, _T("true")) == 0);
 		else if( _tcsicmp(pstrName, _T("multiexpanding")) == 0 ) SetMultiExpanding(_tcsicmp(pstrValue, _T("true")) == 0);
 		else if( _tcsicmp(pstrName, _T("itemfont")) == 0 ) m_ListInfo.nFont = _ttoi(pstrValue);
 		else if( _tcsicmp(pstrName, _T("itemalign")) == 0 ) {
@@ -882,8 +909,8 @@ namespace DuiLib {
 				m_ListInfo.uTextStyle |= DT_TOP;
 			}
 			if( _tcsstr(pstrValue, _T("vcenter")) != NULL ) {
-				m_ListInfo.uTextStyle &= ~(DT_TOP | DT_BOTTOM);
-				m_ListInfo.uTextStyle |= DT_VCENTER;
+				m_ListInfo.uTextStyle &= ~(DT_TOP | DT_BOTTOM | DT_WORDBREAK);
+				m_ListInfo.uTextStyle |= DT_VCENTER | DT_SINGLELINE;
 			}
 			if( _tcsstr(pstrValue, _T("bottom")) != NULL ) {
 				m_ListInfo.uTextStyle &= ~(DT_TOP | DT_VCENTER);
@@ -966,6 +993,7 @@ namespace DuiLib {
 		else if( _tcsicmp(pstrName, _T("itemshowcolumnline")) == 0 ) SetItemShowColumnLine(_tcsicmp(pstrValue, _T("true")) == 0);
 		else if( _tcsicmp(pstrName, _T("itemshowhtml")) == 0 ) SetItemShowHtml(_tcsicmp(pstrValue, _T("true")) == 0);
 		else if ( _tcscmp(pstrName, _T("multiselect")) == 0 ) SetMultiSelect(_tcscmp(pstrValue, _T("true")) == 0);
+		else if ( _tcscmp(pstrName, _T("itemrselected")) == 0 ) SetItemRSelected(_tcscmp(pstrValue, _T("true")) == 0);
 		else CVerticalLayoutUI::SetAttribute(pstrName, pstrValue);
 	}
 
@@ -1205,7 +1233,8 @@ namespace DuiLib {
 		rc.top += m_rcInset.top;
 		rc.right -= m_rcInset.right;
 		rc.bottom -= m_rcInset.bottom;
-		if( m_pVerticalScrollBar && m_pVerticalScrollBar->IsVisible() ) rc.right -= m_pVerticalScrollBar->GetFixedWidth();
+		if(m_pOwner->IsFixedScrollbar() && m_pVerticalScrollBar) rc.right -= m_pVerticalScrollBar->GetFixedWidth();
+		else if( m_pVerticalScrollBar && m_pVerticalScrollBar->IsVisible() ) rc.right -= m_pVerticalScrollBar->GetFixedWidth();
 		if( m_pHorizontalScrollBar && m_pHorizontalScrollBar->IsVisible() ) rc.bottom -= m_pHorizontalScrollBar->GetFixedHeight();
 
 		// Determine the minimum size
@@ -1332,7 +1361,24 @@ namespace DuiLib {
 				}
 			}
 		}
-
+		UINT uListType = m_pOwner->GetListType();
+		if(uListType == LT_LIST) {
+			// ¼ÆËãºáÏò³ß´ç
+			int nItemCount = m_items.GetSize();
+			if (nItemCount > 0)
+			{
+				CControlUI* pControl = static_cast<CControlUI*>(m_items[0]);
+				int nFixedWidth = pControl->GetFixedWidth();
+				if (nFixedWidth > 0)
+				{
+					int nRank = (rc.right - rc.left) / nFixedWidth;
+					if (nRank > 0)
+					{
+						cyNeeded = ((nItemCount - 1) / nRank + 1) * pControl->GetFixedHeight();
+					}
+				}
+			}
+		}
 		// Process the scrollbar
 		ProcessScrollBar(rc, cxNeeded, cyNeeded);
 	}
@@ -1353,7 +1399,7 @@ namespace DuiLib {
 	//
 	IMPLEMENT_DUICONTROL(CListHeaderUI)
 
-	CListHeaderUI::CListHeaderUI():
+		CListHeaderUI::CListHeaderUI():
 	m_bIsScaleHeader(false)
 	{
 	}
@@ -1912,7 +1958,7 @@ namespace DuiLib {
 	/////////////////////////////////////////////////////////////////////////////////////
 	//
 	//
-		CListElementUI::CListElementUI() : m_iIndex(-1),
+	CListElementUI::CListElementUI() : m_iIndex(-1),
 		m_pOwner(NULL), 
 		m_bSelected(false),
 		m_uButtonState(0)
@@ -2198,6 +2244,21 @@ namespace DuiLib {
 			return;
 		}
 
+		// ÓÒ¼üÑ¡Ôñ
+		if(m_pOwner != NULL)
+		{
+			if( m_pOwner->GetListInfo()->bRSelected && event.Type == UIEVENT_RBUTTONDOWN )
+			{
+				if( IsEnabled() ){
+					if((GetKeyState(VK_CONTROL) & 0x8000)) {
+						SelectMulti(!IsSelected());
+					}
+					else Select();
+				}
+				return;
+			}
+		}
+
 		if( event.Type == UIEVENT_BUTTONDOWN )
 		{
 			if( IsEnabled() ){
@@ -2314,7 +2375,7 @@ namespace DuiLib {
 	//
 	IMPLEMENT_DUICONTROL(CListTextElementUI)
 
-	CListTextElementUI::CListTextElementUI() : m_nLinks(0), m_nHoverLink(-1), m_pOwner(NULL)
+		CListTextElementUI::CListTextElementUI() : m_nLinks(0), m_nHoverLink(-1), m_pOwner(NULL)
 	{
 		::ZeroMemory(&m_rcLinks, sizeof(m_rcLinks));
 	}
@@ -2499,8 +2560,8 @@ namespace DuiLib {
 	//
 	IMPLEMENT_DUICONTROL(CListContainerElementUI)
 
-	CListContainerElementUI::CListContainerElementUI() : 
-		m_iIndex(-1),
+		CListContainerElementUI::CListContainerElementUI() : 
+	m_iIndex(-1),
 		m_pOwner(NULL), 
 		m_bSelected(false),
 		m_uButtonState(0)
@@ -2689,6 +2750,21 @@ namespace DuiLib {
 			}
 			return;
 		}
+		// ÓÒ¼üÑ¡Ôñ
+		if(m_pOwner != NULL)
+		{
+			if( m_pOwner->GetListInfo()->bRSelected && event.Type == UIEVENT_RBUTTONDOWN )
+			{
+				if( IsEnabled() ){
+					if((GetKeyState(VK_CONTROL) & 0x8000)) {
+						SelectMulti(!IsSelected());
+					}
+					else Select();
+				}
+				return;
+			}
+		}
+
 		if( event.Type == UIEVENT_BUTTONUP ) 
 		{
 			if( IsEnabled() ){
@@ -2880,20 +2956,40 @@ namespace DuiLib {
 	}
 
 	void CListContainerElementUI::SetPos(RECT rc, bool bNeedInvalidate)
-	{	
+	{
 		CHorizontalLayoutUI::SetPos(rc, bNeedInvalidate);
 		if( m_pOwner == NULL ) return;
+
 		UINT uListType = m_pOwner->GetListType();
+		if(uListType == LT_LIST) {
+			int nFixedWidth = GetFixedWidth();
+			if (nFixedWidth > 0)
+			{
+				int nRank = (rc.right - rc.left) / nFixedWidth;
+				if (nRank > 0)
+				{
+					int nIndex = GetIndex();
+					int nfloor = nIndex / nRank;
+					int nHeight = rc.bottom - rc.top;
+
+					rc.top = rc.top - nHeight * (nIndex - nfloor);
+					rc.left = rc.left + nFixedWidth * (nIndex % nRank);
+					rc.right = rc.left + nFixedWidth;
+					rc.bottom = nHeight + rc.top;
+				}
+			}
+		}
+
 		if(uListType != LT_LIST && uListType != LT_TREE) return;
 
 		CListUI* pList = static_cast<CListUI*>(m_pOwner);
 
- 		if (uListType == LT_TREE)
- 		{
- 			pList = (CListUI*)pList->CControlUI::GetInterface(_T("List"));
+		if (uListType == LT_TREE)
+		{
+			pList = (CListUI*)pList->CControlUI::GetInterface(_T("List"));
 			if (pList == NULL) return;
- 		}
-	
+		}
+
 		CListHeaderUI *pHeader = pList->GetHeader();
 		if (pHeader == NULL || !pHeader->IsVisible()) return;
 		int nCount = m_items.GetSize();

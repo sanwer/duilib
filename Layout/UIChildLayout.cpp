@@ -5,7 +5,7 @@ namespace DuiLib
 {
 	IMPLEMENT_DUICONTROL(CChildLayoutUI)
 
-	CChildLayoutUI::CChildLayoutUI()
+		CChildLayoutUI::CChildLayoutUI()
 	{
 
 	}

@@ -2,11 +2,11 @@
 #include "UIResourceManager.h"
 
 namespace DuiLib {
-	
+
 	CResourceManager::CResourceManager(void)
 	{
 		m_pQuerypInterface = NULL;
-		
+
 	}
 
 	CResourceManager::~CResourceManager(void)
@@ -253,5 +253,5 @@ namespace DuiLib {
 		}
 	}
 
-	
+
 } // namespace DuiLib

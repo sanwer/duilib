@@ -18,7 +18,7 @@ namespace DuiLib
 #define _WIN32_WINNT_WINTHRESHOLD           0x0A00 /* ABRACADABRA_THRESHOLD*/
 #define _WIN32_WINNT_WIN10                  0x0A00 /* ABRACADABRA_THRESHOLD*/
 
-	#define WM_DPICHANGED                   0x02E0
+#define WM_DPICHANGED                   0x02E0
 
 	static BOOL IsWindowsVersionOrGreater(WORD wMajorVersion, WORD wMinorVersion, WORD wServicePackMajor)
 	{

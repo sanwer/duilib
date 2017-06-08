@@ -6,7 +6,7 @@ namespace DuiLib
 {
 	IMPLEMENT_DUICONTROL(CLabelUI)
 
-	CLabelUI::CLabelUI() : m_uTextStyle(DT_VCENTER | DT_SINGLELINE), m_dwTextColor(0), 
+		CLabelUI::CLabelUI() : m_uTextStyle(DT_VCENTER | DT_SINGLELINE), m_dwTextColor(0), 
 		m_dwDisabledTextColor(0),
 		m_iFont(-1),
 		m_bShowHtml(false),
@@ -29,7 +29,7 @@ namespace DuiLib
 		if( _tcsicmp(pstrName, _T("Label")) == 0 ) return static_cast<CLabelUI*>(this);
 		return CControlUI::GetInterface(pstrName);
 	}
-	
+
 	UINT CLabelUI::GetControlFlags() const
 	{
 		return IsEnabled() ? UIFLAG_SETCURSOR : 0;

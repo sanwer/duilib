@@ -6,13 +6,13 @@ namespace DuiLib
 {
 	IMPLEMENT_DUICONTROL(CTreeNodeUI)
 
-	//************************************
-	// 函数名称: CTreeNodeUI
-	// 返回类型: 
-	// 参数信息: CTreeNodeUI * _ParentNode
-	// 函数说明: 
-	//************************************
-	CTreeNodeUI::CTreeNodeUI( CTreeNodeUI* _ParentNode /*= NULL*/ )
+		//************************************
+		// 函数名称: CTreeNodeUI
+		// 返回类型: 
+		// 参数信息: CTreeNodeUI * _ParentNode
+		// 函数说明: 
+		//************************************
+		CTreeNodeUI::CTreeNodeUI( CTreeNodeUI* _ParentNode /*= NULL*/ )
 	{
 		m_dwItemTextColor = 0x00000000;
 		m_dwItemHotTextColor = 0;
@@ -54,7 +54,7 @@ namespace DuiLib
 		pHoriz->Add(pItemButton);
 		Add(pHoriz);
 	}
-	
+
 	//************************************
 	// 函数名称: ~CTreeNodeUI
 	// 返回类型: 
@@ -88,7 +88,7 @@ namespace DuiLib
 			return static_cast<CTreeNodeUI*>(this);
 		return CListContainerElementUI::GetInterface(pstrName);
 	}
-	
+
 	//************************************
 	// 函数名称: DoEvent
 	// 返回类型: void
@@ -184,7 +184,7 @@ namespace DuiLib
 			CContainerUI::Invalidate();
 		}
 	}
-	
+
 	//************************************
 	// 函数名称: Select
 	// 返回类型: bool
@@ -222,7 +222,7 @@ namespace DuiLib
 	{
 		if (_tcsicmp(_pTreeNodeUI->GetClass(), _T("TreeNodeUI")) == 0)
 			return AddChildNode((CTreeNodeUI*)_pTreeNodeUI);
-		
+
 		return CListContainerElementUI::Add(_pTreeNodeUI);
 	}
 
@@ -342,7 +342,7 @@ namespace DuiLib
 	{
 		return !mTreeNodes.IsEmpty();
 	}
-	
+
 	//************************************
 	// 函数名称: AddChildNode
 	// 返回类型: bool
@@ -561,7 +561,7 @@ namespace DuiLib
 	{
 		return pCheckBox->IsVisible();
 	}
-	
+
 	//************************************
 	// 函数名称: GetNodeIndex
 	// 返回类型: int
@@ -579,7 +579,7 @@ namespace DuiLib
 
 		return -1;
 	}
-	
+
 	//************************************
 	// 函数名称: GetNodeIndex
 	// 返回类型: int
@@ -614,10 +614,10 @@ namespace DuiLib
 			else 
 				nRetNode = pNode;
 		}
-		
+
 		return nRetNode;
 	}
-	
+
 	//************************************
 	// 函数名称: CalLocation
 	// 返回类型: CTreeNodeUI*
@@ -727,18 +727,18 @@ namespace DuiLib
 	/*****************************************************************************/
 	/*****************************************************************************/
 	IMPLEMENT_DUICONTROL(CTreeViewUI)
-	
-	//************************************
-	// 函数名称: CTreeViewUI
-	// 返回类型: 
-	// 参数信息: void
-	// 函数说明: 
-	//************************************
-	CTreeViewUI::CTreeViewUI( void ) : m_bVisibleFolderBtn(TRUE),m_bVisibleCheckBtn(FALSE),m_uItemMinWidth(0)
+
+		//************************************
+		// 函数名称: CTreeViewUI
+		// 返回类型: 
+		// 参数信息: void
+		// 函数说明: 
+		//************************************
+		CTreeViewUI::CTreeViewUI( void ) : m_bVisibleFolderBtn(TRUE),m_bVisibleCheckBtn(FALSE),m_uItemMinWidth(0)
 	{
 		this->GetHeader()->SetVisible(FALSE);
 	}
-	
+
 	//************************************
 	// 函数名称: ~CTreeViewUI
 	// 返回类型: 
@@ -747,7 +747,7 @@ namespace DuiLib
 	//************************************
 	CTreeViewUI::~CTreeViewUI( void )
 	{
-		
+
 	}
 
 	//************************************
@@ -922,9 +922,9 @@ namespace DuiLib
 	//************************************
 	void CTreeViewUI::Notify( TNotifyUI& msg )
 	{
-		
+
 	}
-	
+
 	//************************************
 	// 函数名称: OnCheckBoxChanged
 	// 返回类型: bool
@@ -943,7 +943,7 @@ namespace DuiLib
 		}
 		return TRUE;
 	}
-	
+
 	//************************************
 	// 函数名称: OnFolderChanged
 	// 返回类型: bool
@@ -962,7 +962,7 @@ namespace DuiLib
 		}
 		return TRUE;
 	}
-	
+
 	//************************************
 	// 函数名称: OnDBClickItem
 	// 返回类型: bool
@@ -1135,7 +1135,7 @@ namespace DuiLib
 	{
 		return m_uItemMinWidth;
 	}
-	
+
 	//************************************
 	// 函数名称: SetItemTextColor
 	// 返回类型: void
@@ -1183,7 +1183,7 @@ namespace DuiLib
 			}
 		}
 	}
-		
+
 	//************************************
 	// 函数名称: SetSelItemHotTextColor
 	// 返回类型: void

@@ -5,7 +5,7 @@ namespace DuiLib
 {
 	IMPLEMENT_DUICONTROL(CProgressUI)
 
-	CProgressUI::CProgressUI() : m_bShowText(false), m_bHorizontal(true), m_nMin(0), m_nMax(100), m_nValue(0), m_bStretchForeImage(true)
+		CProgressUI::CProgressUI() : m_bShowText(false), m_bHorizontal(true), m_nMin(0), m_nMax(100), m_nValue(0), m_bStretchForeImage(true)
 	{
 		m_uTextStyle = DT_SINGLELINE | DT_CENTER;
 		SetFixedHeight(12);
@@ -21,7 +21,7 @@ namespace DuiLib
 		if( _tcsicmp(pstrName, DUI_CTR_PROGRESS) == 0 ) return static_cast<CProgressUI*>(this);
 		return CLabelUI::GetInterface(pstrName);
 	}
-	
+
 	bool CProgressUI::IsShowText()
 	{
 		return m_bShowText;
@@ -108,9 +108,9 @@ namespace DuiLib
 		}
 		else {
 			rc.bottom = m_rcItem.top + (m_rcItem.bottom - m_rcItem.top) * (m_nMax - m_nValue) / (m_nMax - m_nMin);
-		
+
 		}
-		
+
 		CRenderEngine::DrawColor(hDC, rc, GetAdjustColor(m_dwForeColor));
 	}
 

@@ -241,7 +241,7 @@ namespace DuiLib
 	//
 	IMPLEMENT_DUICONTROL(CEditUI)
 
-	CEditUI::CEditUI() : m_pWindow(NULL), m_uMaxChar(255), m_bReadOnly(false), 
+		CEditUI::CEditUI() : m_pWindow(NULL), m_uMaxChar(255), m_bReadOnly(false), 
 		m_bPasswordMode(false), m_cPasswordChar(_T('*')), m_uButtonState(0), 
 		m_dwEditbkColor(0xFFFFFFFF), m_dwEditTextColor(0x00000000), m_iWindowStyls(0),m_dwTipValueColor(0xFFBAC0C5)
 	{
@@ -564,8 +564,8 @@ namespace DuiLib
 	{
 		return m_dwTipValueColor;
 	}
-	
-	
+
+
 	void CEditUI::SetPos(RECT rc, bool bNeedInvalidate)
 	{
 		CControlUI::SetPos(rc, bNeedInvalidate);

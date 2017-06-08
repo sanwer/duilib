@@ -24,7 +24,7 @@ namespace DuiLib
 		virtual void Notify(TNotifyUI& msg);
 
 		DUI_DECLARE_MESSAGE_MAP()
-		virtual void OnClick(TNotifyUI& msg);
+			virtual void OnClick(TNotifyUI& msg);
 		BOOL IsInStaticControl(CControlUI *pControl);
 
 	protected:
@@ -33,7 +33,7 @@ namespace DuiLib
 		virtual LPCTSTR GetWindowClassName(void) const = 0 ;
 		virtual LPCTSTR GetManagerName() { return NULL; }
 		virtual LRESULT ResponseDefaultKeyEvent(WPARAM wParam);
-		CPaintManagerUI m_pm;
+		CPaintManagerUI m_Manager;
 
 	public:
 		virtual UINT GetClassStyle() const;

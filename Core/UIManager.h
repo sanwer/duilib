@@ -226,8 +226,6 @@ namespace DuiLib {
 		HDC GetPaintDC() const;
 		HWND GetPaintWindow() const;
 		HWND GetTooltipWindow() const;
-		int GetTooltipWindowWidth() const;
-		void SetTooltipWindowWidth(int iWidth);
 		int GetHoverTime() const;
 		void SetHoverTime(int iTime);
 
@@ -267,7 +265,7 @@ namespace DuiLib {
 		CRichEditUI* GetCurrentCaretObject();
 		bool CreateCaret(HBITMAP hBmp, int nWidth, int nHeight);
 		void DrawCaret(HDC hDC, const RECT& rcPaint);
-		
+
 		void SetUseGdiplusText(bool bUse);
 		bool IsUseGdiplusText() const;
 		void SetGdiplusTextRenderingHint(int trh);
@@ -479,7 +477,7 @@ namespace DuiLib {
 		// 提示信息
 		HWND m_hwndTooltip;
 		TOOLINFO m_ToolTip;
-		
+		int m_nTooltipHoverTime;
 		// RichEdit光标
 		RECT m_rtCaret;
 		bool m_bCaretActive;
@@ -488,7 +486,7 @@ namespace DuiLib {
 
 		// 窗口阴影
 		CShadowUI m_shadow;
-		
+
 		//
 		CControlUI* m_pRoot;
 		CControlUI* m_pFocus;
@@ -508,7 +506,7 @@ namespace DuiLib {
 		bool m_bUpdateNeeded;
 		bool m_bFocusNeeded;
 		bool m_bOffscreenPaint;
-		
+
 		BYTE m_nOpacity;
 		bool m_bLayered;
 		RECT m_rcLayeredInset;
@@ -536,7 +534,7 @@ namespace DuiLib {
 		CStdStringPtrMap m_mNameHash;
 		CStdStringPtrMap m_mWindowCustomAttrHash;
 		CStdStringPtrMap m_mOptionGroup;
-		
+
 		bool m_bForceUseSharedRes;
 		TResInfo m_ResInfo;
 
@@ -549,7 +547,7 @@ namespace DuiLib {
 		static HINSTANCE m_hResourceInstance;
 		static CDuiString m_pStrResourcePath;
 		static CDuiString m_pStrResourceZip;
-		static CDuiString m_pStrResourceZipPwd;  //Garfield 20160325 带密码zip包解密
+		static CDuiString m_pStrResourceZipPwd;
 		static HANDLE m_hResourceZip;
 		static bool m_bCachedResourceZip;
 		static int m_nResType;

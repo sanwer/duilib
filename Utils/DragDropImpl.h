@@ -15,7 +15,7 @@ namespace DuiLib {
 	typedef std::vector<FORMATETC> FormatEtcArray;
 	typedef std::vector<FORMATETC*> PFormatEtcArray;
 	typedef std::vector<STGMEDIUM*> PStgMediumArray;
-	
+
 	///////////////////////////////////////////////////////////////////////////////////////////////
 	class UILIB_API CEnumFormatEtc : public IEnumFORMATETC
 	{

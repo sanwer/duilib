@@ -24,7 +24,7 @@ namespace DuiLib {
 #endif
 		bool IsHitItem(POINT ptMouse);
 	public:
-		CPaintManagerUI m_pm;
+		CPaintManagerUI m_Manager;
 		CComboUI* m_pOwner;
 		CVerticalLayoutUI* m_pLayout;
 		int m_iOldSel;
@@ -74,7 +74,7 @@ namespace DuiLib {
 			SIZE sz = pControl->EstimateSize(szAvailable);
 			cyFixed += sz.cy;
 		}
-		cyFixed += 4; // CVerticalLayoutUI 默认的Inset 调整
+		cyFixed += 4;
 		rc.bottom = rc.top + MIN(cyFixed, szDrop.cy);
 
 		::MapWindowRect(pOwner->GetManager()->GetPaintWindow(), HWND_DESKTOP, &rc);
@@ -115,7 +115,7 @@ namespace DuiLib {
 
 	bool CComboWnd::IsHitItem(POINT ptMouse)
 	{
-		CControlUI* pControl = m_pm.FindControl(ptMouse);
+		CControlUI* pControl = m_Manager.FindControl(ptMouse);
 		if(pControl != NULL) {
 			LPVOID pInterface = pControl->GetInterface(DUI_CTR_SCROLLBAR);
 			if(pInterface) return false;
@@ -128,20 +128,20 @@ namespace DuiLib {
 				pControl = pControl->GetParent();
 			}
 		}
-		
+
 		return false;
 	}
 
 	LRESULT CComboWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		if( uMsg == WM_CREATE ) {
-			m_pm.SetForceUseSharedRes(true);
-			m_pm.Init(m_hWnd);
+			m_Manager.SetForceUseSharedRes(true);
+			m_Manager.Init(m_hWnd);
 			// The trick is to add the items to the new container. Their owner gets
 			// reassigned by this operation - which is why it is important to reassign
 			// the items back to the righfull owner/manager when the window closes.
 			m_pLayout = new CVerticalLayoutUI;
-			m_pLayout->SetManager(&m_pm, NULL, true);
+			m_pLayout->SetManager(&m_Manager, NULL, true);
 			LPCTSTR pDefaultAttributes = m_pOwner->GetManager()->GetDefaultAttributeList(_T("VerticalLayout"));
 			if( pDefaultAttributes ) {
 				m_pLayout->ApplyAttributeList(pDefaultAttributes);
@@ -156,8 +156,11 @@ namespace DuiLib {
 			for( int i = 0; i < m_pOwner->GetCount(); i++ ) {
 				m_pLayout->Add(static_cast<CControlUI*>(m_pOwner->GetItemAt(i)));
 			}
-			m_pm.AttachDialog(m_pLayout);
-			m_pm.AddNotifier(this);
+			CShadowUI *pShadow = m_pOwner->GetManager()->GetShadow();
+			pShadow->CopyShadow(m_Manager.GetShadow());
+			m_Manager.GetShadow()->ShowShadow(m_pOwner->IsShowShadow());
+			m_Manager.AttachDialog(m_pLayout);
+			m_Manager.AddNotifier(this);
 			return 0;
 		}
 		else if( uMsg == WM_CLOSE ) {
@@ -169,13 +172,13 @@ namespace DuiLib {
 		else if( uMsg == WM_LBUTTONDOWN ) {
 			POINT pt = { 0 };
 			::GetCursorPos(&pt);
-			::ScreenToClient(m_pm.GetPaintWindow(), &pt);
+			::ScreenToClient(m_Manager.GetPaintWindow(), &pt);
 			m_bHitItem = IsHitItem(pt);
 		}
 		else if( uMsg == WM_LBUTTONUP ) {
 			POINT pt = { 0 };
 			::GetCursorPos(&pt);
-			::ScreenToClient(m_pm.GetPaintWindow(), &pt);
+			::ScreenToClient(m_Manager.GetPaintWindow(), &pt);
 			if(m_bHitItem && IsHitItem(pt)) {
 				PostMessage(WM_KILLFOCUS);
 			}
@@ -220,7 +223,7 @@ namespace DuiLib {
 		}
 
 		LRESULT lRes = 0;
-		if( m_pm.MessageHandler(uMsg, wParam, lParam, lRes) ) return lRes;
+		if( m_Manager.MessageHandler(uMsg, wParam, lParam, lRes) ) return lRes;
 		return CWindowWnd::HandleMessage(uMsg, wParam, lParam);
 	}
 
@@ -250,13 +253,18 @@ namespace DuiLib {
 #if(_WIN32_WINNT >= 0x0501)
 	UINT CComboWnd::GetClassStyle() const
 	{
-		return __super::GetClassStyle() | CS_DROPSHADOW;
+		if(m_pOwner->IsShowShadow()) {
+			return __super::GetClassStyle();
+		}
+		else {
+			return __super::GetClassStyle() | CS_DROPSHADOW;
+		}
 	}
 #endif
 	////////////////////////////////////////////////////////
 	IMPLEMENT_DUICONTROL(CComboUI)
 
-	CComboUI::CComboUI() : m_uTextStyle(DT_VCENTER | DT_SINGLELINE)
+		CComboUI::CComboUI() : m_uTextStyle(DT_VCENTER | DT_SINGLELINE)
 		, m_dwTextColor(0)
 		, m_dwDisabledTextColor(0)
 		, m_iFont(-1)
@@ -355,12 +363,12 @@ namespace DuiLib {
 	{
 		return SelectItem(iIndex, bTakeFocus);
 	}
-	
+
 	bool CComboUI::UnSelectItem(int iIndex, bool bOthers)
 	{
 		return false;
 	}
-		
+
 	bool CComboUI::SetItemIndex(CControlUI* pControl, int iIndex)
 	{
 		int iOrginIndex = GetItemIndex(pControl);
@@ -569,6 +577,7 @@ namespace DuiLib {
 	bool CComboUI::Activate()
 	{
 		if( !CControlUI::Activate() ) return false;
+		if( m_pManager != NULL ) m_pManager->SendNotify(this, DUI_MSGTYPE_PREDROPDOWN);
 		if( m_pWindow ) return true;
 		m_pWindow = new CComboWnd();
 		ASSERT(m_pWindow);
@@ -679,6 +688,19 @@ namespace DuiLib {
 		Invalidate();
 	}
 
+	bool CComboUI::IsShowShadow()
+	{
+		return m_bShowShadow;
+	}
+
+	void CComboUI::SetShowShadow(bool bShow)
+	{
+		if( m_bShowShadow == bShow ) return;
+
+		m_bShowShadow = bShow;
+		Invalidate();
+	}
+
 	LPCTSTR CComboUI::GetNormalImage() const
 	{
 		return m_sNormalImage;
@@ -743,7 +765,6 @@ namespace DuiLib {
 	{
 		m_bScrollSelect = bScrollSelect;
 	}
-
 
 	void CComboUI::SetItemFont(int index)
 	{
@@ -923,13 +944,15 @@ namespace DuiLib {
 
 	void CComboUI::SetPos(RECT rc, bool bNeedInvalidate)
 	{
-		// 隐藏下拉窗口
-		if(m_pWindow && ::IsWindow(m_pWindow->GetHWND())) m_pWindow->Close();
-		// 所有元素大小置为0
-		RECT rcNull = { 0 };
-		for( int i = 0; i < m_items.GetSize(); i++ ) static_cast<CControlUI*>(m_items[i])->SetPos(rcNull);
-		// 调整位置
-		CControlUI::SetPos(rc, bNeedInvalidate);
+		if(!::EqualRect(&rc, &m_rcItem)) {
+			// 隐藏下拉窗口
+			if(m_pWindow && ::IsWindow(m_pWindow->GetHWND())) m_pWindow->Close();
+			// 所有元素大小置为0
+			RECT rcNull = { 0 };
+			for( int i = 0; i < m_items.GetSize(); i++ ) static_cast<CControlUI*>(m_items[i])->SetPos(rcNull);
+			// 调整位置
+			CControlUI::SetPos(rc, bNeedInvalidate);
+		}
 	}
 
 	void CComboUI::Move(SIZE szOffset, bool bNeedInvalidate)
@@ -1003,6 +1026,7 @@ namespace DuiLib {
 			SetTextPadding(rcTextPadding);
 		}
 		else if( _tcsicmp(pstrName, _T("showhtml")) == 0 ) SetShowHtml(_tcsicmp(pstrValue, _T("true")) == 0);
+		else if( _tcsicmp(pstrName, _T("showshadow")) == 0 ) SetShowShadow(_tcsicmp(pstrValue, _T("true")) == 0);
 		else if( _tcsicmp(pstrName, _T("normalimage")) == 0 ) SetNormalImage(pstrValue);
 		else if( _tcsicmp(pstrName, _T("hotimage")) == 0 ) SetHotImage(pstrValue);
 		else if( _tcsicmp(pstrName, _T("pushedimage")) == 0 ) SetPushedImage(pstrValue);
@@ -1018,7 +1042,7 @@ namespace DuiLib {
 			szDropBoxSize.cy = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);    
 			SetDropBoxSize(szDropBoxSize);
 		}
-		else if( _tcsicmp(pstrName, _T("itemfont")) == 0 ) m_ListInfo.nFont = _ttoi(pstrValue);
+		else if( _tcsicmp(pstrName, _T("itemfont")) == 0 ) SetItemFont(_ttoi(pstrValue));
 		else if( _tcsicmp(pstrName, _T("itemalign")) == 0 ) {
 			if( _tcsstr(pstrValue, _T("left")) != NULL ) {
 				m_ListInfo.uTextStyle &= ~(DT_CENTER | DT_RIGHT);
@@ -1031,6 +1055,20 @@ namespace DuiLib {
 			if( _tcsstr(pstrValue, _T("right")) != NULL ) {
 				m_ListInfo.uTextStyle &= ~(DT_LEFT | DT_CENTER);
 				m_ListInfo.uTextStyle |= DT_RIGHT;
+			}
+		}
+		else if( _tcsicmp(pstrName, _T("itemvalign")) == 0 ) {
+			if( _tcsstr(pstrValue, _T("top")) != NULL ) {
+				m_ListInfo.uTextStyle &= ~(DT_VCENTER | DT_BOTTOM);
+				m_ListInfo.uTextStyle |= DT_TOP;
+			}
+			if( _tcsstr(pstrValue, _T("vcenter")) != NULL ) {
+				m_ListInfo.uTextStyle &= ~(DT_TOP | DT_BOTTOM | DT_WORDBREAK);
+				m_ListInfo.uTextStyle |= DT_VCENTER | DT_SINGLELINE;
+			}
+			if( _tcsstr(pstrValue, _T("bottom")) != NULL ) {
+				m_ListInfo.uTextStyle &= ~(DT_TOP | DT_VCENTER);
+				m_ListInfo.uTextStyle |= DT_BOTTOM;
 			}
 		}
 		else if( _tcsicmp(pstrName, _T("itemendellipsis")) == 0 ) {

@@ -5,7 +5,7 @@ namespace DuiLib
 {
 	IMPLEMENT_DUICONTROL(CTextUI)
 
-	CTextUI::CTextUI() : m_nLinks(0), m_nHoverLink(-1)
+		CTextUI::CTextUI() : m_nLinks(0), m_nHoverLink(-1)
 	{
 		m_uTextStyle = DT_WORDBREAK;
 		m_rcTextPadding.left = 2;
@@ -123,7 +123,7 @@ namespace DuiLib
 		}
 		SIZE cXY = {rcText.right - rcText.left + m_rcTextPadding.left + m_rcTextPadding.right,
 			rcText.bottom - rcText.top + m_rcTextPadding.top + m_rcTextPadding.bottom};
-		
+
 		if (m_bAutoCalcWidth)
 		{
 			m_cxyFixed.cx = MulDiv(cXY.cx, 100.0, GetManager()->GetDPIObj()->GetScale());

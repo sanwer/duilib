@@ -130,7 +130,7 @@ namespace DuiLib
 		virtual void SetItemHotTextColor(DWORD _dwItemHotTextColor);
 		virtual void SetSelItemTextColor(DWORD _dwSelItemTextColor);
 		virtual void SetSelItemHotTextColor(DWORD _dwSelHotItemTextColor);
-		
+
 		virtual void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
 	private:
 		UINT m_uItemMinWidth;

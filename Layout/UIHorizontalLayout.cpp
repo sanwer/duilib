@@ -4,7 +4,7 @@
 namespace DuiLib
 {
 	IMPLEMENT_DUICONTROL(CHorizontalLayoutUI)
-	CHorizontalLayoutUI::CHorizontalLayoutUI() : m_iSepWidth(0), m_uButtonState(0), m_bImmMode(false)
+		CHorizontalLayoutUI::CHorizontalLayoutUI() : m_iSepWidth(0), m_uButtonState(0), m_bImmMode(false)
 	{
 		ptLastMouse.x = ptLastMouse.y = 0;
 		::ZeroMemory(&m_rcNewPos, sizeof(m_rcNewPos));
@@ -49,8 +49,8 @@ namespace DuiLib
 
 		// Determine the minimum size
 		SIZE szAvailable = { rc.right - rc.left, rc.bottom - rc.top };
-		if( m_pHorizontalScrollBar && m_pHorizontalScrollBar->IsVisible() ) 
-			szAvailable.cx += m_pHorizontalScrollBar->GetScrollRange();
+		//if( m_pHorizontalScrollBar && m_pHorizontalScrollBar->IsVisible() ) 
+		//	szAvailable.cx += m_pHorizontalScrollBar->GetScrollRange();
 		if( m_pVerticalScrollBar && m_pVerticalScrollBar->IsVisible() ) 
 			szAvailable.cy += m_pVerticalScrollBar->GetScrollRange();
 
@@ -112,7 +112,7 @@ namespace DuiLib
 				SetFloatPos(it2);
 				continue;
 			}
-			
+
 			iEstimate += 1;
 			RECT rcPadding = pControl->GetPadding();
 			szRemaining.cx -= rcPadding.left;
@@ -125,7 +125,7 @@ namespace DuiLib
 			if (iControlMaxHeight <= 0) iControlMaxHeight = pControl->GetMaxHeight();
 			if (szControlAvailable.cx > iControlMaxWidth) szControlAvailable.cx = iControlMaxWidth;
 			if (szControlAvailable.cy > iControlMaxHeight) szControlAvailable.cy = iControlMaxHeight;
-      cxFixedRemaining = cxFixedRemaining - (rcPadding.left + rcPadding.right);
+			cxFixedRemaining = cxFixedRemaining - (rcPadding.left + rcPadding.right);
 			if (iEstimate > 1) cxFixedRemaining = cxFixedRemaining - m_iChildPadding;
 			SIZE sz = pControl->EstimateSize(szControlAvailable);
 			if( sz.cx == 0 ) {

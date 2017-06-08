@@ -234,7 +234,8 @@ namespace DuiLib {
 		m_trh(0),
 		m_bDragMode(false),
 		m_hDragBitmap(NULL),
-		m_pDPI(NULL)
+		m_pDPI(NULL),
+		m_nTooltipHoverTime(400UL)
 	{
 		if (m_SharedResInfo.m_DefaultFontInfo.sFontName.IsEmpty())
 		{
@@ -411,7 +412,7 @@ namespace DuiLib {
 	{
 		return m_pStrResourceZipPwd;
 	}
-	
+
 	bool CPaintManagerUI::IsCachedResourceZip()
 	{
 		return m_bCachedResourceZip;
@@ -595,6 +596,15 @@ namespace DuiLib {
 	HWND CPaintManagerUI::GetTooltipWindow() const
 	{
 		return m_hwndTooltip;
+	}
+	int CPaintManagerUI::GetHoverTime() const
+	{
+		return m_nTooltipHoverTime;
+	}
+
+	void CPaintManagerUI::SetHoverTime(int iTime)
+	{
+		m_nTooltipHoverTime = iTime;
 	}
 
 	LPCTSTR CPaintManagerUI::GetName() const
@@ -1344,7 +1354,7 @@ namespace DuiLib {
 					tme.cbSize = sizeof(TRACKMOUSEEVENT);
 					tme.dwFlags = TME_HOVER | TME_LEAVE;
 					tme.hwndTrack = m_hWndPaint;
-					tme.dwHoverTime = m_hwndTooltip == NULL ? 400UL : (DWORD) ::SendMessage(m_hwndTooltip, TTM_GETDELAYTIME, TTDT_INITIAL, 0L);
+					tme.dwHoverTime = m_hwndTooltip == NULL ? m_nTooltipHoverTime : (DWORD) ::SendMessage(m_hwndTooltip, TTM_GETDELAYTIME, TTDT_INITIAL, 0L);
 					_TrackMouseEvent(&tme);
 					m_bMouseTracking = true;
 				}
@@ -1407,7 +1417,8 @@ namespace DuiLib {
 					dragSrcHelper.InitializeFromBitmap(hBitmap, ptDrag, rc, pdobj); //will own the bmp
 					DWORD dwEffect;
 					HRESULT hr = ::DoDragDrop(pdobj, pdsrc, DROPEFFECT_COPY | DROPEFFECT_MOVE, &dwEffect);
-					pdsrc->Release();
+					if(dwEffect )
+						pdsrc->Release();
 					pdobj->Release();
 					m_bDragMode = false;
 					break;
@@ -1968,7 +1979,7 @@ namespace DuiLib {
 	{
 		RemoveAllDrawInfos();
 		RemoveAllImages();;
-		
+
 		for (int it = 0; it < m_ResInfo.m_CustomFonts.GetSize(); it++) {
 			TFontInfo* pFontInfo = static_cast<TFontInfo*>(m_ResInfo.m_CustomFonts.Find(m_ResInfo.m_CustomFonts[it]));
 			RebuildFont(pFontInfo);
@@ -2671,8 +2682,10 @@ namespace DuiLib {
 				}
 				if (hz == NULL) break;
 				ZIPENTRY ze;
-				int i;
-				if (FindZipItem(hz, pstrPath, true, &i, &ze) != 0) break;
+				int i = 0;
+				CDuiString key = pstrPath;
+				key.Replace(_T("\\"), _T("/"));
+				if (FindZipItem(hz, key, true, &i, &ze) != 0) break;
 				dwSize = ze.unc_size;
 				if (dwSize == 0) break;
 				pData = new BYTE[dwSize];
@@ -2975,7 +2988,7 @@ namespace DuiLib {
 		if( bitmap == NULL || bitmap[0] == _T('\0') ) return NULL;
 
 		TImageInfo* data = NULL;
-		if( type != NULL ) {
+		if( type != NULL && lstrlen(type) > 0) {
 			if( isdigit(*bitmap) ) {
 				LPTSTR pstr = NULL;
 				int iIndex = _tcstol(bitmap, &pstr, 10);

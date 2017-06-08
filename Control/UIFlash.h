@@ -17,7 +17,7 @@ namespace DuiLib
 {
 	class UILIB_API CFlashUI
 		: public CActiveXUI
-	//	, public IOleInPlaceSiteWindowless // 透明模式绘图，需要实现这个接口
+		//	, public IOleInPlaceSiteWindowless // 透明模式绘图，需要实现这个接口
 		, public _IShockwaveFlashEvents
 		, public ITranslateAccelerator
 	{

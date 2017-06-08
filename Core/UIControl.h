@@ -28,8 +28,8 @@ namespace DuiLib {
 		virtual CPaintManagerUI* GetManager() const;
 		virtual void SetManager(CPaintManagerUI* pManager, CControlUI* pParent, bool bInit = true);
 		virtual CControlUI* GetParent() const;
-	    void setInstance(HINSTANCE instance = NULL) {m_instance = instance;};
-		
+		void setInstance(HINSTANCE instance = NULL) {m_instance = instance;};
+
 		// 定时器
 		bool SetTimer(UINT nTimerID, UINT nElapse);
 		void KillTimer(UINT nTimerID);
@@ -48,6 +48,8 @@ namespace DuiLib {
 		virtual void SetDropEnable(bool bDrop);
 
 		// 图形相关
+		LPCTSTR GetGradient();
+		void SetGradient(LPCTSTR pStrImage);
 		DWORD GetBkColor() const;
 		void SetBkColor(DWORD dwBackColor);
 		DWORD GetBkColor2() const;
@@ -121,7 +123,7 @@ namespace DuiLib {
 		virtual void SetToolTip(LPCTSTR pstrText);
 		virtual void SetToolTipWidth(int nWidth);
 		virtual int	  GetToolTipWidth(void);	// 多行ToolTip单行最长宽度
-		
+
 		// 光标
 		virtual WORD GetCursor();
 		virtual void SetCursor(WORD wCursor);
@@ -236,6 +238,7 @@ namespace DuiLib {
 		CDuiString m_sUserData;
 		UINT_PTR m_pTag;
 
+		CDuiString m_sGradient;
 		DWORD m_dwBackColor;
 		DWORD m_dwBackColor2;
 		DWORD m_dwBackColor3;
@@ -252,7 +255,7 @@ namespace DuiLib {
 		SIZE m_cxyBorderRound;
 		RECT m_rcPaint;
 		RECT m_rcBorderSize;
-	    HINSTANCE m_instance;
+		HINSTANCE m_instance;
 
 		CStdStringPtrMap m_mCustomAttrHash;
 	};
