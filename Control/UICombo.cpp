@@ -332,6 +332,25 @@ namespace DuiLib {
 		return m_iCurSel;
 	}
 
+	UINT_PTR CComboUI::GetCurTag() const
+	{
+		if( m_iCurSel < 0 ) return NULL;
+		CControlUI* pControl = static_cast<CControlUI*>(m_items[m_iCurSel]);
+		return pControl->GetTag();
+	}
+
+	bool CComboUI::SelectTag(UINT_PTR pTag)
+	{
+		CControlUI* pControl = NULL;
+		for( int iIndex = 0; iIndex < m_items.GetSize(); iIndex++ ){
+			pControl = static_cast<CControlUI*>(m_items[iIndex]);
+			if(pControl && pControl->GetTag() == pTag){
+				return SelectItem(iIndex);
+			}
+		}
+		return false;
+	}
+
 	bool CComboUI::SelectItem(int iIndex, bool bTakeFocus)
 	{
 		if( iIndex == m_iCurSel ) return true;
