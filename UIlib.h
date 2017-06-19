@@ -93,5 +93,6 @@
 #include "Control/UIMenu.h"
 
 #pragma comment( lib, "comctl32.lib" )
+#pragma comment( lib, "Gdi32.lib" )
 #pragma comment( lib, "GdiPlus.lib" )
 #pragma comment( lib, "Imm32.lib" )

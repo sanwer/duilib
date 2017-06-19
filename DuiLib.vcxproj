@@ -33,6 +33,7 @@
     <UseDebugLibraries Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</UseDebugLibraries>
     <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</WholeProgramOptimization>
     <WholeProgramOptimization Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</WholeProgramOptimization>
+    <UseOfMfc Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Static</UseOfMfc>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
