@@ -916,7 +916,7 @@ namespace DuiLib {
 	//
 	IMPLEMENT_DUICONTROL(CActiveXUI)
 
-		CActiveXUI::CActiveXUI() : m_pUnk(NULL), m_pControl(NULL), m_hwndHost(NULL), m_bCreated(false), m_bDelayCreate(true), m_bMFC(false)
+	CActiveXUI::CActiveXUI() : m_pUnk(NULL), m_pControl(NULL), m_hwndHost(NULL), m_bCreated(false), m_bDelayCreate(true), m_bMFC(false)
 	{
 		m_clsid = IID_NULL;
 	}
@@ -1123,7 +1123,7 @@ namespace DuiLib {
 	void CActiveXUI::ReleaseControl()
 	{
 		// ÒÆ³ýÏûÏ¢Á´
-		m_pManager->RemoveMessageFilter(this);
+		if(m_pManager != NULL) m_pManager->RemoveMessageFilter(this);
 
 		if( m_pUnk != NULL ) {
 			IObjectWithSite* pSite = NULL;
@@ -1208,7 +1208,7 @@ namespace DuiLib {
 		if( (dwMiscStatus & OLEMISC_INVISIBLEATRUNTIME) == 0 ) {
 			try
 			{
-				Hr = m_pUnk->DoVerb(OLEIVERB_INPLACEACTIVATE, NULL, pOleClientSite, 0, m_pManager->GetPaintWindow(), &m_rcItem);
+				if(m_pManager != NULL) Hr = m_pUnk->DoVerb(OLEIVERB_INPLACEACTIVATE, NULL, pOleClientSite, 0, m_pManager->GetPaintWindow(), &m_rcItem);
 			}
 			catch (...)
 			{
