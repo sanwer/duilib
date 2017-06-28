@@ -1,8 +1,10 @@
 #include "StdAfx.h"
 #include "ControlFactory.h"
 
-namespace DuiLib 
+namespace DuiLib
 {
+	CControlFactory CControlFactory::m_Instance;
+
 	CControlFactory::CControlFactory()
 	{
 		INNER_REGISTER_DUICONTROL(CControlUI);
@@ -59,14 +61,8 @@ namespace DuiLib
 		m_mapControl.insert(MAP_DUI_CTRATECLASS::value_type(strClassName, pFunc));
 	}
 
-	CControlFactory* CControlFactory::GetInstance()  
+	CControlFactory* CControlFactory::GetInstance()
 	{
-		static CControlFactory* pInstance = new CControlFactory;
-		return pInstance;
-	}
-
-	void CControlFactory::Release()
-	{
-		delete this;
+		return &m_Instance;
 	}
 }

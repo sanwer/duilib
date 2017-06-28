@@ -1,6 +1,6 @@
 #pragma once
 #include <map>
-namespace DuiLib 
+namespace DuiLib
 {
 	typedef CControlUI* (*CreateClass)();
 	typedef std::map<CDuiString, CreateClass> MAP_DUI_CTRATECLASS;
@@ -12,13 +12,13 @@ namespace DuiLib
 		void RegistControl(CDuiString strClassName, CreateClass pFunc);
 
 		static CControlFactory* GetInstance();
-		void Release();
 
-	private:	
+	private:
 		CControlFactory();
 		virtual ~CControlFactory();
 
 	private:
+		static CControlFactory m_Instance;
 		MAP_DUI_CTRATECLASS m_mapControl;
 	};
 
