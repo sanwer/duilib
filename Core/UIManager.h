@@ -121,7 +121,7 @@ namespace DuiLib {
 	typedef struct UILIB_API tagTDrawInfo
 	{
 		tagTDrawInfo();
-		void Parse(LPCTSTR pStrImage, LPCTSTR pStrModify, CPaintManagerUI *paintManager);
+		void Parse(LPCTSTR pStrImage, LPCTSTR pStrModify, CPaintManagerUI* pManager);
 		void Clear();
 
 		CDuiString sDrawString;
@@ -290,7 +290,7 @@ namespace DuiLib {
 		static void SetResourceType(int nType);
 		static int GetResourceType();
 		static bool GetHSL(short* H, short* S, short* L);
-		static void SetHSL(bool bUseHSL, short H, short S, short L); // H:0~360, S:0~200, L:0~200 
+		static void SetHSL(bool bUseHSL, short H, short S, short L); // H:0~360, S:0~200, L:0~200
 		static void ReloadSkin();
 		static CPaintManagerUI* GetPaintManager(LPCTSTR pstrName);
 		static CStdPtrArray* GetPaintManagers();
@@ -391,7 +391,7 @@ namespace DuiLib {
 		void SetPainting(bool bIsPainting);
 
 		bool AddNotifier(INotifyUI* pControl);
-		bool RemoveNotifier(INotifyUI* pControl);   
+		bool RemoveNotifier(INotifyUI* pControl);
 		void SendNotify(TNotifyUI& Msg, bool bAsync = false);
 		void SendNotify(CControlUI* pControl, LPCTSTR pstrMessage, WPARAM wParam = 0, LPARAM lParam = 0, bool bAsync = false);
 
