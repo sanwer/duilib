@@ -48,6 +48,8 @@ namespace DuiLib {
 		UINT GetListType();
 		TListInfoUI* GetListInfo();
 		int GetCurSel() const;
+		const CDuiString& GetCurUserData();
+		bool SelectUserData(LPCTSTR pstrText);
 		UINT_PTR GetCurTag() const;
 		bool SelectTag(UINT_PTR pTag);
 		bool SelectItem(int iIndex, bool bTakeFocus = false);
@@ -125,7 +127,7 @@ namespace DuiLib {
 	protected:
 		CComboWnd* m_pWindow;
 
-		int m_iCurSel;
+		int		m_iCurSel;
 		DWORD	m_dwTextColor;
 		DWORD	m_dwDisabledTextColor;
 		int		m_iFont;
@@ -134,6 +136,7 @@ namespace DuiLib {
 		bool	m_bShowHtml;
 		bool	m_bShowShadow;
 		CDuiString m_sDropBoxAttributes;
+		CDuiString m_sCurUserData;
 		SIZE m_szDropBox;
 		UINT m_uButtonState;
 

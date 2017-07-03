@@ -332,6 +332,25 @@ namespace DuiLib {
 		return m_iCurSel;
 	}
 
+	const CDuiString& CComboUI::GetCurUserData()
+	{
+		if( m_iCurSel < 0 ) return m_sCurUserData;
+		CControlUI* pControl = static_cast<CControlUI*>(m_items[m_iCurSel]);
+		return pControl->GetUserData();
+	}
+
+	bool CComboUI::SelectUserData(LPCTSTR pstrText)
+	{
+		CControlUI* pControl = NULL;
+		for( int iIndex = 0; iIndex < m_items.GetSize(); iIndex++ ){
+			pControl = static_cast<CControlUI*>(m_items[iIndex]);
+			if(pControl && pControl->GetUserData().CompareNoCase(pstrText)==0){
+				return SelectItem(iIndex);
+			}
+		}
+		return false;
+	}
+
 	UINT_PTR CComboUI::GetCurTag() const
 	{
 		if( m_iCurSel < 0 ) return NULL;
@@ -341,14 +360,19 @@ namespace DuiLib {
 
 	bool CComboUI::SelectTag(UINT_PTR pTag)
 	{
+		bool bRet = false;
 		CControlUI* pControl = NULL;
 		for( int iIndex = 0; iIndex < m_items.GetSize(); iIndex++ ){
 			pControl = static_cast<CControlUI*>(m_items[iIndex]);
 			if(pControl && pControl->GetTag() == pTag){
-				return SelectItem(iIndex);
+				bool bEnable = IsEnabled();
+				if(!bEnable)SetEnabled();
+				bRet = SelectItem(iIndex);
+				if(!bEnable)SetEnabled(false);
+				break;
 			}
 		}
-		return false;
+		return bRet;
 	}
 
 	bool CComboUI::SelectItem(int iIndex, bool bTakeFocus)
@@ -361,6 +385,7 @@ namespace DuiLib {
 			IListItemUI* pListItem = static_cast<IListItemUI*>(pControl->GetInterface(_T("ListItem")));
 			if( pListItem != NULL ) pListItem->Select(false);
 			m_iCurSel = -1;
+			m_sCurUserData.Empty();
 		}
 		if( iIndex < 0 ) return false;
 		if( m_items.GetSize() == 0 ) return false;
