@@ -596,7 +596,7 @@ namespace DuiLib
 		// NOTE: This is actually a helper-function for the list/combo/ect controls
 		//       that allow them to find the next enabled/available selectable item
 		if( GetCount() == 0 ) return -1;
-		iIndex = CLAMP(iIndex, 0, GetCount() - 1);
+		iIndex = MIN(iIndex, GetCount() - 1);
 		if( bForward ) {
 			for( int i = iIndex; i < GetCount(); i++ ) {
 				if( GetItemAt(i)->GetInterface(_T("ListItem")) != NULL 

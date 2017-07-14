@@ -533,9 +533,9 @@ namespace DuiLib {
 		if( m_bUseHSL || m_bUseHSL != bUseHSL ) {
 			m_bUseHSL = bUseHSL;
 			if( H == m_H && S == m_S && L == m_L ) return;
-			m_H = CLAMP(H, 0, 360);
-			m_S = CLAMP(S, 0, 200);
-			m_L = CLAMP(L, 0, 200);
+			m_H = MIN(H, 360);
+			m_S = MIN(S, 200);
+			m_L = MIN(L, 200);
 			AdjustSharedImagesHSL();
 			for( int i = 0; i < m_aPreMessages.GetSize(); i++ ) {
 				CPaintManagerUI* pManager = static_cast<CPaintManagerUI*>(m_aPreMessages[i]);
@@ -1926,7 +1926,9 @@ namespace DuiLib {
 				try{
 					::DispatchMessage(&msg);
 				} catch(...) {
-					DUITRACE(_T("EXCEPTION: %s(%d)\n"), __FILET__, __LINE__);
+					char szMsg[MAX_PATH];
+					::sprintf(szMsg, "EXCEPTION: %s(%d)", __FILE__, __LINE__);
+					OutputDebugStringA(szMsg);
 #ifdef _DEBUG
 					throw "CPaintManagerUI::MessageLoop";
 #endif

@@ -416,10 +416,9 @@ namespace DuiLib {
 
 			if( pControl == NULL ) {
 #ifdef _DEBUG
-				DUITRACE(_T("Î´Öª¿Ø¼þ:%s"), pstrClass);
-#else
-				continue;
+				OutputDebugString(pstrClass);
 #endif
+				continue;
 			}
 
 			// Add children
