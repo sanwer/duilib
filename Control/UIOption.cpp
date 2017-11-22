@@ -76,10 +76,12 @@ namespace DuiLib
 			if( !m_sGroupName.IsEmpty() ) {
 				if( m_bSelected ) {
 					CStdPtrArray* aOptionGroup = m_pManager->GetOptionGroup(m_sGroupName);
-					for( int i = 0; i < aOptionGroup->GetSize(); i++ ) {
-						COptionUI* pControl = static_cast<COptionUI*>(aOptionGroup->GetAt(i));
-						if( pControl != this ) {
-							pControl->Selected(false);
+					if(aOptionGroup){
+						for( int i = 0; i < aOptionGroup->GetSize(); i++ ) {
+							COptionUI* pControl = static_cast<COptionUI*>(aOptionGroup->GetAt(i));
+							if( pControl != this ) {
+								pControl->Selected(false);
+							}
 						}
 					}
 					m_pManager->SendNotify(this, DUI_MSGTYPE_SELECTCHANGED);
@@ -409,10 +411,12 @@ namespace DuiLib
 			if( !m_sGroupName.IsEmpty() ) {
 				if( m_bSelected ) {
 					CStdPtrArray* aOptionGroup = m_pManager->GetOptionGroup(m_sGroupName);
-					for( int i = 0; i < aOptionGroup->GetSize(); i++ ) {
-						COptionUI* pControl = static_cast<COptionUI*>(aOptionGroup->GetAt(i));
-						if( pControl != this ) {
-							pControl->Selected(FALSE);
+					if(aOptionGroup){
+						for( int i = 0; i < aOptionGroup->GetSize(); i++ ) {
+							COptionUI* pControl = static_cast<COptionUI*>(aOptionGroup->GetAt(i));
+							if( pControl != this ) {
+								pControl->Selected(FALSE);
+							}
 						}
 					}
 					m_pManager->SendNotify(this, DUI_MSGTYPE_SELECTCHANGED, m_bSelected, 0);
