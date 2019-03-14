@@ -1,10 +1,9 @@
-#ifndef __UICONTROL_H__
-#define __UICONTROL_H__
-
+#ifndef _UICONTROL_H_
+#define _UICONTROL_H_
 #pragma once
 
-namespace DuiLib {
-
+namespace DuiLib
+{
 	/////////////////////////////////////////////////////////////////////////////////////
 	//
 
@@ -181,8 +180,8 @@ namespace DuiLib {
 		CControlUI* ApplyAttributeList(LPCTSTR pstrList);
 
 		virtual SIZE EstimateSize(SIZE szAvailable);
-
-		virtual void DoPaint(HDC hDC, const RECT& rcPaint);
+		virtual bool Paint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl = NULL);
+		virtual bool DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl);
 		virtual void PaintBkColor(HDC hDC);
 		virtual void PaintBkImage(HDC hDC);
 		virtual void PaintStatusImage(HDC hDC);
@@ -262,4 +261,4 @@ namespace DuiLib {
 
 } // namespace DuiLib
 
-#endif // __UICONTROL_H__
+#endif // __UICONTROL_H_

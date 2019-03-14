@@ -1,14 +1,15 @@
 #include "StdAfx.h"
 
-namespace DuiLib {
+namespace DuiLib
+{
 	IMPLEMENT_DUICONTROL(CControlUI)
 
-		CControlUI::CControlUI()
-		:m_pManager(NULL), 
-		m_pParent(NULL), 
+	CControlUI::CControlUI()
+		:m_pManager(NULL),
+		m_pParent(NULL),
 		m_bUpdateNeeded(true),
 		m_bMenuUsed(false),
-		m_bVisible(true), 
+		m_bVisible(true),
 		m_bInternVisible(true),
 		m_bFocused(false),
 		m_bEnabled(true),
@@ -51,7 +52,7 @@ namespace DuiLib {
 	CControlUI::~CControlUI()
 	{
 		if( OnDestroy ) OnDestroy(this);
-		RemoveAllCustomAttribute();	
+		RemoveAllCustomAttribute();
 		if( m_pManager != NULL ) m_pManager->ReapObjects(this);
 	}
 
@@ -130,6 +131,8 @@ namespace DuiLib {
 		if( m_sText == pstrText ) return;
 
 		m_sText = pstrText;
+		m_sText.Replace(_T("{\\n}"), _T("\n"));
+
 		Invalidate();
 	}
 
@@ -352,10 +355,11 @@ namespace DuiLib {
 		}
 	}
 
-	RECT CControlUI::GetClientPos() const 
+	RECT CControlUI::GetClientPos() const
 	{
 		return m_rcItem;
 	}
+
 	void CControlUI::SetPos(RECT rc, bool bNeedInvalidate)
 	{
 		if( rc.right < rc.left ) rc.right = rc.left;
@@ -366,7 +370,6 @@ namespace DuiLib {
 
 		m_rcItem = rc;
 		if( m_pManager == NULL ) return;
-
 		if( !m_bSetPos ) {
 			m_bSetPos = true;
 			if( OnSize ) OnSize(this);
@@ -453,7 +456,7 @@ namespace DuiLib {
 
 	void CControlUI::SetFixedWidth(int cx)
 	{
-		if( cx < 0 ) return; 
+		if( cx < 0 ) return;
 		m_cxyFixed.cx = cx;
 		NeedParentUpdate();
 	}
@@ -469,7 +472,7 @@ namespace DuiLib {
 
 	void CControlUI::SetFixedHeight(int cy)
 	{
-		if( cy < 0 ) return; 
+		if( cy < 0 ) return;
 		m_cxyFixed.cy = cy;
 		NeedParentUpdate();
 	}
@@ -486,7 +489,7 @@ namespace DuiLib {
 	{
 		if( m_cxyMin.cx == cx ) return;
 
-		if( cx < 0 ) return; 
+		if( cx < 0 ) return;
 		m_cxyMin.cx = cx;
 		NeedParentUpdate();
 	}
@@ -503,7 +506,7 @@ namespace DuiLib {
 	{
 		if( m_cxyMax.cx == cx ) return;
 
-		if( cx < 0 ) return; 
+		if( cx < 0 ) return;
 		m_cxyMax.cx = cx;
 		NeedParentUpdate();
 	}
@@ -521,7 +524,7 @@ namespace DuiLib {
 	{
 		if( m_cxyMin.cy == cy ) return;
 
-		if( cy < 0 ) return; 
+		if( cy < 0 ) return;
 		m_cxyMin.cy = cy;
 		NeedParentUpdate();
 	}
@@ -539,7 +542,7 @@ namespace DuiLib {
 	{
 		if( m_cxyMax.cy == cy ) return;
 
-		if( cy < 0 ) return; 
+		if( cy < 0 ) return;
 		m_cxyMax.cy = cy;
 		NeedParentUpdate();
 	}
@@ -643,7 +646,6 @@ namespace DuiLib {
 
 	bool CControlUI::IsVisible() const
 	{
-
 		return m_bVisible && m_bInternVisible;
 	}
 
@@ -697,9 +699,10 @@ namespace DuiLib {
 	{
 		return m_bKeyboardEnabled ;
 	}
+
 	void CControlUI::SetKeyboardEnabled(bool bEnabled)
 	{
-		m_bKeyboardEnabled = bEnabled ; 
+		m_bKeyboardEnabled = bEnabled ;
 	}
 
 	bool CControlUI::IsFocused() const
@@ -746,7 +749,7 @@ namespace DuiLib {
 		{
 			rcTemp = invalidateRc;
 			rcParent = pParent->GetPos();
-			if( !::IntersectRect(&invalidateRc, &rcTemp, &rcParent) ) 
+			if( !::IntersectRect(&invalidateRc, &rcTemp, &rcParent) )
 			{
 				return;
 			}
@@ -818,13 +821,13 @@ namespace DuiLib {
 			return;
 		}
 
-		if( event.Type == UIEVENT_SETFOCUS ) 
+		if( event.Type == UIEVENT_SETFOCUS )
 		{
 			m_bFocused = true;
 			Invalidate();
 			return;
 		}
-		if( event.Type == UIEVENT_KILLFOCUS ) 
+		if( event.Type == UIEVENT_KILLFOCUS )
 		{
 			m_bFocused = false;
 			Invalidate();
@@ -845,7 +848,6 @@ namespace DuiLib {
 
 		if( m_pParent != NULL ) m_pParent->DoEvent(event);
 	}
-
 
 	void CControlUI::SetVirtualWnd(LPCTSTR pstrValue)
 	{
@@ -926,10 +928,10 @@ namespace DuiLib {
 		if( _tcsicmp(pstrName, _T("pos")) == 0 ) {
 			RECT rcPos = { 0 };
 			LPTSTR pstr = NULL;
-			rcPos.left = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);    
-			rcPos.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);    
-			rcPos.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);    
-			rcPos.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);    
+			rcPos.left = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);
+			rcPos.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+			rcPos.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
+			rcPos.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
 			SIZE szXY = {rcPos.left >= 0 ? rcPos.left : rcPos.right, rcPos.top >= 0 ? rcPos.top : rcPos.bottom};
 			SetFixedXY(szXY);
 			SetFixedWidth(rcPos.right - rcPos.left);
@@ -998,10 +1000,10 @@ namespace DuiLib {
 		else if( _tcsicmp(pstrName, _T("padding")) == 0 ) {
 			RECT rcPadding = { 0 };
 			LPTSTR pstr = NULL;
-			rcPadding.left = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);    
-			rcPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);    
-			rcPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);    
-			rcPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);    
+			rcPadding.left = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);
+			rcPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+			rcPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
+			rcPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
 			SetPadding(rcPadding);
 		}
 		else if( _tcsicmp(pstrName, _T("gradient")) == 0 ) SetGradient(pstrValue);
@@ -1071,7 +1073,7 @@ namespace DuiLib {
 		else if( _tcsicmp(pstrName, _T("borderround")) == 0 ) {
 			SIZE cxyRound = { 0 };
 			LPTSTR pstr = NULL;
-			cxyRound.cx = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);    
+			cxyRound.cx = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);
 			cxyRound.cy = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
 			SetBorderRound(cxyRound);
 		}
@@ -1200,10 +1202,19 @@ namespace DuiLib {
 		return m_cxyFixed;
 	}
 
-	void CControlUI::DoPaint(HDC hDC, const RECT& rcPaint)
+	bool CControlUI::Paint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl)
 	{
-		if( !::IntersectRect(&m_rcPaint, &rcPaint, &m_rcItem) ) return;
+		if (pStopControl == this) return false;
+		if( !::IntersectRect(&m_rcPaint, &rcPaint, &m_rcItem) ) return true;
+		//if( OnPaint ) {
+		//	if( !OnPaint(this) ) return true;
+		//}
+		if (!DoPaint(hDC, m_rcPaint, pStopControl)) return false;
+		return true;
+	}
 
+	bool CControlUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl)
+	{
 		// »æÖÆÑ­Ðò£º±³¾°ÑÕÉ«->±³¾°Í¼->×´Ì¬Í¼->ÎÄ±¾->±ß¿ò
 		SIZE cxyBorderRound;
 		RECT rcBorderSize;
@@ -1236,6 +1247,7 @@ namespace DuiLib {
 			PaintText(hDC);
 			PaintBorder(hDC);
 		}
+		return true;
 	}
 
 	void CControlUI::PaintBkColor(HDC hDC)
@@ -1301,7 +1313,6 @@ namespace DuiLib {
 			nBorderSize = m_nBorderSize;
 			cxyBorderRound = m_cxyBorderRound;
 			rcBorderSize = m_rcBorderSize;
-
 		}
 
 		if(m_dwBorderColor != 0 || m_dwFocusBorderColor != 0) {
@@ -1313,7 +1324,7 @@ namespace DuiLib {
 					CRenderEngine::DrawRoundRect(hDC, m_rcItem, nBorderSize, cxyBorderRound.cx, cxyBorderRound.cy, GetAdjustColor(m_dwBorderColor), m_nBorderStyle);
 			}
 			else {
-				if (IsFocused() && m_dwFocusBorderColor != 0 && m_nBorderSize > 0) { 
+				if (IsFocused() && m_dwFocusBorderColor != 0 && nBorderSize > 0) {
 					CRenderEngine::DrawRect(hDC, m_rcItem, nBorderSize, GetAdjustColor(m_dwFocusBorderColor), m_nBorderStyle);
 				}
 				else if(rcBorderSize.left > 0 || rcBorderSize.top > 0 || rcBorderSize.right > 0 || rcBorderSize.bottom > 0) {

@@ -1,9 +1,9 @@
-#ifndef __UICOMBO_H__
-#define __UICOMBO_H__
-
+#ifndef _UICOMBO_H_
+#define _UICOMBO_H_
 #pragma once
 
-namespace DuiLib {
+namespace DuiLib
+{
 	/////////////////////////////////////////////////////////////////////////////////////
 	//
 
@@ -120,7 +120,7 @@ namespace DuiLib {
 		void DoEvent(TEventUI& event);
 		void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
 
-		void DoPaint(HDC hDC, const RECT& rcPaint);
+		bool DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl);
 		void PaintText(HDC hDC);
 		void PaintStatusImage(HDC hDC);
 
@@ -152,4 +152,4 @@ namespace DuiLib {
 
 } // namespace DuiLib
 
-#endif // __UICOMBO_H__
+#endif // __UICOMBO_H_

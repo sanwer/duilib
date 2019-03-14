@@ -12,7 +12,8 @@ Author: Leon Finker  1/2001
 #include <atlbase.h>
 #include "DragDropImpl.h"
 
-namespace DuiLib {
+namespace DuiLib
+{
 	//////////////////////////////////////////////////////////////////////
 	// CIDataObject Class
 	//////////////////////////////////////////////////////////////////////
@@ -66,10 +67,10 @@ namespace DuiLib {
 		return nTemp;
 	}
 
-	STDMETHODIMP CIDataObject::GetData( 
+	STDMETHODIMP CIDataObject::GetData(
 		/* [unique][in] */ FORMATETC __RPC_FAR *pformatetcIn,
 		/* [out] */ STGMEDIUM __RPC_FAR *pmedium)
-	{ 
+	{
 		ATLTRACE("CIDataObject::GetData\n");
 		if(pformatetcIn == NULL || pmedium == NULL)
 			return E_INVALIDARG;
@@ -89,18 +90,18 @@ namespace DuiLib {
 		return DV_E_FORMATETC;
 	}
 
-	STDMETHODIMP CIDataObject::GetDataHere( 
+	STDMETHODIMP CIDataObject::GetDataHere(
 		/* [unique][in] */ FORMATETC __RPC_FAR *pformatetc,
 		/* [out][in] */ STGMEDIUM __RPC_FAR *pmedium)
-	{ 
+	{
 		ATLTRACE("CIDataObject::GetDataHere\n");
 
 		return E_NOTIMPL;
 	}
 
-	STDMETHODIMP CIDataObject::QueryGetData( 
+	STDMETHODIMP CIDataObject::QueryGetData(
 		/* [unique][in] */ FORMATETC __RPC_FAR *pformatetc)
-	{ 
+	{
 		ATLTRACE("CIDataObject::QueryGetData\n");
 		if(pformatetc == NULL)
 			return E_INVALIDARG;
@@ -124,21 +125,21 @@ namespace DuiLib {
 		return hr;
 	}
 
-	STDMETHODIMP CIDataObject::GetCanonicalFormatEtc( 
+	STDMETHODIMP CIDataObject::GetCanonicalFormatEtc(
 		/* [unique][in] */ FORMATETC __RPC_FAR *pformatectIn,
 		/* [out] */ FORMATETC __RPC_FAR *pformatetcOut)
-	{ 
+	{
 		ATLTRACE("CIDataObject::GetCanonicalFormatEtc\n");
 		if (pformatetcOut == NULL)
 			return E_INVALIDARG;
 		return DATA_S_SAMEFORMATETC;
 	}
 
-	STDMETHODIMP CIDataObject::SetData( 
+	STDMETHODIMP CIDataObject::SetData(
 		/* [unique][in] */ FORMATETC __RPC_FAR *pformatetc,
 		/* [unique][in] */ STGMEDIUM __RPC_FAR *pmedium,
 		/* [in] */ BOOL fRelease)
-	{ 
+	{
 		ATLTRACE("CIDataObject::SetData\n");
 		if(pformatetc == NULL || pmedium == NULL)
 			return E_INVALIDARG;
@@ -166,6 +167,7 @@ namespace DuiLib {
 
 		return S_OK;
 	}
+
 	void CIDataObject::CopyMedium(STGMEDIUM* pMedDest, STGMEDIUM* pMedSrc, FORMATETC* pFmtSrc)
 	{
 		switch(pMedSrc->tymed)
@@ -205,10 +207,11 @@ namespace DuiLib {
 			pMedSrc->pUnkForRelease->AddRef();
 		}
 	}
+
 	STDMETHODIMP CIDataObject::EnumFormatEtc(
 		/* [in] */ DWORD dwDirection,
 		/* [out] */ IEnumFORMATETC __RPC_FAR *__RPC_FAR *ppenumFormatEtc)
-	{ 
+	{
 		ATLTRACE("CIDataObject::EnumFormatEtc\n");
 		if(ppenumFormatEtc == NULL)
 			return E_POINTER;
@@ -220,7 +223,7 @@ namespace DuiLib {
 			*ppenumFormatEtc= new CEnumFormatEtc(m_ArrFormatEtc);
 			if(*ppenumFormatEtc == NULL)
 				return E_OUTOFMEMORY;
-			(*ppenumFormatEtc)->AddRef(); 
+			(*ppenumFormatEtc)->AddRef();
 			break;
 
 		case DATADIR_SET:
@@ -232,24 +235,24 @@ namespace DuiLib {
 		return S_OK;
 	}
 
-	STDMETHODIMP CIDataObject::DAdvise( 
+	STDMETHODIMP CIDataObject::DAdvise(
 		/* [in] */ FORMATETC __RPC_FAR *pformatetc,
 		/* [in] */ DWORD advf,
 		/* [unique][in] */ IAdviseSink __RPC_FAR *pAdvSink,
 		/* [out] */ DWORD __RPC_FAR *pdwConnection)
-	{ 
+	{
 		ATLTRACE("CIDataObject::DAdvise\n");
 		return OLE_E_ADVISENOTSUPPORTED;
 	}
 
-	STDMETHODIMP CIDataObject::DUnadvise( 
+	STDMETHODIMP CIDataObject::DUnadvise(
 		/* [in] */ DWORD dwConnection)
 	{
 		ATLTRACE("CIDataObject::DUnadvise\n");
 		return E_NOTIMPL;
 	}
 
-	HRESULT STDMETHODCALLTYPE CIDataObject::EnumDAdvise( 
+	HRESULT STDMETHODCALLTYPE CIDataObject::EnumDAdvise(
 		/* [out] */ IEnumSTATDATA __RPC_FAR *__RPC_FAR *ppenumAdvise)
 	{
 		ATLTRACE("CIDataObject::EnumDAdvise\n");
@@ -292,7 +295,7 @@ namespace DuiLib {
 		return nTemp;
 	}
 
-	STDMETHODIMP CIDropSource::QueryContinueDrag( 
+	STDMETHODIMP CIDropSource::QueryContinueDrag(
 		/* [in] */ BOOL fEscapePressed,
 		/* [in] */ DWORD grfKeyState)
 	{
@@ -306,7 +309,6 @@ namespace DuiLib {
 		}
 
 		return S_OK;
-
 	}
 
 	STDMETHODIMP CIDropSource::GiveFeedback(
@@ -364,7 +366,7 @@ namespace DuiLib {
 		if(nTemp == 0)
 			delete this;
 
-		return nTemp; 
+		return nTemp;
 	}
 
 	STDMETHODIMP CEnumFormatEtc::Next( ULONG celt,LPFORMATETC lpFormatEtc, ULONG FAR *pceltFetched)
@@ -416,7 +418,7 @@ namespace DuiLib {
 
 		CEnumFormatEtc *newEnum = new CEnumFormatEtc(m_pFmtEtc);
 		if(newEnum ==NULL)
-			return E_OUTOFMEMORY;  	
+			return E_OUTOFMEMORY;
 		newEnum->AddRef();
 		newEnum->m_iCur = m_iCur;
 		*ppCloneEnumFormatEtc = newEnum;
@@ -426,7 +428,7 @@ namespace DuiLib {
 	//////////////////////////////////////////////////////////////////////
 	// CIDropTarget Class
 	//////////////////////////////////////////////////////////////////////
-	CIDropTarget::CIDropTarget(HWND hTargetWnd): 
+	CIDropTarget::CIDropTarget(HWND hTargetWnd):
 	m_hTargetWnd(hTargetWnd),
 		m_cRefCount(0), m_bAllowDrop(false),
 		m_pDropTargetHelper(NULL), m_pSupportedFrmt(NULL)
@@ -472,9 +474,9 @@ namespace DuiLib {
 	}
 
 	bool CIDropTarget::QueryDrop(DWORD grfKeyState, LPDWORD pdwEffect)
-	{  
+	{
 		ATLTRACE("CIDropTarget::QueryDrop\n");
-		DWORD dwOKEffects = *pdwEffect; 
+		DWORD dwOKEffects = *pdwEffect;
 
 		if(!m_bAllowDrop)
 		{
@@ -488,30 +490,30 @@ namespace DuiLib {
 		*pdwEffect = (grfKeyState & MK_CONTROL) ?
 			( (grfKeyState & MK_SHIFT) ? DROPEFFECT_LINK : DROPEFFECT_COPY ):
 			( (grfKeyState & MK_SHIFT) ? DROPEFFECT_MOVE : 0 );
-		if(*pdwEffect == 0) 
+		if(*pdwEffect == 0)
 		{
-			// No modifier keys used by user while dragging. 
+			// No modifier keys used by user while dragging.
 			if (DROPEFFECT_COPY & dwOKEffects)
 				*pdwEffect = DROPEFFECT_COPY;
 			else if (DROPEFFECT_MOVE & dwOKEffects)
-				*pdwEffect = DROPEFFECT_MOVE; 
+				*pdwEffect = DROPEFFECT_MOVE;
 			else if (DROPEFFECT_LINK & dwOKEffects)
-				*pdwEffect = DROPEFFECT_LINK; 
-			else 
+				*pdwEffect = DROPEFFECT_LINK;
+			else
 			{
 				*pdwEffect = DROPEFFECT_NONE;
 			}
-		} 
+		}
 		else
 		{
 			// Check if the drag source application allows the drop effect desired by user.
 			// The drag source specifies this in DoDragDrop
 			if(!(*pdwEffect & dwOKEffects))
 				*pdwEffect = DROPEFFECT_NONE;
-		}  
+		}
 
 		return (DROPEFFECT_NONE == *pdwEffect)?false:true;
-	}   
+	}
 
 	HRESULT STDMETHODCALLTYPE CIDropTarget::DragEnter(
 		/* [unique][in] */ IDataObject __RPC_FAR *pDataObj,
@@ -546,7 +548,7 @@ namespace DuiLib {
 		return S_OK;
 	}
 
-	HRESULT STDMETHODCALLTYPE CIDropTarget::DragOver( 
+	HRESULT STDMETHODCALLTYPE CIDropTarget::DragOver(
 		/* [in] */ DWORD grfKeyState,
 		/* [in] */ POINTL pt,
 		/* [out][in] */ DWORD __RPC_FAR *pdwEffect)
@@ -572,12 +574,12 @@ namespace DuiLib {
 
 	HRESULT STDMETHODCALLTYPE CIDropTarget::Drop(
 		/* [unique][in] */ IDataObject __RPC_FAR *pDataObj,
-		/* [in] */ DWORD grfKeyState, /* [in] */ POINTL pt, 
+		/* [in] */ DWORD grfKeyState, /* [in] */ POINTL pt,
 		/* [out][in] */ DWORD __RPC_FAR *pdwEffect)
 	{
 		ATLTRACE("CIDropTarget::Drop\n");
 		if (pDataObj == NULL)
-			return E_INVALIDARG;	
+			return E_INVALIDARG;
 
 		if(m_pDropTargetHelper)
 			m_pDropTargetHelper->Drop(pDataObj, (LPPOINT)&pt, *pdwEffect);

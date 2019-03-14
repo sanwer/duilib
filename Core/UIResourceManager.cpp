@@ -1,13 +1,11 @@
 #include "StdAfx.h"
 #include "UIResourceManager.h"
 
-namespace DuiLib {
-	CResourceManager CResourceManager::m_Instance;
-
+namespace DuiLib
+{
 	CResourceManager::CResourceManager(void)
 	{
 		m_pQuerypInterface = NULL;
-
 	}
 
 	CResourceManager::~CResourceManager(void)
@@ -248,6 +246,7 @@ namespace DuiLib {
 			}
 		}
 	}
+
 	void CResourceManager::ResetTextMap()
 	{
 		CDuiString * lpStr;
@@ -260,6 +259,4 @@ namespace DuiLib {
 			}
 		}
 	}
-
-
 } // namespace DuiLib

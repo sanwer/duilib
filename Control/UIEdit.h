@@ -1,6 +1,5 @@
-#ifndef __UIEDIT_H__
-#define __UIEDIT_H__
-
+#ifndef _UIEDIT_H_
+#define _UIEDIT_H_
 #pragma once
 
 namespace DuiLib
@@ -45,6 +44,8 @@ namespace DuiLib
 		void SetNativeEditTextColor( LPCTSTR pStrColor );
 		DWORD GetNativeEditTextColor() const;
 
+		bool IsAutoSelAll();
+		void SetAutoSelAll(bool bAutoSelAll);
 		void SetSel(long nStartChar, long nEndChar);
 		void SetSelAll();
 		void SetReplaceSel(LPCTSTR lpszReplace);
@@ -71,6 +72,7 @@ namespace DuiLib
 		UINT m_uMaxChar;
 		bool m_bReadOnly;
 		bool m_bPasswordMode;
+		bool m_bAutoSelAll;
 		TCHAR m_cPasswordChar;
 		UINT m_uButtonState;
 		CDuiString m_sNormalImage;
@@ -84,4 +86,4 @@ namespace DuiLib
 		int m_iWindowStyls;
 	};
 }
-#endif // __UIEDIT_H__
+#endif // __UIEDIT_H_

@@ -1,10 +1,9 @@
-#ifndef __UIDLGBUILDER_H__
-#define __UIDLGBUILDER_H__
-
+#ifndef _UIDLGBUILDER_H_
+#define _UIDLGBUILDER_H_
 #pragma once
 
-namespace DuiLib {
-
+namespace DuiLib
+{
 	class IDialogBuilderCallback
 	{
 	public:
@@ -37,4 +36,4 @@ namespace DuiLib {
 
 } // namespace DuiLib
 
-#endif // __UIDLGBUILDER_H__
+#endif // __UIDLGBUILDER_H_

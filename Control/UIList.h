@@ -1,7 +1,9 @@
-#ifndef __UILIST_H__
-#define __UILIST_H__
+#ifndef _UILIST_H_
+#define _UILIST_H_
+#pragma once
 
-namespace DuiLib {
+namespace DuiLib
+{
 	/////////////////////////////////////////////////////////////////////////////////////
 	//
 
@@ -132,7 +134,7 @@ namespace DuiLib {
 		bool IsFixedScrollbar();
 		void SetFixedScrollbar(bool bFixed);
 
-		CListHeaderUI* GetHeader() const;  
+		CListHeaderUI* GetHeader() const;
 		CContainerUI* GetList() const;
 		UINT GetListType();
 		TListInfoUI* GetListInfo();
@@ -164,7 +166,7 @@ namespace DuiLib {
 		void SetAlternateBk(bool bAlternateBk);
 		void SetSelectedItemTextColor(DWORD dwTextColor);
 		void SetSelectedItemBkColor(DWORD dwBkColor);
-		void SetSelectedItemImage(LPCTSTR pStrImage); 
+		void SetSelectedItemImage(LPCTSTR pStrImage);
 		void SetHotItemTextColor(DWORD dwTextColor);
 		void SetHotItemBkColor(DWORD dwBkColor);
 		void SetHotItemImage(LPCTSTR pStrImage);
@@ -194,7 +196,7 @@ namespace DuiLib {
 		LPCTSTR GetDisabledItemImage() const;
 		DWORD GetItemLineColor() const;
 
-		void SetMultiExpanding(bool bMultiExpandable); 
+		void SetMultiExpanding(bool bMultiExpandable);
 		int GetExpandedItem() const;
 		bool ExpandItem(int iIndex, bool bExpand = true);
 
@@ -227,8 +229,7 @@ namespace DuiLib {
 		BOOL SortItems(PULVCompareFunc pfnCompare, UINT_PTR dwData);
 
 		virtual BOOL CheckColumEditable(int nColum) { return FALSE; };
-		virtual CEditUI* GetEditUI() { return NULL; };
-
+		virtual CRichEditUI* GetEditUI() { return NULL; };
 		virtual BOOL CheckColumComboBoxable(int nColum) { return FALSE; };
 		virtual CComboBoxUI* GetComboBoxUI() { return NULL; };
 
@@ -425,7 +426,7 @@ namespace DuiLib {
 
 		void DoEvent(TEventUI& event);
 		SIZE EstimateSize(SIZE szAvailable);
-		void DoPaint(HDC hDC, const RECT& rcPaint);
+		bool DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl);
 
 		void DrawItemText(HDC hDC, const RECT& rcItem);
 	};
@@ -498,9 +499,9 @@ namespace DuiLib {
 
 		void DoEvent(TEventUI& event);
 		void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
-		void DoPaint(HDC hDC, const RECT& rcPaint);
+		bool DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl);
 
-		virtual void DrawItemText(HDC hDC, const RECT& rcItem);    
+		virtual void DrawItemText(HDC hDC, const RECT& rcItem);
 		virtual void DrawItemBk(HDC hDC, const RECT& rcItem);
 
 		void SetPos(RECT rc, bool bNeedInvalidate = true);
@@ -514,4 +515,4 @@ namespace DuiLib {
 
 } // namespace DuiLib
 
-#endif // __UILIST_H__
+#endif // __UILIST_H_

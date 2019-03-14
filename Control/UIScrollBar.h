@@ -1,6 +1,5 @@
-#ifndef __UISCROLLBAR_H__
-#define __UISCROLLBAR_H__
-
+#ifndef _UISCROLLBAR_H_
+#define _UISCROLLBAR_H_
 #pragma once
 
 namespace DuiLib
@@ -83,7 +82,7 @@ namespace DuiLib
 		void DoEvent(TEventUI& event);
 		void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
 
-		void DoPaint(HDC hDC, const RECT& rcPaint);
+		bool DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl);
 
 		void PaintBk(HDC hDC);
 		void PaintButton1(HDC hDC);
@@ -94,7 +93,7 @@ namespace DuiLib
 	protected:
 
 		enum
-		{ 
+		{
 			DEFAULT_SCROLLBAR_SIZE = 16,
 			DEFAULT_TIMERID = 10,
 		};
@@ -146,4 +145,4 @@ namespace DuiLib
 	};
 }
 
-#endif // __UISCROLLBAR_H__
+#endif // __UISCROLLBAR_H_

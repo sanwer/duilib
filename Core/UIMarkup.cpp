@@ -4,7 +4,8 @@
 #define TRACE
 #endif
 
-namespace DuiLib {
+namespace DuiLib
+{
 	///////////////////////////////////////////////////////////////////////////////////////
 	//
 	//
@@ -221,7 +222,7 @@ namespace DuiLib {
 #ifdef _UNICODE
 		if (encoding == XMLFILE_ENCODING_UTF8)
 		{
-			if( dwSize >= 3 && pByte[0] == 0xEF && pByte[1] == 0xBB && pByte[2] == 0xBF ) 
+			if( dwSize >= 3 && pByte[0] == 0xEF && pByte[1] == 0xBB && pByte[2] == 0xBF )
 			{
 				pByte += 3; dwSize -= 3;
 			}
@@ -271,7 +272,7 @@ namespace DuiLib {
 #else // !_UNICODE
 		if (encoding == XMLFILE_ENCODING_UTF8)
 		{
-			if( dwSize >= 3 && pByte[0] == 0xEF && pByte[1] == 0xBB && pByte[2] == 0xBF ) 
+			if( dwSize >= 3 && pByte[0] == 0xEF && pByte[1] == 0xBB && pByte[2] == 0xBF )
 			{
 				pByte += 3; dwSize -= 3;
 			}
@@ -343,7 +344,6 @@ namespace DuiLib {
 			DWORD dwSize = ::GetFileSize(hFile, NULL);
 			if( dwSize == 0 ) return _Failed(_T("File is empty"));
 			if ( dwSize > 4096*1024 ) return _Failed(_T("File too large"));
-
 			DWORD dwRead = 0;
 			BYTE* pByte = new BYTE[ dwSize ];
 			::ReadFile( hFile, pByte, dwSize, &dwRead, NULL );
@@ -376,8 +376,8 @@ namespace DuiLib {
 #endif
 			}
 			if( hz == NULL ) return _Failed(_T("Error opening zip file"));
-			ZIPENTRY ze; 
-			int i = 0; 
+			ZIPENTRY ze;
+			int i = 0;
 			CDuiString key = pstrFilename;
 			key.Replace(_T("\\"), _T("/"));
 			if( FindZipItem(hz, key, true, &i, &ze) != 0 ) return _Failed(_T("Could not find ziped file"));
@@ -437,7 +437,7 @@ namespace DuiLib {
 	{
 		_SkipWhitespace(pstrText);
 		ULONG iPrevious = 0;
-		for( ; ; ) 
+		for( ; ; )
 		{
 			if( *pstrText == _T('\0') && iParent <= 1 ) return true;
 			_SkipWhitespace(pstrText);
@@ -488,11 +488,11 @@ namespace DuiLib {
 				// Determine type of next element
 				if( *pstrText == _T('\0') && iParent <= 1 ) return true;
 				if( *pstrText != _T('<') ) return _Failed(_T("Expected end-tag start"), pstrText);
-				if( pstrText[0] == _T('<') && pstrText[1] != _T('/') ) 
+				if( pstrText[0] == _T('<') && pstrText[1] != _T('/') )
 				{
 					if( !_Parse(pstrText, iPos) ) return false;
 				}
-				if( pstrText[0] == _T('<') && pstrText[1] == _T('/') ) 
+				if( pstrText[0] == _T('<') && pstrText[1] == _T('/') )
 				{
 					*pstrDest = _T('\0');
 					*pstrText = _T('\0');
@@ -543,7 +543,7 @@ namespace DuiLib {
 	}
 
 	bool CMarkup::_ParseAttributes(LPTSTR& pstrText)
-	{   
+	{
 		// ÎÞÊôÐÔ
 		LPTSTR pstrIdentifier = pstrText;
 		if( *pstrIdentifier == _T('/') && *++pstrIdentifier == _T('>') ) return true;
@@ -635,5 +635,4 @@ namespace DuiLib {
 		_tcsncpy(m_szErrorXML, pstrLocation != NULL ? pstrLocation : _T(""), lengthof(m_szErrorXML) - 1);
 		return false; // Always return 'false'
 	}
-
 } // namespace DuiLib

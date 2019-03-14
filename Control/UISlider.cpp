@@ -4,7 +4,8 @@
 namespace DuiLib
 {
 	IMPLEMENT_DUICONTROL(CSliderUI)
-		CSliderUI::CSliderUI() : m_uButtonState(0), m_nStep(1),m_bSendMove(false)
+
+	CSliderUI::CSliderUI() : m_uButtonState(0), m_nStep(1),m_bSendMove(false)
 	{
 		m_uTextStyle = DT_SINGLELINE | DT_CENTER;
 		m_szThumb.cx = m_szThumb.cy = 10;
@@ -60,12 +61,12 @@ namespace DuiLib
 		if( m_bHorizontal ) {
 			int left = m_rcItem.left + (m_rcItem.right - m_rcItem.left - m_szThumb.cx) * (m_nValue - m_nMin) / (m_nMax - m_nMin);
 			int top = (m_rcItem.bottom + m_rcItem.top - m_szThumb.cy) / 2;
-			rcThumb = CDuiRect(left, top, left + m_szThumb.cx, top + m_szThumb.cy); 
+			rcThumb = CDuiRect(left, top, left + m_szThumb.cx, top + m_szThumb.cy);
 		}
 		else {
 			int left = (m_rcItem.right + m_rcItem.left - m_szThumb.cx) / 2;
 			int top = m_rcItem.bottom - m_szThumb.cy - (m_rcItem.bottom - m_rcItem.top - m_szThumb.cy) * (m_nValue - m_nMin) / (m_nMax - m_nMin);
-			rcThumb = CDuiRect(left, top, left + m_szThumb.cx, top + m_szThumb.cy); 
+			rcThumb = CDuiRect(left, top, left + m_szThumb.cx, top + m_szThumb.cy);
 		}
 		if(m_pManager != NULL) {
 			//m_pManager->GetDPIObj()->Scale(&rcThumb);
@@ -128,12 +129,12 @@ namespace DuiLib
 				if( m_bHorizontal ) {
 					if( event.ptMouse.x >= m_rcItem.right - m_szThumb.cx / 2 ) nValue = m_nMax;
 					else if( event.ptMouse.x <= m_rcItem.left + m_szThumb.cx / 2 ) nValue = m_nMin;
-					else nValue = m_nMin + (m_nMax - m_nMin) * (event.ptMouse.x - m_rcItem.left - m_szThumb.cx / 2 ) / (m_rcItem.right - m_rcItem.left - m_szThumb.cx);
+					else nValue = m_nMin + 1.0f * (m_nMax - m_nMin) * (event.ptMouse.x - m_rcItem.left - m_szThumb.cx / 2 ) / (m_rcItem.right - m_rcItem.left - m_szThumb.cx);
 				}
 				else {
 					if( event.ptMouse.y >= m_rcItem.bottom - m_szThumb.cy / 2 ) nValue = m_nMin;
 					else if( event.ptMouse.y <= m_rcItem.top + m_szThumb.cy / 2  ) nValue = m_nMax;
-					else nValue = m_nMin + (m_nMax - m_nMin) * (m_rcItem.bottom - event.ptMouse.y - m_szThumb.cy / 2 ) / (m_rcItem.bottom - m_rcItem.top - m_szThumb.cy);
+					else nValue = m_nMin + 1.0f * (m_nMax - m_nMin) * (m_rcItem.bottom - event.ptMouse.y - m_szThumb.cy / 2 ) / (m_rcItem.bottom - m_rcItem.top - m_szThumb.cy);
 				}
 				if(m_nValue != nValue && nValue >= m_nMin && nValue <= m_nMax) {
 					m_nValue = nValue;
@@ -173,7 +174,7 @@ namespace DuiLib
 		{
 			return;
 		}
-		if( event.Type == UIEVENT_SCROLLWHEEL ) 
+		if( event.Type == UIEVENT_SCROLLWHEEL )
 		{
 			if( IsEnabled() ) {
 				switch( LOWORD(event.wParam) ) {
@@ -193,12 +194,12 @@ namespace DuiLib
 				if( m_bHorizontal ) {
 					if( event.ptMouse.x >= m_rcItem.right - m_szThumb.cx / 2 ) m_nValue = m_nMax;
 					else if( event.ptMouse.x <= m_rcItem.left + m_szThumb.cx / 2 ) m_nValue = m_nMin;
-					else m_nValue = m_nMin + (m_nMax - m_nMin) * (event.ptMouse.x - m_rcItem.left - m_szThumb.cx / 2 ) / (m_rcItem.right - m_rcItem.left - m_szThumb.cx);
+					else m_nValue = m_nMin + 1.0f * (m_nMax - m_nMin) * (event.ptMouse.x - m_rcItem.left - m_szThumb.cx / 2 ) / (m_rcItem.right - m_rcItem.left - m_szThumb.cx);
 				}
 				else {
 					if( event.ptMouse.y >= m_rcItem.bottom - m_szThumb.cy / 2 ) m_nValue = m_nMin;
 					else if( event.ptMouse.y <= m_rcItem.top + m_szThumb.cy / 2  ) m_nValue = m_nMax;
-					else m_nValue = m_nMin + (m_nMax - m_nMin) * (m_rcItem.bottom - event.ptMouse.y - m_szThumb.cy / 2 ) / (m_rcItem.bottom - m_rcItem.top - m_szThumb.cy);
+					else m_nValue = m_nMin + 1.0f * (m_nMax - m_nMin) * (m_rcItem.bottom - event.ptMouse.y - m_szThumb.cy / 2 ) / (m_rcItem.bottom - m_rcItem.top - m_szThumb.cy);
 				}
 				if (m_bSendMove) {
 					UpdateText();
@@ -242,6 +243,7 @@ namespace DuiLib
 	{
 		m_bSendMove = bCanSend;
 	}
+
 	bool CSliderUI::GetCanSendMove() const
 	{
 		return m_bSendMove;
@@ -255,8 +257,8 @@ namespace DuiLib
 		else if( _tcsicmp(pstrName, _T("thumbsize")) == 0 ) {
 			SIZE szXY = {0};
 			LPTSTR pstr = NULL;
-			szXY.cx = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);    
-			szXY.cy = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr); 
+			szXY.cx = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);
+			szXY.cy = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
 			SetThumbSize(szXY);
 		}
 		else if( _tcsicmp(pstrName, _T("step")) == 0 ) {

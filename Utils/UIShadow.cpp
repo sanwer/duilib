@@ -5,7 +5,6 @@
 
 namespace DuiLib
 {
-
 	const TCHAR *strWndClassName = _T("PerryShadowWnd");
 	bool CShadowUI::s_bHasInit = FALSE;
 
@@ -42,7 +41,7 @@ namespace DuiLib
 
 		memset(&wcex, 0, sizeof(wcex));
 
-		wcex.cbSize = sizeof(WNDCLASSEX); 
+		wcex.cbSize			= sizeof(WNDCLASSEX);
 		wcex.style			= CS_HREDRAW | CS_VREDRAW;
 		wcex.lpfnWndProc	= DefWindowProc;
 		wcex.cbClsExtra		= 0;
@@ -61,15 +60,15 @@ namespace DuiLib
 		return true;
 	}
 
-	void CShadowUI::Create(CPaintManagerUI* pManager)
+	void CShadowUI::Create(CPaintManagerUI* pPaintManager)
 	{
 		if(!m_bIsShowShadow)
 			return;
 
 		// Already initialized
 		_ASSERT(CPaintManagerUI::GetInstance() != INVALID_HANDLE_VALUE);
-		_ASSERT(pManager != NULL);
-		m_pManager = pManager;
+		_ASSERT(pPaintManager != NULL);
+		m_pManager = pPaintManager;
 		HWND hParentWnd = m_pManager->GetPaintWindow();
 		// Add parent window - shadow pair to the map
 		_ASSERT(GetShadowMap().find(hParentWnd) == GetShadowMap().end());	// Only one shadow for each window
@@ -101,9 +100,7 @@ namespace DuiLib
 #pragma warning(disable: 4311)	// temporrarily disable the type_cast warning in Win32
 		SetWindowLongPtr(hParentWnd, GWLP_WNDPROC, (LONG_PTR)ParentProc);
 #pragma warning(default: 4311)
-
 	}
-
 	std::map<HWND, CShadowUI *>& CShadowUI::GetShadowMap()
 	{
 		static std::map<HWND, CShadowUI *> s_Shadowmap;
@@ -116,7 +113,6 @@ namespace DuiLib
 
 		CShadowUI *pThis = GetShadowMap()[hwnd];
 		if (pThis->m_bIsDisableShadow) {
-
 #pragma warning(disable: 4312)	// temporrarily disable the type_cast warning in Win32
 			// Call the default(original) window procedure for other messages or messages processed but not returned
 			return ((WNDPROC)pThis->m_OriParentProc)(hwnd, uMsg, wParam, lParam);
@@ -130,8 +126,11 @@ namespace DuiLib
 				::SetWindowPos(pThis->m_hWnd, hwnd, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_NOACTIVATE | SWP_NOREDRAW);
 				break;
 			}
+
 		case WM_WINDOWPOSCHANGED:
 			RECT WndRect;
+			LPWINDOWPOS pWndPos;
+			pWndPos = (LPWINDOWPOS)lParam;
 			GetWindowRect(hwnd, &WndRect);
 			if (pThis->m_bIsImageMode) {
 				SetWindowPos(pThis->m_hWnd, hwnd, WndRect.left - pThis->m_nSize, WndRect.top - pThis->m_nSize, 0, 0, SWP_NOSIZE | SWP_NOACTIVATE);
@@ -139,7 +138,23 @@ namespace DuiLib
 			else {
 				SetWindowPos(pThis->m_hWnd, hwnd, WndRect.left + pThis->m_nxOffset - pThis->m_nSize, WndRect.top + pThis->m_nyOffset - pThis->m_nSize, 0, 0, SWP_NOSIZE | SWP_NOACTIVATE);
 			}
+			if (pWndPos->flags & SWP_SHOWWINDOW) {
+				if (pThis->m_Status & SS_ENABLED && !(pThis->m_Status & SS_PARENTVISIBLE))
+				{
+					pThis->m_bUpdate = true;
+					::ShowWindow(pThis->m_hWnd, SW_SHOWNOACTIVATE);
+					pThis->m_Status |= SS_VISABLE | SS_PARENTVISIBLE;
+				}
+			}
+			else if (pWndPos->flags & SWP_HIDEWINDOW) {
+				if (pThis->m_Status & SS_ENABLED)
+				{
+					::ShowWindow(pThis->m_hWnd, SW_HIDE);
+					pThis->m_Status &= ~(SS_VISABLE | SS_PARENTVISIBLE);
+				}
+			}
 			break;
+
 		case WM_MOVE:
 			if(pThis->m_Status & SS_VISABLE)
 			{
@@ -194,6 +209,7 @@ namespace DuiLib
 
 			// In some cases of sizing, the up-right corner of the parent window region would not be properly updated
 			// Update() again when sizing is finished
+
 		case WM_EXITSIZEMOVE:
 			if(pThis->m_Status & SS_VISABLE)
 			{
@@ -226,16 +242,14 @@ namespace DuiLib
 		case WM_NCDESTROY:
 			GetShadowMap().erase(hwnd);	// Remove this window and shadow from the map
 			break;
-
 		}
-
 
 #pragma warning(disable: 4312)	// temporrarily disable the type_cast warning in Win32
 		// Call the default(original) window procedure for other messages or messages processed but not returned
 		return ((WNDPROC)pThis->m_OriParentProc)(hwnd, uMsg, wParam, lParam);
 #pragma warning(default: 4312)
-
 	}
+
 	void GetLastErrorMessage() {          //Formats GetLastError() value.
 		LPVOID lpMsgBuf;
 
@@ -251,8 +265,8 @@ namespace DuiLib
 
 		// Free the buffer.
 		LocalFree(lpMsgBuf);
-
 	}
+
 	void CShadowUI::Update(HWND hParent)
 	{
 		if(!m_bIsShowShadow || !(m_Status & SS_VISABLE)) return;
@@ -299,7 +313,7 @@ namespace DuiLib
 		{
 			RECT rcPaint = {0, 0, nShadWndWid, nShadWndHei};
 			const TImageInfo* data = m_pManager->GetImageEx((LPCTSTR)m_sShadowImage, NULL, 0);
-			if( !data ) return;    
+			if( !data ) return;
 			RECT rcBmpPart = {0};
 			rcBmpPart.right = data->nX;
 			rcBmpPart.bottom = data->nY;
@@ -467,7 +481,6 @@ namespace DuiLib
 			int j;
 			if(ptAnchors[i][0] < ptAnchors[i][1])
 			{
-
 				// Start of line
 				for(j = ptAnchors[i][0];
 					j < min(max(ptAnchors[i - 1][0], ptAnchors[i + 1][0]) + 1, ptAnchors[i][1]);
@@ -507,7 +520,6 @@ namespace DuiLib
 						}
 					}
 				}	// for() end of line
-
 			}
 		}	// for() Generate blurred border
 
@@ -560,20 +572,16 @@ namespace DuiLib
 		return m_bIsShowShadow;
 	}
 
-
-	void CShadowUI::DisableShadow(bool bDisable) {
-
-
+	void CShadowUI::DisableShadow(bool bDisable)
+	{
 		m_bIsDisableShadow = bDisable;
 		if (m_hWnd != NULL) {
-
 			if (m_bIsDisableShadow) {
 				::ShowWindow(m_hWnd, SW_HIDE);
 			}
 			else {
 				// Determine the initial show state of shadow according to parent window's state
 				LONG lParentStyle = GetWindowLongPtr(GetParent(m_hWnd), GWL_STYLE);
-
 
 				if (!(WS_VISIBLE & lParentStyle))	// Parent invisible
 					m_Status = SS_ENABLED;
@@ -582,24 +590,17 @@ namespace DuiLib
 				else	// Show the shadow
 				{
 					m_Status = SS_ENABLED | SS_VISABLE | SS_PARENTVISIBLE;
-
 				}
-
 
 				if ((WS_VISIBLE & lParentStyle) && !((WS_MAXIMIZE | WS_MINIMIZE) & lParentStyle))// Parent visible && no maxsize or min size
 				{
 					::ShowWindow(m_hWnd, SW_SHOWNOACTIVATE);
 					Update(GetParent(m_hWnd));
 				}
-
-
-
 			}
-
-
 		}
-
 	}
+
 	////TODO shadow disnable fix////
 	bool CShadowUI::IsDisableShadow() const {
 

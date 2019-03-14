@@ -1,5 +1,5 @@
-#ifndef __DPI_H__
-#define __DPI_H__
+#ifndef _DPI_H_
+#define _DPI_H_
 #pragma once
 
 #ifndef DPI_ENUMS_DECLARED
@@ -55,4 +55,4 @@ namespace DuiLib
 		PROCESS_DPI_AWARENESS m_Awareness;
 	};
 }
-#endif //__DPI_H__
+#endif //__DPI_H_

@@ -1,3 +1,5 @@
+#ifndef _UIDEFINE_H_
+#define _UIDEFINE_H_
 #pragma once
 
 namespace DuiLib
@@ -317,3 +319,4 @@ protected:                                                                \
 
 	}// namespace DuiLib
 
+#endif // _UIDEFINE_H_

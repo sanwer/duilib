@@ -1,12 +1,10 @@
-#ifndef __UIMENU_H__
-#define __UIMENU_H__
-
+#ifndef _UIMENU_H_
+#define _UIMENU_H_
 #pragma once
-
 #include "../Utils/observer_impl_base.h"
 
-namespace DuiLib {
-
+namespace DuiLib
+{
 	struct ContextMenuParam
 	{
 		// 1: remove all
@@ -55,8 +53,6 @@ namespace DuiLib {
 
 	};
 
-#define WM_MENUCLICK WM_USER + 121  //用来接收按钮单击的消息
-
 
 	///////////////////////////////////////////////
 	class MenuMenuReceiverImplBase;
@@ -83,7 +79,7 @@ namespace DuiLib {
 		friend class Iterator;
 	public:
 		MenuObserverImpl():
-		  m_pManager(NULL),
+		  m_pMainWndPaintManager(NULL),
 			  m_pMenuCheckInfo(NULL)
 		  {
 			  pReceivers_ = new ReceiversVector;
@@ -168,12 +164,12 @@ namespace DuiLib {
 		  virtual void SetManger(CPaintManagerUI* pManager)
 		  {
 			  if (pManager != NULL)
-				  m_pManager = pManager;
+				  m_pMainWndPaintManager = pManager;
 		  }
 
 		  virtual CPaintManagerUI* GetManager() const
 		  {
-			  return m_pManager;
+			  return m_pMainWndPaintManager;
 		  }
 
 		  virtual void SetMenuCheckInfo(CStdStringPtrMap* pInfo)
@@ -192,7 +188,7 @@ namespace DuiLib {
 	protected:
 		typedef std::vector<MenuMenuReceiverImplBase*> ReceiversVector;
 		ReceiversVector *pReceivers_;
-		CPaintManagerUI* m_pManager;
+		CPaintManagerUI* m_pMainWndPaintManager;
 		CStdStringPtrMap* m_pMenuCheckInfo;
 	};
 
@@ -263,7 +259,7 @@ namespace DuiLib {
 		virtual bool SetItemIndex(CControlUI* pControl, int iIndex);
 		virtual bool Remove(CControlUI* pControl);
 
-		SIZE EstimateSize(SIZE szAvailable) override;
+		SIZE EstimateSize(SIZE szAvailable);
 
 		void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue) ;
 	};
@@ -346,7 +342,7 @@ namespace DuiLib {
 
 		LPCTSTR GetClass() const;
 		LPVOID GetInterface(LPCTSTR pstrName);
-		void DoPaint(HDC hDC, const RECT& rcPaint);
+		bool DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl);
 		void DrawItemText(HDC hDC, const RECT& rcItem);
 		SIZE EstimateSize(SIZE szAvailable);
 
@@ -391,4 +387,4 @@ namespace DuiLib {
 
 } // namespace DuiLib
 
-#endif // __UIMENU_H__
+#endif // __UIMENU_H_

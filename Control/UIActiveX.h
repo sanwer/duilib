@@ -1,12 +1,11 @@
-#ifndef __UIACTIVEX_H__
-#define __UIACTIVEX_H__
-
+#ifndef _UIACTIVEX_H_
+#define _UIACTIVEX_H_
 #pragma once
 
 struct IOleObject;
 
-
-namespace DuiLib {
+namespace DuiLib
+{
 	/////////////////////////////////////////////////////////////////////////////////////
 	//
 
@@ -55,7 +54,7 @@ namespace DuiLib {
 		void SetInternVisible(bool bVisible = true);
 		void SetPos(RECT rc, bool bNeedInvalidate = true);
 		void Move(SIZE szOffset, bool bNeedInvalidate = true);
-		void DoPaint(HDC hDC, const RECT& rcPaint);
+		bool DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl);
 
 		void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
 
@@ -78,4 +77,4 @@ namespace DuiLib {
 
 } // namespace DuiLib
 
-#endif // __UIACTIVEX_H__
+#endif // __UIACTIVEX_H_

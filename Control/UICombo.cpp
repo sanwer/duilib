@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
-namespace DuiLib {
-
+namespace DuiLib
+{
 	/////////////////////////////////////////////////////////////////////////////////////
 	//
 	//
@@ -48,6 +48,8 @@ namespace DuiLib {
 				}
 				pCtrl = pCtrl->GetParent();
 			}
+
+			if( m_pOwner->GetManager() != NULL ) m_pOwner->GetManager()->SendNotify(msg.pSender, DUI_MSGTYPE_CLICK, 0, 0);
 		}
 	}
 
@@ -157,8 +159,10 @@ namespace DuiLib {
 				m_pLayout->Add(static_cast<CControlUI*>(m_pOwner->GetItemAt(i)));
 			}
 			CShadowUI *pShadow = m_pOwner->GetManager()->GetShadow();
-			pShadow->CopyShadow(m_Manager.GetShadow());
-			m_Manager.GetShadow()->ShowShadow(m_pOwner->IsShowShadow());
+			if(pShadow != NULL && m_pOwner != NULL) {
+				pShadow->CopyShadow(m_Manager.GetShadow());
+				m_Manager.GetShadow()->ShowShadow(m_pOwner->IsShowShadow());
+			}
 			m_Manager.AttachDialog(m_pLayout);
 			m_Manager.AddNotifier(this);
 			return 0;
@@ -229,8 +233,9 @@ namespace DuiLib {
 
 	void CComboWnd::EnsureVisible(int iIndex)
 	{
-		if( m_pOwner->GetCurSel() < 0 ) return;
-		m_pLayout->FindSelectable(m_pOwner->GetCurSel(), false);
+		int nCurSel = m_pOwner->GetCurSel();
+		if( nCurSel < 0 ) return;
+		m_pLayout->FindSelectable(nCurSel, false);
 		RECT rcItem = m_pLayout->GetItemAt(iIndex)->GetPos();
 		RECT rcList = m_pLayout->GetPos();
 		CScrollBarUI* pHorizontalScrollBar = m_pLayout->GetHorizontalScrollBar();
@@ -264,7 +269,7 @@ namespace DuiLib {
 	////////////////////////////////////////////////////////
 	IMPLEMENT_DUICONTROL(CComboUI)
 
-		CComboUI::CComboUI() : m_uTextStyle(DT_VCENTER | DT_SINGLELINE)
+	CComboUI::CComboUI() : m_uTextStyle(DT_VCENTER | DT_SINGLELINE)
 		, m_dwTextColor(0)
 		, m_dwDisabledTextColor(0)
 		, m_iFont(-1)
@@ -310,7 +315,7 @@ namespace DuiLib {
 
 	UINT CComboUI::GetControlFlags() const
 	{
-		return UIFLAG_TABSTOP;
+		return UIFLAG_TABSTOP | UIFLAG_SETCURSOR;
 	}
 
 	void CComboUI::DoInit()
@@ -420,7 +425,7 @@ namespace DuiLib {
 		if( iOrginIndex == iIndex ) return true;
 
 		IListItemUI* pSelectedListItem = NULL;
-		if( m_iCurSel >= 0 ) pSelectedListItem = 
+		if( m_iCurSel >= 0 ) pSelectedListItem =
 			static_cast<IListItemUI*>(GetItemAt(m_iCurSel)->GetInterface(_T("ListItem")));
 		if( !CContainerUI::SetItemIndex(pControl, iIndex) ) return false;
 		int iMinIndex = min(iOrginIndex, iIndex);
@@ -439,7 +444,7 @@ namespace DuiLib {
 	bool CComboUI::Add(CControlUI* pControl)
 	{
 		IListItemUI* pListItem = static_cast<IListItemUI*>(pControl->GetInterface(_T("ListItem")));
-		if( pListItem != NULL ) 
+		if( pListItem != NULL )
 		{
 			pListItem->SetOwner(this);
 			pListItem->SetIndex(m_items.GetSize());
@@ -526,11 +531,11 @@ namespace DuiLib {
 			return;
 		}
 
-		if( event.Type == UIEVENT_SETFOCUS ) 
+		if( event.Type == UIEVENT_SETFOCUS )
 		{
 			Invalidate();
 		}
-		if( event.Type == UIEVENT_KILLFOCUS ) 
+		if( event.Type == UIEVENT_KILLFOCUS )
 		{
 			Invalidate();
 		}
@@ -633,9 +638,13 @@ namespace DuiLib {
 
 	CDuiString CComboUI::GetText() const
 	{
-		if( m_iCurSel < 0 ) return _T("");
-		CControlUI* pControl = static_cast<CControlUI*>(m_items[m_iCurSel]);
-		return pControl->GetText();
+		if( m_iCurSel < 0 || m_iCurSel >= m_items.GetSize()) {
+			return __super::GetText();
+		}
+		else {
+			CControlUI* pControl = static_cast<CControlUI*>(m_items[m_iCurSel]);
+			return pControl->GetText();
+		}
 	}
 
 	void CComboUI::SetEnabled(bool bEnable)
@@ -1025,7 +1034,7 @@ namespace DuiLib {
 				m_uTextStyle |= (DT_TOP | DT_SINGLELINE);
 			}
 			if( _tcsstr(pstrValue, _T("vcenter")) != NULL ) {
-				m_uTextStyle &= ~(DT_TOP | DT_BOTTOM );            
+				m_uTextStyle &= ~(DT_TOP | DT_BOTTOM );
 				m_uTextStyle |= (DT_VCENTER | DT_SINGLELINE);
 			}
 			if( _tcsstr(pstrValue, _T("bottom")) != NULL ) {
@@ -1036,7 +1045,7 @@ namespace DuiLib {
 		else if( _tcsicmp(pstrName, _T("endellipsis")) == 0 ) {
 			if( _tcsicmp(pstrValue, _T("true")) == 0 ) m_uTextStyle |= DT_END_ELLIPSIS;
 			else m_uTextStyle &= ~DT_END_ELLIPSIS;
-		}   
+		}
 		else if( _tcsicmp(pstrName, _T("wordbreak")) == 0 ) {
 			if( _tcsicmp(pstrValue, _T("true")) == 0 ) {
 				m_uTextStyle &= ~DT_SINGLELINE;
@@ -1046,7 +1055,7 @@ namespace DuiLib {
 				m_uTextStyle &= ~DT_WORDBREAK & ~DT_EDITCONTROL;
 				m_uTextStyle |= DT_SINGLELINE;
 			}
-		}    
+		}
 		else if( _tcsicmp(pstrName, _T("font")) == 0 ) SetFont(_ttoi(pstrValue));
 		else if( _tcsicmp(pstrName, _T("textcolor")) == 0 ) {
 			if( *pstrValue == _T('#')) pstrValue = ::CharNext(pstrValue);
@@ -1063,10 +1072,10 @@ namespace DuiLib {
 		else if( _tcsicmp(pstrName, _T("textpadding")) == 0 ) {
 			RECT rcTextPadding = { 0 };
 			LPTSTR pstr = NULL;
-			rcTextPadding.left = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);    
-			rcTextPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);    
-			rcTextPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);    
-			rcTextPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);    
+			rcTextPadding.left = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);
+			rcTextPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+			rcTextPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
+			rcTextPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
 			SetTextPadding(rcTextPadding);
 		}
 		else if( _tcsicmp(pstrName, _T("showhtml")) == 0 ) SetShowHtml(_tcsicmp(pstrValue, _T("true")) == 0);
@@ -1082,8 +1091,8 @@ namespace DuiLib {
 		{
 			SIZE szDropBoxSize = { 0 };
 			LPTSTR pstr = NULL;
-			szDropBoxSize.cx = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);    
-			szDropBoxSize.cy = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);    
+			szDropBoxSize.cx = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);
+			szDropBoxSize.cy = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
 			SetDropBoxSize(szDropBoxSize);
 		}
 		else if( _tcsicmp(pstrName, _T("itemfont")) == 0 ) SetItemFont(_ttoi(pstrValue));
@@ -1118,14 +1127,14 @@ namespace DuiLib {
 		else if( _tcsicmp(pstrName, _T("itemendellipsis")) == 0 ) {
 			if( _tcsicmp(pstrValue, _T("true")) == 0 ) m_ListInfo.uTextStyle |= DT_END_ELLIPSIS;
 			else m_ListInfo.uTextStyle &= ~DT_END_ELLIPSIS;
-		}   
+		}
 		else if( _tcsicmp(pstrName, _T("itemtextpadding")) == 0 ) {
 			RECT rcTextPadding = { 0 };
 			LPTSTR pstr = NULL;
-			rcTextPadding.left = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);    
-			rcTextPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);    
-			rcTextPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);    
-			rcTextPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);    
+			rcTextPadding.left = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);
+			rcTextPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+			rcTextPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
+			rcTextPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
 			SetItemTextPadding(rcTextPadding);
 		}
 		else if( _tcsicmp(pstrName, _T("itemtextcolor")) == 0 ) {
@@ -1191,9 +1200,9 @@ namespace DuiLib {
 		else CContainerUI::SetAttribute(pstrName, pstrValue);
 	}
 
-	void CComboUI::DoPaint(HDC hDC, const RECT& rcPaint)
+	bool CComboUI::DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl)
 	{
-		CControlUI::DoPaint(hDC, rcPaint);
+		return CControlUI::DoPaint(hDC, rcPaint, pStopControl);
 	}
 
 	void CComboUI::PaintStatusImage(HDC hDC)
@@ -1250,13 +1259,13 @@ namespace DuiLib {
 		int nLinks = 0;
 		if( IsEnabled() ) {
 			if( m_bShowHtml )
-				CRenderEngine::DrawHtmlText(hDC, m_pManager, rc, sText, m_dwTextColor, NULL, NULL, nLinks, m_uTextStyle);
+				CRenderEngine::DrawHtmlText(hDC, m_pManager, rc, sText, m_dwTextColor, NULL, NULL, nLinks, m_iFont, m_uTextStyle);
 			else
 				CRenderEngine::DrawText(hDC, m_pManager, rc, sText, m_dwTextColor, m_iFont, m_uTextStyle);
 		}
 		else {
 			if( m_bShowHtml )
-				CRenderEngine::DrawHtmlText(hDC, m_pManager, rc, sText, m_dwDisabledTextColor, NULL, NULL, nLinks, m_uTextStyle);
+				CRenderEngine::DrawHtmlText(hDC, m_pManager, rc, sText, m_dwDisabledTextColor, NULL, NULL, nLinks, m_iFont, m_uTextStyle);
 			else
 				CRenderEngine::DrawText(hDC, m_pManager, rc, sText, m_dwDisabledTextColor, m_iFont, m_uTextStyle);
 		}

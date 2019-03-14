@@ -1,6 +1,6 @@
-#ifndef OBSERVER_IMPL_BASE_HPP
-#define OBSERVER_IMPL_BASE_HPP
-
+#ifndef _OBSERVER_IMPL_BASE_H_
+#define _OBSERVER_IMPL_BASE_H_
+#pragma once
 #include <map>
 #include <vector>
 
@@ -136,4 +136,4 @@ protected:
 	int count_;
 };
 
-#endif // OBSERVER_IMPL_BASE_HPP
+#endif // _OBSERVER_IMPL_BASE_H_

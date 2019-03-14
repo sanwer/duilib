@@ -4,7 +4,7 @@
 namespace DuiLib
 {
 	IMPLEMENT_DUICONTROL(CTabLayoutUI)
-		CTabLayoutUI::CTabLayoutUI() : m_iCurSel(-1)
+	CTabLayoutUI::CTabLayoutUI() : m_iCurSel(-1)
 	{
 	}
 

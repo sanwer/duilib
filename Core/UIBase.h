@@ -1,10 +1,9 @@
-#ifndef __UIBASE_H__
-#define __UIBASE_H__
-
-
+#ifndef _UIBASE_H_
+#define _UIBASE_H_
 #pragma once
 
-namespace DuiLib {
+namespace DuiLib
+{
 	/////////////////////////////////////////////////////////////////////////////////////
 	//
 
@@ -103,4 +102,4 @@ namespace DuiLib {
 
 } // namespace DuiLib
 
-#endif // __UIBASE_H__
+#endif // __UIBASE_H_

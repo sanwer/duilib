@@ -20,6 +20,8 @@
 #define _WIN32_WINNT _WIN32_WINNT_WINXP
 #endif
 
+//#define USE_XIMAGE_EFFECT
+
 #include "UIlib.h"
 
 #include <olectl.h>
@@ -27,5 +29,6 @@
 #define lengthof(x) (sizeof(x)/sizeof(*x))
 #define MAX max
 #define MIN min
+#define CLAMP(x,a,b) (MIN(b,MAX(a,x)))
 
 #endif

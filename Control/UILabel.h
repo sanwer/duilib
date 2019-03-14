@@ -1,6 +1,5 @@
-#ifndef __UILABEL_H__
-#define __UILABEL_H__
-
+#ifndef _UILABEL_H_
+#define _UILABEL_H_
 #pragma once
 
 namespace DuiLib
@@ -37,6 +36,8 @@ namespace DuiLib
 
 		virtual bool GetAutoCalcWidth() const;
 		virtual void SetAutoCalcWidth(bool bAutoCalcWidth);
+		virtual bool GetAutoCalcHeight() const;
+		virtual void SetAutoCalcHeight(bool bAutoCalcHeight);
 		virtual void SetText(LPCTSTR pstrText);
 
 	protected:
@@ -47,7 +48,12 @@ namespace DuiLib
 		RECT	m_rcTextPadding;
 		bool	m_bShowHtml;
 		bool	m_bAutoCalcWidth;
+		bool	m_bAutoCalcHeight;
+
+		SIZE    m_szAvailableLast;
+		SIZE    m_cxyFixedLast;
+		bool    m_bNeedEstimateSize;
 	};
 }
 
-#endif // __UILABEL_H__
+#endif // __UILABEL_H_

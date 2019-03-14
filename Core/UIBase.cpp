@@ -5,25 +5,23 @@
 #pragma comment(lib, "shlwapi.lib")
 #endif
 
-namespace DuiLib {
-
+namespace DuiLib
+{
 	/////////////////////////////////////////////////////////////////////////////////////
 	//
 	//
-
 	void UILIB_API DUI__Trace(LPCTSTR pstrFormat, ...)
 	{
 #ifdef _DEBUG
 		TCHAR szBuffer[2048] = {0};
 		va_list args;
 		va_start(args, pstrFormat);
-		_vsntprintf(szBuffer, 2048, pstrFormat, args); 
+		_vsntprintf(szBuffer, 2048, pstrFormat, args);
 		va_end(args);
 
 		CDuiString strMsg = szBuffer;
 		strMsg += _T("\n");
 		OutputDebugString(strMsg.GetData());
-
 #endif
 	}
 
@@ -90,16 +88,13 @@ namespace DuiLib {
 		return szMsg;
 	}
 
-	/////////////////////////////////////////////////////////////////////////////////////
-	//
-	//
 
 	//////////////////////////////////////////////////////////////////////////
 	//
 	DUI_BASE_BEGIN_MESSAGE_MAP(CNotifyPump)
 		DUI_END_MESSAGE_MAP()
 
-		static const DUI_MSGMAP_ENTRY* DuiFindMessageEntry(const DUI_MSGMAP_ENTRY* lpEntry,TNotifyUI& msg )
+	static const DUI_MSGMAP_ENTRY* DuiFindMessageEntry(const DUI_MSGMAP_ENTRY* lpEntry,TNotifyUI& msg )
 	{
 		CDuiString sMsgType = msg.sType;
 		CDuiString sCtrlName = msg.pSender->GetName();
@@ -218,9 +213,9 @@ LDispatch:
 	{
 	}
 
-	HWND CWindowWnd::GetHWND() const 
-	{ 
-		return m_hWnd; 
+	HWND CWindowWnd::GetHWND() const
+	{
+		return m_hWnd;
 	}
 
 	UINT CWindowWnd::GetClassStyle() const
@@ -421,7 +416,7 @@ LDispatch:
 			pThis = static_cast<CWindowWnd*>(lpcs->lpCreateParams);
 			pThis->m_hWnd = hWnd;
 			::SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LPARAM>(pThis));
-		} 
+		}
 		else {
 			pThis = reinterpret_cast<CWindowWnd*>(::GetWindowLongPtr(hWnd, GWLP_USERDATA));
 			if( uMsg == WM_NCDESTROY && pThis != NULL ) {
@@ -435,7 +430,7 @@ LDispatch:
 		}
 		if( pThis != NULL ) {
 			return pThis->HandleMessage(uMsg, wParam, lParam);
-		} 
+		}
 		else {
 			return ::DefWindowProc(hWnd, uMsg, wParam, lParam);
 		}
@@ -449,7 +444,7 @@ LDispatch:
 			pThis = static_cast<CWindowWnd*>(lpcs->lpCreateParams);
 			::SetProp(hWnd, _T("WndX"), (HANDLE) pThis);
 			pThis->m_hWnd = hWnd;
-		} 
+		}
 		else {
 			pThis = reinterpret_cast<CWindowWnd*>(::GetProp(hWnd, _T("WndX")));
 			if( uMsg == WM_NCDESTROY && pThis != NULL ) {
@@ -463,7 +458,7 @@ LDispatch:
 		}
 		if( pThis != NULL ) {
 			return pThis->HandleMessage(uMsg, wParam, lParam);
-		} 
+		}
 		else {
 			return ::DefWindowProc(hWnd, uMsg, wParam, lParam);
 		}
@@ -473,7 +468,7 @@ LDispatch:
 	{
 		ASSERT(::IsWindow(m_hWnd));
 		return ::SendMessage(m_hWnd, uMsg, wParam, lParam);
-	} 
+	}
 
 	LRESULT CWindowWnd::PostMessage(UINT uMsg, WPARAM wParam /*= 0*/, LPARAM lParam /*= 0*/)
 	{

@@ -1,10 +1,6 @@
-/*
-创建日期：	2012/11/05 15:09:48
-作者：			daviyang35@gmail.com
-描述：	FlashEventHandler
-*/
+#ifndef _FLASH_EVENT_HANDLER_H_
+#define _FLASH_EVENT_HANDLER_H_
 #pragma once
-//#include <ExDisp.h>
 
 namespace DuiLib
 {
@@ -38,3 +34,5 @@ namespace DuiLib
 		}
 	};
 }
+
+#endif //__FLASH_EVENT_HANDLER_H_

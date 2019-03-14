@@ -1,6 +1,5 @@
-#ifndef __UIPROGRESS_H__
-#define __UIPROGRESS_H__
-
+#ifndef _UIPROGRESS_H_
+#define _UIPROGRESS_H_
 #pragma once
 
 namespace DuiLib
@@ -44,4 +43,4 @@ namespace DuiLib
 
 } // namespace DuiLib
 
-#endif // __UIPROGRESS_H__
+#endif // __UIPROGRESS_H_

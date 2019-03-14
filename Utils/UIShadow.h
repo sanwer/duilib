@@ -1,48 +1,10 @@
-// WndShadow.h : header file
-//
-// Version 0.1
-//
-// Copyright (c) 2006 Perry Zhu, All Rights Reserved.
-//
-// mailto:perry@live.com
-//
-//
-// This source file may be redistributed unmodified by any means PROVIDING 
-// it is NOT sold for profit without the authors expressed written 
-// consent, and providing that this notice and the author's name and all 
-// copyright notices remain intact. This software is by no means to be 
-// included as part of any third party components library, or as part any
-// development solution that offers MFC extensions that are sold for profit. 
-// 
-// If the source code is used in any commercial applications then a statement 
-// along the lines of:
-// 
-// "Portions Copyright (c) 2006 Perry Zhu" must be included in the "Startup 
-// Banner", "About Box" or "Printed Documentation". This software is provided 
-// "as is" without express or implied warranty. Use it at your own risk! The 
-// author accepts no liability for any damage/loss of business that this 
-// product may cause.
-//
-/////////////////////////////////////////////////////////////////////////////
-//****************************************************************************
-
-/********************************************************************
-	created:	2015/01/09
-	filename: 	UIShadow.h
-	author:		Redrain
-	
-	purpose:	DuiLib阴影类，在原WndShadow类的基础上，增加了通过PNG图片设置阴影的功能，并且把代码与DuiLib融合
-*********************************************************************/
-
-#ifndef __UISHADOW_H__
-#define __UISHADOW_H__
-
+#ifndef _UISHADOW_H_
+#define _UISHADOW_H_
 #pragma once
 #include <map>
 
 namespace DuiLib
 {
-
 	class UILIB_API CShadowUI
 	{
 	public:
@@ -53,7 +15,7 @@ namespace DuiLib
 
 	public:
 		// bShow为真时才会创建阴影
-		void ShowShadow(bool bShow);	
+		void ShowShadow(bool bShow);
 		bool IsShowShadow() const;
 
 		void DisableShadow(bool bDisable);
@@ -74,7 +36,7 @@ namespace DuiLib
 		bool CopyShadow(CShadowUI* pShadow);
 
 		//	创建阴影窗体，由CPaintManagerUI自动调用,除非自己要单独创建阴影
-		void Create(CPaintManagerUI* pManager);
+		void Create(CPaintManagerUI* pPaintManager);
 	protected:
 
 		//	初始化并注册阴影类
@@ -111,13 +73,13 @@ namespace DuiLib
 
 		static bool s_bHasInit;
 
-		CPaintManagerUI* m_pManager;		// 父窗体的CPaintManagerUI，用来获取素材资源和父窗体句柄
-		HWND			 m_hWnd;			// 阴影窗体的句柄
-		LONG_PTR		 m_OriParentProc;	// 子类化父窗体
-		BYTE			 m_Status;
-		bool			 m_bIsImageMode;	// 是否为图片阴影模式
-		bool			 m_bIsShowShadow;	// 是否要显示阴影
-		bool			m_bIsDisableShadow;
+		CPaintManagerUI*	m_pManager;		// 父窗体的CPaintManagerUI，用来获取素材资源和父窗体句柄
+		HWND				m_hWnd;			// 阴影窗体的句柄
+		LONG_PTR			m_OriParentProc;	// 子类化父窗体
+		BYTE				m_Status;
+		bool				m_bIsImageMode;	// 是否为图片阴影模式
+		bool				m_bIsShowShadow;	// 是否要显示阴影
+		bool				m_bIsDisableShadow;
 		// 算法阴影成员变量
 		unsigned char m_nDarkness;	// Darkness, transparency of blurred area
 		unsigned char m_nSharpness;	// Sharpness, width of blurred border of shadow window
@@ -143,4 +105,4 @@ namespace DuiLib
 
 }
 
-#endif //__UISHADOW_H__
+#endif //__UISHADOW_H_

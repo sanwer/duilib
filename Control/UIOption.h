@@ -1,6 +1,5 @@
-#ifndef __UIOPTION_H__
-#define __UIOPTION_H__
-
+#ifndef _UIOPTION_H_
+#define _UIOPTION_H_
 #pragma once
 
 namespace DuiLib
@@ -43,10 +42,13 @@ namespace DuiLib
 		virtual LPCTSTR GetSelectedStateImage();
 		virtual void SetSelectedStateImage(LPCTSTR pStrImage);
 
+		void SetSelectedFont(int index);
+		int GetSelectedFont() const;
+
 		LPCTSTR GetGroup() const;
 		void SetGroup(LPCTSTR pStrGroupName = NULL);
 		bool IsSelected() const;
-		virtual void Selected(bool bSelected);
+		virtual void Selected(bool bSelected, bool bMsg = true);
 
 		void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
 
@@ -58,6 +60,8 @@ namespace DuiLib
 	protected:
 		bool			m_bSelected;
 		CDuiString		m_sGroupName;
+
+		int				m_iSelectedFont;
 
 		DWORD			m_dwSelectedBkColor;
 		DWORD			m_dwSelectedTextColor;
@@ -74,6 +78,8 @@ namespace DuiLib
 	class UILIB_API CCheckBoxUI : public COptionUI
 	{
 		DECLARE_DUICONTROL(CCheckBoxUI)
+	public:
+		CCheckBoxUI();
 
 	public:
 		virtual LPCTSTR GetClass() const;
@@ -81,16 +87,16 @@ namespace DuiLib
 
 		void SetCheck(bool bCheck);
 		bool GetCheck() const;
-	protected:
-		bool m_bAutoCheck; 
 
 	public:
-		CCheckBoxUI();
 		virtual void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
 		void SetAutoCheck(bool bEnable);
 		virtual void DoEvent(TEventUI& event);
-		virtual void Selected(bool bSelected);
+		virtual void Selected(bool bSelected, bool bMsg = true);
+
+	protected:
+		bool m_bAutoCheck;
 	};
 } // namespace DuiLib
 
-#endif // __UIOPTION_H__
+#endif // __UIOPTION_H_

@@ -1,5 +1,8 @@
+#ifndef _CONTROL_FACTORY_H_
+#define _CONTROL_FACTORY_H_
 #pragma once
 #include <map>
+
 namespace DuiLib
 {
 	typedef CControlUI* (*CreateClass)();
@@ -12,13 +15,13 @@ namespace DuiLib
 		void RegistControl(CDuiString strClassName, CreateClass pFunc);
 
 		static CControlFactory* GetInstance();
+		void Release();
 
 	private:
 		CControlFactory();
 		virtual ~CControlFactory();
 
 	private:
-		static CControlFactory m_Instance;
 		MAP_DUI_CTRATECLASS m_mapControl;
 	};
 
@@ -36,3 +39,5 @@ public:\
 #define INNER_REGISTER_DUICONTROL(class_name)\
 	RegistControl(_T(#class_name), (CreateClass)class_name::CreateControl);
 }
+
+#endif // _CONTROL_FACTORY_H_

@@ -1,6 +1,5 @@
-#ifndef __UTILS_H__
-#define __UTILS_H__
-
+#ifndef _UTILS_H_
+#define _UTILS_H_
 #pragma once
 #include "OAIdl.h"
 #include <vector>
@@ -124,102 +123,6 @@ namespace DuiLib
 		int m_iElementSize;
 		int m_nCount;
 		int m_nAllocated;
-	};
-
-	/////////////////////////////////////////////////////////////////////////////////////
-	//
-
-	class UILIB_API CStdPtrQueue
-	{
-		typedef struct Queue_Item
-		{
-			LPVOID pData;
-			Queue_Item* pPrev;
-			Queue_Item* pNext;
-		} QUEUE_ITEM, *PQUEUE_ITEM;
-	public:
-		CStdPtrQueue(){
-			m_pFront = new QUEUE_ITEM;
-			if(m_pFront == NULL) return;
-
-			m_pBack = new QUEUE_ITEM;
-			if(m_pBack == NULL){
-				delete m_pFront;
-				m_pFront = NULL;
-				return;
-			}
-
-			m_pFront->pPrev = NULL;
-			m_pFront->pNext = m_pBack;
-			m_pFront->pData = NULL;
-
-			m_pBack->pPrev = m_pFront;
-			m_pBack->pNext = NULL;
-			m_pBack->pData = NULL;
-		}
-		~CStdPtrQueue(){
-			Empty();
-		}
-
-		void Empty(){
-			LPVOID pData = NULL;
-			while(pData = Pop())
-				delete pData;
-			if(m_pFront){
-				delete m_pFront;
-				m_pFront = NULL;
-			}
-			if(m_pBack){
-				delete m_pBack;
-				m_pBack = NULL;
-			}
-		}
-		bool IsEmpty() const{
-			if(m_pFront && m_pBack)
-				return m_pFront->pNext == m_pBack;
-			return true;
-		}
-		PQUEUE_ITEM Front(){return m_pFront;}
-		PQUEUE_ITEM Back(){return m_pBack;}
-		bool Push(LPVOID pData){
-			if(m_pBack){
-				PQUEUE_ITEM pPrev = m_pBack->pPrev;
-				if(pPrev){
-					PQUEUE_ITEM pItem = new QUEUE_ITEM;
-					if(pItem){
-						pItem->pData = pData;
-						pItem->pPrev = pPrev;
-						pItem->pNext = m_pBack;
-						pPrev->pNext = pItem;
-						m_pBack->pPrev = pItem;
-						return true;
-					}
-				}
-			}
-			return false;
-		}
-		LPVOID Pop(){
-			PQUEUE_ITEM pItem = NULL;
-			PQUEUE_ITEM pNext = NULL;
-			LPVOID pData = NULL;
-			if(m_pFront && m_pFront->pNext != m_pBack){
-				pItem = m_pFront->pNext;
-				if(pItem){
-					pNext = pItem->pNext;
-					if(pNext){
-						pData = pItem->pData;
-						m_pFront->pNext = pNext;
-						pNext->pPrev = m_pFront;
-						delete pItem;
-					}
-				}
-			}
-			return pData;
-		}
-
-	protected:
-		PQUEUE_ITEM m_pFront;
-		PQUEUE_ITEM m_pBack;
 	};
 
 
@@ -364,9 +267,9 @@ namespace DuiLib
 	class CDuiVariant : public VARIANT
 	{
 	public:
-		CDuiVariant() 
-		{ 
-			VariantInit(this); 
+		CDuiVariant()
+		{
+			VariantInit(this);
 		}
 		CDuiVariant(int i)
 		{
@@ -393,40 +296,40 @@ namespace DuiLib
 			this->pdispVal = disp;
 		}
 
-		~CDuiVariant() 
-		{ 
-			VariantClear(this); 
+		~CDuiVariant()
+		{
+			VariantClear(this);
 		}
 	};
 
 	//////////////////////////////////////////////////////////////////////////////////////
 	//
-	static char* w2a(wchar_t* lpszSrc)
+	static char* w2a(wchar_t* lpszSrc, UINT CodePage = CP_ACP)
 	{
 		if (lpszSrc != NULL)
 		{
-			int  nANSILen = WideCharToMultiByte(CP_ACP, 0, lpszSrc, -1, NULL, 0, NULL, NULL);
+			int nANSILen = WideCharToMultiByte(CodePage, 0, lpszSrc, -1, NULL, 0, NULL, NULL);
 			char* pANSI = new char[nANSILen + 1];
 			if (pANSI != NULL)
 			{
 				ZeroMemory(pANSI, nANSILen + 1);
-				WideCharToMultiByte(CP_ACP, 0, lpszSrc, -1, pANSI, nANSILen, NULL, NULL);
+				WideCharToMultiByte(CodePage, 0, lpszSrc, -1, pANSI, nANSILen, NULL, NULL);
 				return pANSI;
 			}
-		}	
+		}
 		return NULL;
 	}
 
-	static wchar_t* a2w(char* lpszSrc)
+	static wchar_t* a2w(char* lpszSrc, UINT CodePage = CP_ACP)
 	{
 		if (lpszSrc != NULL)
 		{
-			int nUnicodeLen = MultiByteToWideChar(CP_ACP, 0, lpszSrc, -1, NULL, 0);
+			int nUnicodeLen = MultiByteToWideChar(CodePage, 0, lpszSrc, -1, NULL, 0);
 			LPWSTR pUnicode = new WCHAR[nUnicodeLen + 1];
 			if (pUnicode != NULL)
 			{
 				ZeroMemory((void*)pUnicode, (nUnicodeLen + 1) * sizeof(WCHAR));
-				MultiByteToWideChar(CP_ACP, 0, lpszSrc,-1, pUnicode, nUnicodeLen);
+				MultiByteToWideChar(CodePage, 0, lpszSrc,-1, pUnicode, nUnicodeLen);
 				return pUnicode;
 			}
 		}
@@ -434,4 +337,4 @@ namespace DuiLib
 	}
 }// namespace DuiLib
 
-#endif // __UTILS_H__
+#endif // __UTILS_H_

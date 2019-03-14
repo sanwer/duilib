@@ -10,7 +10,7 @@ namespace DuiLib
 {
 	IMPLEMENT_DUICONTROL(CFlashUI)
 
-		CFlashUI::CFlashUI(void)
+	CFlashUI::CFlashUI(void)
 		: m_dwRef(0)
 		, m_dwCookie(0)
 		, m_pFlash(NULL)
@@ -70,7 +70,7 @@ namespace DuiLib
 		{
 		case DISPID_FLASHEVENT_FLASHCALL:
 			{
-				if (pDispParams->cArgs != 1 || pDispParams->rgvarg[0].vt != VT_BSTR) 
+				if (pDispParams->cArgs != 1 || pDispParams->rgvarg[0].vt != VT_BSTR)
 					return E_INVALIDARG;
 				return this->FlashCall(pDispParams->rgvarg[0].bstrVal);
 			}
@@ -124,7 +124,7 @@ namespace DuiLib
 
 	ULONG STDMETHODCALLTYPE CFlashUI::AddRef( void )
 	{
-		::InterlockedIncrement(&m_dwRef); 
+		::InterlockedIncrement(&m_dwRef);
 		return m_dwRef;
 	}
 
@@ -264,7 +264,7 @@ namespace DuiLib
 		{
 			hr = pCP->Unadvise(m_dwCookie);
 		}
-		return hr; 
+		return hr;
 	}
 
 };

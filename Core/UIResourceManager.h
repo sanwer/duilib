@@ -1,8 +1,9 @@
-#ifndef __UIRESOURCEMANAGER_H__
-#define __UIRESOURCEMANAGER_H__
+#ifndef _UIRESOURCE_MANAGER_H_
+#define _UIRESOURCE_MANAGER_H_
 #pragma once
 
-namespace DuiLib {
+namespace DuiLib
+{
 	// 控件文字查询接口
 	class UILIB_API IQueryControlText
 	{
@@ -19,8 +20,10 @@ namespace DuiLib {
 	public:
 		static CResourceManager* GetInstance()
 		{
-			return &m_Instance;
+			static CResourceManager * p = new CResourceManager;
+			return p;
 		};
+		void Release(void) { delete this; }
 
 	public:
 		BOOL LoadResource(STRINGorID xml, LPCTSTR type = NULL);
@@ -41,7 +44,6 @@ namespace DuiLib {
 		void ResetTextMap();
 
 	private:
-		static CResourceManager m_Instance;
 		CStdStringPtrMap m_mTextResourceHashMap;
 		IQueryControlText*	m_pQuerypInterface;
 		CStdStringPtrMap m_mImageHashMap;
@@ -53,4 +55,4 @@ namespace DuiLib {
 
 } // namespace DuiLib
 
-#endif // __UIRESOURCEMANAGER_H__
+#endif // _UIRESOURCE_MANAGER_H_

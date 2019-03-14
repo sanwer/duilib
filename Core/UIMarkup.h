@@ -1,10 +1,9 @@
-#ifndef __UIMARKUP_H__
-#define __UIMARKUP_H__
-
+#ifndef _UIMARKUP_H_
+#define _UIMARKUP_H_
 #pragma once
 
-namespace DuiLib {
-
+namespace DuiLib
+{
 	enum
 	{
 		XMLFILE_ENCODING_UTF8 = 0,
@@ -116,4 +115,4 @@ namespace DuiLib {
 
 } // namespace DuiLib
 
-#endif // __UIMARKUP_H__
+#endif // __UIMARKUP_H_

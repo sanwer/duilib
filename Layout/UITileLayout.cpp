@@ -4,7 +4,7 @@
 namespace DuiLib
 {
 	IMPLEMENT_DUICONTROL(CTileLayoutUI)
-		CTileLayoutUI::CTileLayoutUI() : m_nColumns(1)
+	CTileLayoutUI::CTileLayoutUI() : m_nColumns(1)
 	{
 		m_szItem.cx = m_szItem.cy = 0;
 	}
@@ -50,8 +50,8 @@ namespace DuiLib
 		if( _tcsicmp(pstrName, _T("itemsize")) == 0 ) {
 			SIZE szItem = { 0 };
 			LPTSTR pstr = NULL;
-			szItem.cx = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);    
-			szItem.cy = _tcstol(pstr + 1, &pstr, 10);   ASSERT(pstr);     
+			szItem.cx = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);
+			szItem.cy = _tcstol(pstr + 1, &pstr, 10);   ASSERT(pstr);
 			SetItemSize(szItem);
 		}
 		else if( _tcsicmp(pstrName, _T("columns")) == 0 ) SetColumns(_ttoi(pstrValue));
@@ -83,7 +83,7 @@ namespace DuiLib
 
 		int cyNeeded = 0;
 		int cxWidth = (rc.right - rc.left) / m_nColumns;
-		if( m_pHorizontalScrollBar && m_pHorizontalScrollBar->IsVisible() ) 
+		if( m_pHorizontalScrollBar && m_pHorizontalScrollBar->IsVisible() )
 			cxWidth = (rc.right - rc.left + m_pHorizontalScrollBar->GetScrollRange() ) / m_nColumns; ;
 
 		int cyHeight = 0;

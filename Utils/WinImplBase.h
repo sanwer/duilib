@@ -1,7 +1,6 @@
-#include "StdAfx.h"
-
-#ifndef WIN_IMPL_BASE_HPP
-#define WIN_IMPL_BASE_HPP
+#ifndef _WIN_IMPL_BASE_H_
+#define _WIN_IMPL_BASE_H_
+#pragma once
 
 namespace DuiLib
 {
@@ -24,8 +23,8 @@ namespace DuiLib
 		virtual void Notify(TNotifyUI& msg);
 
 		DUI_DECLARE_MESSAGE_MAP()
-			virtual void OnClick(TNotifyUI& msg);
-		BOOL IsInStaticControl(CControlUI *pControl);
+		virtual void OnClick(TNotifyUI& msg);
+		virtual BOOL IsInStaticControl(CControlUI *pControl);
 
 	protected:
 		virtual CDuiString GetSkinType() { return _T(""); }
@@ -69,4 +68,4 @@ namespace DuiLib
 	};
 }
 
-#endif // WIN_IMPL_BASE_HPP
+#endif // _WINDOW_IMPL_BASE_H_

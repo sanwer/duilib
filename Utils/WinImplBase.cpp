@@ -6,9 +6,9 @@ namespace DuiLib
 	//
 	DUI_BEGIN_MESSAGE_MAP(WindowImplBase, CNotifyPump)
 		DUI_ON_MSGTYPE(DUI_MSGTYPE_CLICK,OnClick)
-		DUI_END_MESSAGE_MAP()
+	DUI_END_MESSAGE_MAP()
 
-		void WindowImplBase::OnFinalMessage( HWND hWnd )
+	void WindowImplBase::OnFinalMessage( HWND hWnd )
 	{
 		m_Manager.RemovePreMessageFilter(this);
 		m_Manager.RemoveNotifier(this);
@@ -88,7 +88,6 @@ namespace DuiLib
 	{
 		return 0;
 	}
-
 
 	BOOL WindowImplBase::IsInStaticControl(CControlUI *pControl)
 	{
@@ -198,8 +197,8 @@ namespace DuiLib
 		lpMMI->ptMaxPosition.y	= rcWork.top;
 		lpMMI->ptMaxSize.x = rcWork.right - rcWork.left;
 		lpMMI->ptMaxSize.y = rcWork.bottom - rcWork.top;
-		lpMMI->ptMaxTrackSize.x = rcWork.right - rcWork.left;
-		lpMMI->ptMaxTrackSize.y = rcWork.bottom - rcWork.top;
+		lpMMI->ptMaxTrackSize.x = m_Manager.GetMaxInfo().cx == 0?rcWork.right - rcWork.left:m_Manager.GetMaxInfo().cx;
+		lpMMI->ptMaxTrackSize.y = m_Manager.GetMaxInfo().cy == 0?rcWork.bottom - rcWork.top:m_Manager.GetMaxInfo().cy;
 		lpMMI->ptMinTrackSize.x = m_Manager.GetMinInfo().cx;
 		lpMMI->ptMinTrackSize.y = m_Manager.GetMinInfo().cy;
 
@@ -281,12 +280,6 @@ namespace DuiLib
 		LONG styleValue = ::GetWindowLong(*this, GWL_STYLE);
 		styleValue &= ~WS_CAPTION;
 		::SetWindowLong(*this, GWL_STYLE, styleValue | WS_CLIPSIBLINGS | WS_CLIPCHILDREN);
-
-		// 调整窗口尺寸
-		RECT rcClient;
-		::GetClientRect(*this, &rcClient);
-		::SetWindowPos(*this, NULL, rcClient.left, rcClient.top, rcClient.right - rcClient.left, rcClient.bottom - rcClient.top, SWP_FRAMECHANGED);
-
 		// 关联UI管理器
 		m_Manager.Init(m_hWnd, GetManagerName());
 		// 注册PreMessage回调
@@ -413,19 +406,19 @@ namespace DuiLib
 		CDuiString sCtrlName = msg.pSender->GetName();
 		if( sCtrlName == _T("closebtn") ) {
 			Close();
-			return; 
+			return;
 		}
-		else if( sCtrlName == _T("minbtn")) { 
-			SendMessage(WM_SYSCOMMAND, SC_MINIMIZE, 0); 
-			return; 
+		else if( sCtrlName == _T("minbtn")) {
+			SendMessage(WM_SYSCOMMAND, SC_MINIMIZE, 0);
+			return;
 		}
-		else if( sCtrlName == _T("maxbtn")) { 
-			SendMessage(WM_SYSCOMMAND, SC_MAXIMIZE, 0); 
-			return; 
+		else if( sCtrlName == _T("maxbtn")) {
+			SendMessage(WM_SYSCOMMAND, SC_MAXIMIZE, 0);
+			return;
 		}
-		else if( sCtrlName == _T("restorebtn")) { 
-			SendMessage(WM_SYSCOMMAND, SC_RESTORE, 0); 
-			return; 
+		else if( sCtrlName == _T("restorebtn")) {
+			SendMessage(WM_SYSCOMMAND, SC_RESTORE, 0);
+			return;
 		}
 		return;
 	}

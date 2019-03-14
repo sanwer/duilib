@@ -1,9 +1,9 @@
-#ifndef __UICONTAINER_H__
-#define __UICONTAINER_H__
-
+#ifndef _UICONTAINER_H_
+#define _UICONTAINER_H_
 #pragma once
 
-namespace DuiLib {
+namespace DuiLib
+{
 	/////////////////////////////////////////////////////////////////////////////////////
 	//
 
@@ -74,7 +74,7 @@ namespace DuiLib {
 		RECT GetClientPos() const;
 		void SetPos(RECT rc, bool bNeedInvalidate = true);
 		void Move(SIZE szOffset, bool bNeedInvalidate = true);
-		void DoPaint(HDC hDC, const RECT& rcPaint);
+		bool DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl);
 
 		void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
 
@@ -136,4 +136,4 @@ namespace DuiLib {
 
 } // namespace DuiLib
 
-#endif // __UICONTAINER_H__
+#endif // __UICONTAINER_H_

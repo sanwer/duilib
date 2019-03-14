@@ -1,23 +1,27 @@
+#ifndef _UILIB_H_
+#define _UILIB_H_
+#pragma once
+
 #ifdef UILIB_STATIC
-#define UILIB_API 
+#define UILIB_API
 #else
 #if defined(UILIB_EXPORTS)
 #	if defined(_MSC_VER)
 #		define UILIB_API __declspec(dllexport)
 #	else
-#		define UILIB_API 
+#		define UILIB_API
 #	endif
 #else
 #	if defined(_MSC_VER)
 #		define UILIB_API __declspec(dllimport)
 #	else
-#		define UILIB_API 
+#		define UILIB_API
 #	endif
 #endif
 #endif
 #define UILIB_COMDAT __declspec(selectany)
 
-#pragma warning(disable:4251)
+#pragma warning(disable:4100 4121 4189 4251 4505)
 
 #if defined _M_IX86
 #pragma comment(linker, "/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='x86' publicKeyToken='6595b64144ccf1df' language='*'\"")
@@ -78,21 +82,37 @@
 #include "Control/UILabel.h"
 #include "Control/UIText.h"
 #include "Control/UIEdit.h"
+#include "Control/UIGifAnim.h"
+#include "Control/UIGifAnimEx.h"
 
+#include "Control/UIAnimation.h"
+#include "Layout/UIAnimationTabLayout.h"
 #include "Control/UIButton.h"
 #include "Control/UIOption.h"
 
 #include "Control/UIProgress.h"
 #include "Control/UISlider.h"
 
+#include "Control/UIComboBox.h"
 #include "Control/UIRichEdit.h"
+#include "Control/UIDateTime.h"
+#include "Control/UIIPAddress.h"
+#include "Control/UIIPAddressEx.h"
 
 #include "Control/UIActiveX.h"
 #include "Control/UIFlash.h"
 
 #include "Control/UIMenu.h"
+#include "Control/UIGroupBox.h"
+#include "Control/UIRollText.h"
+#include "Control/UIColorPalette.h"
+#include "Control/UIListEx.h"
+#include "Control/UIHotKey.h"
+#include "Control/UIFadeButton.h"
+#include "Control/UIRing.h"
 
 #pragma comment( lib, "comctl32.lib" )
-#pragma comment( lib, "Gdi32.lib" )
 #pragma comment( lib, "GdiPlus.lib" )
 #pragma comment( lib, "Imm32.lib" )
+
+#endif

@@ -1,6 +1,5 @@
-#ifndef __UITILELAYOUT_H__
-#define __UITILELAYOUT_H__
-
+#ifndef _UITILELAYOUT_H_
+#define _UITILELAYOUT_H_
 #pragma once
 
 namespace DuiLib
@@ -28,4 +27,4 @@ namespace DuiLib
 		int m_nColumns;
 	};
 }
-#endif // __UITILELAYOUT_H__
+#endif // __UITILELAYOUT_H_
