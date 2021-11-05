@@ -1,5 +1,6 @@
-#ifndef _UIHORIZONTALLAYOUT_H_
-#define _UIHORIZONTALLAYOUT_H_
+#ifndef __UIHORIZONTALLAYOUT_H__
+#define __UIHORIZONTALLAYOUT_H__
+
 #pragma once
 
 namespace DuiLib
@@ -34,4 +35,4 @@ namespace DuiLib
 		bool m_bImmMode;
 	};
 }
-#endif // __UIHORIZONTALLAYOUT_H_
+#endif // __UIHORIZONTALLAYOUT_H__

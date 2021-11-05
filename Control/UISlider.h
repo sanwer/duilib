@@ -1,5 +1,6 @@
-#ifndef _UISLIDER_H_
-#define _UISLIDER_H_
+#ifndef __UISLIDER_H__
+#define __UISLIDER_H__
+
 #pragma once
 
 namespace DuiLib
@@ -48,4 +49,4 @@ namespace DuiLib
 	};
 }
 
-#endif // __UISLIDER_H_
+#endif // __UISLIDER_H__

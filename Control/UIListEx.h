@@ -1,11 +1,13 @@
-#ifndef _UILISTEX_H_
-#define _UILISTEX_H_
+#ifndef __UILISTEX_H__
+#define __UILISTEX_H__
+
 #pragma once
+
 #include "Layout/UIVerticalLayout.h"
 #include "Layout/UIHorizontalLayout.h"
 
-namespace DuiLib
-{
+namespace DuiLib {
+
 	class IListComboCallbackUI
 	{
 	public:
@@ -26,7 +28,7 @@ namespace DuiLib
 		UINT GetControlFlags() const;
 		LPVOID GetInterface(LPCTSTR pstrName);
 
-	public:
+	public: 
 		virtual void DoEvent(TEventUI& event);
 
 	public:
@@ -81,7 +83,7 @@ namespace DuiLib
 		LPVOID GetInterface(LPCTSTR pstrName);
 		UINT GetControlFlags() const;
 
-		void SetEnabled(BOOL bEnable = TRUE);
+		void SetEnabled(bool bEnable = true);
 
 		BOOL IsDragable() const;
 		void SetDragable(BOOL bDragable);
@@ -188,7 +190,7 @@ namespace DuiLib
 		LPCTSTR GetCheckBoxForeImage();
 		void SetCheckBoxForeImage(LPCTSTR pStrImage);
 
-		void GetCheckBoxRect(RECT &rc);
+		void GetCheckBoxRect(RECT &rc);	
 
 		int GetCheckBoxWidth() const;       // 实际大小位置使用GetPos获取，这里得到的是预设的参考值
 		void SetCheckBoxWidth(int cx);      // 预设的参考值
@@ -201,7 +203,7 @@ namespace DuiLib
 		void SetOwner(CContainerUI* pOwner);
 		CContainerUI* GetOwner();
 	};
-
+	 
 	/////////////////////////////////////////////////////////////////////////////////////
 	//
 
@@ -273,7 +275,7 @@ namespace DuiLib
 		LPCTSTR GetCheckBoxForeImage();
 		void SetCheckBoxForeImage(LPCTSTR pStrImage);
 
-		void GetCheckBoxRect(int nIndex, RECT &rc);
+		void GetCheckBoxRect(int nIndex, RECT &rc);	
 		void GetColumRect(int nColum, RECT &rc);
 
 		int GetCheckBoxWidth() const;       // 实际大小位置使用GetPos获取，这里得到的是预设的参考值
@@ -305,4 +307,4 @@ namespace DuiLib
 	};
 } // namespace DuiLib
 
-#endif // __UILISTEX_H_
+#endif // __UILISTEX_H__

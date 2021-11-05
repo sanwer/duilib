@@ -1,6 +1,12 @@
-#ifndef _FLASH_EVENT_HANDLER_H_
-#define _FLASH_EVENT_HANDLER_H_
+/*
+	创建日期：	2012/11/05 15:09:48
+	作者：			daviyang35@gmail.com
+	描述：	FlashEventHandler
+*/
+#ifndef __FLASH_EVENT_HANDLER_H__
+#define __FLASH_EVENT_HANDLER_H__
 #pragma once
+//#include <ExDisp.h>
 
 namespace DuiLib
 {
@@ -27,7 +33,7 @@ namespace DuiLib
 		{
 			return S_OK;
 		}
-
+		
 		virtual HRESULT FlashCall ( LPCTSTR request )
 		{
 			return S_OK;
@@ -35,4 +41,4 @@ namespace DuiLib
 	};
 }
 
-#endif //__FLASH_EVENT_HANDLER_H_
+#endif // __FLASH_EVENT_HANDLER_H__

@@ -1,8 +1,8 @@
-#ifndef _VERSION_HELPERS_H_
-#define _VERSION_HELPERS_H_
+#ifndef _VERSIONHELPERS_H_INCLUDED_
+#define _VERSIONHELPERS_H_INCLUDED_
 #include <specstrings.h>
 
-namespace DuiLib
+namespace DuiLib 
 {
 #define _WIN32_WINNT_NT4                    0x0400
 #define _WIN32_WINNT_WIN2K                  0x0500
@@ -18,7 +18,7 @@ namespace DuiLib
 #define _WIN32_WINNT_WINTHRESHOLD           0x0A00 /* ABRACADABRA_THRESHOLD*/
 #define _WIN32_WINNT_WIN10                  0x0A00 /* ABRACADABRA_THRESHOLD*/
 
-#define WM_DPICHANGED                       0x02E0
+	#define WM_DPICHANGED                   0x02E0
 
 	static BOOL IsWindowsVersionOrGreater(WORD wMajorVersion, WORD wMinorVersion, WORD wServicePackMajor)
 	{
@@ -102,4 +102,4 @@ namespace DuiLib
 		return !VerifyVersionInfoW(&osvi, VER_PRODUCT_TYPE, dwlConditionMask);
 	}
 }
-#endif // _VERSION_HELPERS_H_
+#endif // _VERSIONHELPERS_H_INCLUDED_

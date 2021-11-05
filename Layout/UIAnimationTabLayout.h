@@ -1,6 +1,5 @@
-#ifndef _UIANIMATIONTABLAYOUT_H_
-#define _UIANIMATIONTABLAYOUT_H_
-#pragma once
+#ifndef __UIANIMATIONTABLAYOUT_H__
+#define __UIANIMATIONTABLAYOUT_H__
 
 namespace DuiLib
 {
@@ -40,4 +39,4 @@ namespace DuiLib
 		};
 	};
 }
-#endif // __UIANIMATIONTABLAYOUT_H_
+#endif // __UIANIMATIONTABLAYOUT_H__

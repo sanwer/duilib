@@ -1,9 +1,10 @@
-#ifndef _UIDLGBUILDER_H_
-#define _UIDLGBUILDER_H_
+#ifndef __UIDLGBUILDER_H__
+#define __UIDLGBUILDER_H__
+
 #pragma once
 
-namespace DuiLib
-{
+namespace DuiLib {
+
 	class IDialogBuilderCallback
 	{
 	public:
@@ -24,16 +25,16 @@ namespace DuiLib
 
 		void GetLastErrorMessage(LPTSTR pstrMessage, SIZE_T cchMax) const;
 		void GetLastErrorLocation(LPTSTR pstrSource, SIZE_T cchMax) const;
-		void SetInstance(HINSTANCE instance){ m_instance = instance;};
+	    void SetInstance(HINSTANCE instance){ m_instance = instance;};
 	private:
 		CControlUI* _Parse(CMarkupNode* parent, CControlUI* pParent = NULL, CPaintManagerUI* pManager = NULL);
 
 		CMarkup m_xml;
 		IDialogBuilderCallback* m_pCallback;
 		LPCTSTR m_pstrtype;
-		HINSTANCE m_instance;
+    	HINSTANCE m_instance;
 	};
 
 } // namespace DuiLib
 
-#endif // __UIDLGBUILDER_H_
+#endif // __UIDLGBUILDER_H__

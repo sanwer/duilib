@@ -1,5 +1,6 @@
-#ifndef _UIEDIT_H_
-#define _UIEDIT_H_
+#ifndef __UIEDIT_H__
+#define __UIEDIT_H__
+
 #pragma once
 
 namespace DuiLib
@@ -55,6 +56,8 @@ namespace DuiLib
 		void SetTipValueColor(LPCTSTR pStrColor);
 		DWORD GetTipValueColor();
 
+		HWND GetHWND();
+
 		void SetPos(RECT rc, bool bNeedInvalidate = true);
 		void Move(SIZE szOffset, bool bNeedInvalidate = true);
 		void SetVisible(bool bVisible = true);
@@ -86,4 +89,4 @@ namespace DuiLib
 		int m_iWindowStyls;
 	};
 }
-#endif // __UIEDIT_H_
+#endif // __UIEDIT_H__

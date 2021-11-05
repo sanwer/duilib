@@ -1,5 +1,6 @@
-#ifndef _UICOMBOBOX_H_
-#define _UICOMBOBOX_H_
+#ifndef __UICOMBOBOX_H__
+#define __UICOMBOBOX_H__
+
 #pragma once
 
 namespace DuiLib
@@ -25,4 +26,4 @@ namespace DuiLib
 	};
 }
 
-#endif // __UICOMBOBOX_H_
+#endif // __UICOMBOBOX_H__

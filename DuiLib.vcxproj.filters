@@ -122,6 +122,9 @@
     <ClCompile Include="Control\UITreeView.cpp">
       <Filter>Source Files\Control</Filter>
     </ClCompile>
+    <ClCompile Include="Control\UIWebBrowser.cpp">
+      <Filter>Source Files\Control</Filter>
+    </ClCompile>
     <ClCompile Include="Core\ControlFactory.cpp">
       <Filter>Source Files\Core</Filter>
     </ClCompile>
@@ -286,6 +289,9 @@
     <ClInclude Include="Control\UITreeView.h">
       <Filter>Header Files\Control</Filter>
     </ClInclude>
+    <ClInclude Include="Control\UIWebBrowser.h">
+      <Filter>Header Files\Control</Filter>
+    </ClInclude>
     <ClInclude Include="Core\ControlFactory.h">
       <Filter>Header Files\Core</Filter>
     </ClInclude>
@@ -334,6 +340,9 @@
     <ClInclude Include="Layout\UIVerticalLayout.h">
       <Filter>Header Files\Layout</Filter>
     </ClInclude>
+    <ClInclude Include="Utils\DownloadMgr.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
     <ClInclude Include="Utils\DPI.h">
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
@@ -368,6 +377,9 @@
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
     <ClInclude Include="Utils\WinImplBase.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\WebBrowserEventHandler.h">
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
     <ClInclude Include="StdAfx.h">

@@ -1,5 +1,6 @@
-#ifndef _UITRAICON_H_
-#define _UITRAICON_H_
+#ifndef __UITRAICON_H__
+#define __UITRAICON_H__
+
 #pragma once
 #include <ShellAPI.h>
 
@@ -37,5 +38,5 @@ namespace DuiLib
 		NOTIFYICONDATA	m_trayData;
 	};
 }
-#endif //
+#endif // 
 

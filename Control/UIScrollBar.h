@@ -1,5 +1,6 @@
-#ifndef _UISCROLLBAR_H_
-#define _UISCROLLBAR_H_
+#ifndef __UISCROLLBAR_H__
+#define __UISCROLLBAR_H__
+
 #pragma once
 
 namespace DuiLib
@@ -93,17 +94,17 @@ namespace DuiLib
 	protected:
 
 		enum
-		{
+		{ 
 			DEFAULT_SCROLLBAR_SIZE = 16,
 			DEFAULT_TIMERID = 10,
 		};
 
 		bool m_bHorizontal;
-		int m_nRange;
-		int m_nScrollPos;
+		__int64 m_nRange;
+		__int64 m_nScrollPos;
 		int m_nLineSize;
 		CContainerUI* m_pOwner;
-		POINT ptLastMouse;
+		POINT m_ptLastMouse;
 		int m_nLastScrollPos;
 		int m_nLastScrollOffset;
 		int m_nScrollRepeatDelay;
@@ -145,4 +146,4 @@ namespace DuiLib
 	};
 }
 
-#endif // __UISCROLLBAR_H_
+#endif // __UISCROLLBAR_H__

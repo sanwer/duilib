@@ -1,6 +1,6 @@
-#ifndef _OBSERVER_IMPL_BASE_H_
-#define _OBSERVER_IMPL_BASE_H_
-#pragma once
+#ifndef OBSERVER_IMPL_BASE_HPP
+#define OBSERVER_IMPL_BASE_HPP
+
 #include <map>
 #include <vector>
 
@@ -55,7 +55,7 @@ public:
 		if (receiver == NULL)
 			return;
 
-		ReceiversMap::iterator it = receivers_.begin();
+		typename ReceiversMap::iterator it = receivers_.begin();
 		for (; it != receivers_.end(); ++it)
 		{
 			if (it->second == receiver)
@@ -68,7 +68,7 @@ public:
 
 	virtual ReturnT Broadcast(ParamT param)
 	{
-		ReceiversMap::iterator it = receivers_.begin();
+		typename ReceiversMap::iterator it = receivers_.begin();
 		for (; it != receivers_.end(); ++it)
 		{
 			it->second->Receive(param);
@@ -79,7 +79,7 @@ public:
 
 	virtual ReturnT Notify(ParamT param)
 	{
-		ReceiversMap::iterator it = receivers_.begin();
+		typename ReceiversMap::iterator it = receivers_.begin();
 		for (; it != receivers_.end(); ++it)
 		{
 			it->second->Respond(param, this);
@@ -113,7 +113,7 @@ public:
 
 	virtual void RemoveObserver()
 	{
-		ObserversMap::iterator it = observers_.begin();
+		typename ObserversMap::iterator it = observers_.begin();
 		for (; it != observers_.end(); ++it)
 		{
 			it->second->RemoveReceiver(this);
@@ -136,4 +136,4 @@ protected:
 	int count_;
 };
 
-#endif // _OBSERVER_IMPL_BASE_H_
+#endif // OBSERVER_IMPL_BASE_HPP

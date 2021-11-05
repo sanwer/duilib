@@ -4,7 +4,6 @@
 namespace DuiLib
 {
 	IMPLEMENT_DUICONTROL(COptionUI)
-
 	COptionUI::COptionUI() : m_bSelected(false) ,m_iSelectedFont(-1), m_dwSelectedTextColor(0), m_dwSelectedBkColor(0), m_nSelectedStateCount(0)
 	{
 	}
@@ -111,8 +110,11 @@ namespace DuiLib
 	{
 		CControlUI::SetEnabled(bEnable);
 		if( !IsEnabled() ) {
-			if( m_bSelected ) m_uButtonState = UISTATE_SELECTED;
-			else m_uButtonState = 0;
+			if( m_bSelected ) m_uButtonState = UISTATE_DISABLED;
+			else m_uButtonState = UISTATE_DISABLED;
+		}
+		else {
+			m_uButtonState = 0;
 		}
 	}
 
@@ -340,13 +342,12 @@ namespace DuiLib
 			if( sText.IsEmpty() ) return;
 			int nLinks = 0;
 			RECT rc = m_rcItem;
-			RECT m_rcTextPadding = CButtonUI::m_rcTextPadding;
-			GetManager()->GetDPIObj()->Scale(&m_rcTextPadding);
-			rc.left += m_rcTextPadding.left;
-			rc.right -= m_rcTextPadding.right;
-			rc.top += m_rcTextPadding.top;
-			rc.bottom -= m_rcTextPadding.bottom;
-
+			RECT rcTextPadding = GetTextPadding();
+			rc.left += rcTextPadding.left;
+			rc.right -= rcTextPadding.right;
+			rc.top += rcTextPadding.top;
+			rc.bottom -= rcTextPadding.bottom;
+			
 			if( m_bShowHtml )
 				CRenderEngine::DrawHtmlText(hDC, m_pManager, rc, sText, IsEnabled()?m_dwTextColor:m_dwDisabledTextColor, \
 				NULL, NULL, nLinks, iFont, m_uTextStyle);
@@ -392,7 +393,7 @@ namespace DuiLib
 	void CCheckBoxUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 	{
 		if( _tcsicmp(pstrName, _T("EnableAutoCheck")) == 0 ) SetAutoCheck(_tcsicmp(pstrValue, _T("true")) == 0);
-
+		
 		COptionUI::SetAttribute(pstrName, pstrValue);
 	}
 
@@ -411,7 +412,7 @@ namespace DuiLib
 
 		if( m_bAutoCheck && (event.Type == UIEVENT_BUTTONDOWN || event.Type == UIEVENT_DBLCLICK)) {
 			if( ::PtInRect(&m_rcItem, event.ptMouse) && IsEnabled() ) {
-				SetCheck(!GetCheck());
+				SetCheck(!GetCheck()); 
 				m_pManager->SendNotify(this, DUI_MSGTYPE_CHECKCLICK, 0, 0);
 				Invalidate();
 			}

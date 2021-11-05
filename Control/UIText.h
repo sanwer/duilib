@@ -1,5 +1,6 @@
-#ifndef _UITEXT_H_
-#define _UITEXT_H_
+#ifndef __UITEXT_H__
+#define __UITEXT_H__
+
 #pragma once
 
 namespace DuiLib
@@ -32,4 +33,4 @@ namespace DuiLib
 
 } // namespace DuiLib
 
-#endif //__UITEXT_H_
+#endif //__UITEXT_H__

@@ -1,7 +1,6 @@
 #include "StdAfx.h"
 #include "DPI.h"
 #include "VersionHelpers.h"
-
 namespace DuiLib
 {
 	//96 DPI = 100% scaling
@@ -9,13 +8,17 @@ namespace DuiLib
 	//144 DPI = 150% scaling
 	//168 DPI = 175% scaling
 	//192 DPI = 200% scaling
+
 	typedef HRESULT (WINAPI *LPSetProcessDpiAwareness)(
 		_In_ PROCESS_DPI_AWARENESS value
 		);
+
 	typedef HRESULT (WINAPI *LPGetProcessDpiAwareness)(
 		_In_  HANDLE                hprocess,
 		_Out_ PROCESS_DPI_AWARENESS *value
 		);
+
+
 	typedef HRESULT (WINAPI *LPGetDpiForMonitor)(
 		_In_  HMONITOR         hmonitor,
 		_In_  MONITOR_DPI_TYPE dpiType,
@@ -23,12 +26,15 @@ namespace DuiLib
 		_Out_ UINT             *dpiY
 		);
 
+
 	CDPI::CDPI()
 	{
 		m_nScaleFactor = 0;
 		m_nScaleFactorSDA = 0;
 		m_Awareness = PROCESS_PER_MONITOR_DPI_AWARE;
+
 		SetScale(96);
+
 	}
 
 	int CDPI::GetDPIOfMonitor(HMONITOR hMonitor)
@@ -82,6 +88,7 @@ namespace DuiLib
 				}
 			}
 		}
+
 		return m_Awareness;
 	}
 
@@ -109,9 +116,11 @@ namespace DuiLib
 		if (m_Awareness == PROCESS_DPI_UNAWARE) {
 			return 96;
 		}
+
 		if (m_Awareness == PROCESS_SYSTEM_DPI_AWARE) {
 			return MulDiv(m_nScaleFactorSDA, 96, 100);
 		}
+
 		return MulDiv(m_nScaleFactor, 96, 100);
 	}
 
@@ -126,6 +135,7 @@ namespace DuiLib
 		return m_nScaleFactor;
 	}
 
+
 	void CDPI::SetScale(UINT uDPI)
 	{
 		m_nScaleFactor = MulDiv(uDPI, 100, 96);
@@ -134,19 +144,8 @@ namespace DuiLib
 		}
 	}
 
-	int  CDPI::Scale(int iValue)
-	{
-		if (m_Awareness == PROCESS_DPI_UNAWARE) {
-			return iValue;
-		}
-		if (m_Awareness == PROCESS_SYSTEM_DPI_AWARE) {
-			return MulDiv(iValue, m_nScaleFactorSDA, 100);
-		}
-		return MulDiv(iValue, m_nScaleFactor, 100);
-	}
+	int  CDPI::ScaleBack(int iValue) {
 
-	int  CDPI::ScaleBack(int iValue)
-	{
 		if (m_Awareness == PROCESS_DPI_UNAWARE) {
 			return iValue;
 		}
@@ -214,5 +213,16 @@ namespace DuiLib
 		szScale.cx = Scale(szSize.cx);
 		szScale.cy = Scale(szSize.cy);
 		return szScale;
+	}
+
+	int  CDPI::Scale(int iValue)
+	{
+		if (m_Awareness == PROCESS_DPI_UNAWARE) {
+			return iValue;
+		}
+		if (m_Awareness == PROCESS_SYSTEM_DPI_AWARE) {
+			return MulDiv(iValue, m_nScaleFactorSDA, 100);
+		}
+		return MulDiv(iValue, m_nScaleFactor, 100);
 	}
 }

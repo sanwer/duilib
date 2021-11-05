@@ -1,5 +1,6 @@
-#ifndef _UITEXTSCROLL_H_
-#define _UITEXTSCROLL_H_
+#ifndef __UITEXTSCROLLH__
+#define __UITEXTSCROLLH__
+
 #pragma once
 
 namespace DuiLib
@@ -26,7 +27,7 @@ namespace DuiLib
 		LPCTSTR GetClass() const;
 		LPVOID GetInterface(LPCTSTR pstrName);
 
-	public:
+	public:	
 		virtual void PaintText(HDC hDC);
 		virtual void DoEvent(TEventUI& event);
 		virtual void SetPos(RECT rc);
@@ -35,15 +36,15 @@ namespace DuiLib
 	public:
 		void BeginRoll(int nDirect = ROLLTEXT_RIGHT, LONG lTimeSpan = ROLLTEXT_TIMERID_SPAN, LONG lMaxTimeLimited = 60);
 		void EndRoll();
-
-	private:
+		
+	private:    
 		int m_nStep;
 		int m_nScrollPos;
 		BOOL m_bUseRoll;
-		int m_nRollDirection;
+		int m_nRollDirection;   
 		int m_nText_W_H;
 	};
 
 }	// namespace DuiLib
 
-#endif // __UITEXTSCROLL_H_
+#endif // __UITEXTSCROLLH__

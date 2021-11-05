@@ -1,9 +1,11 @@
-#ifndef _UIGROUPBOX_H_
-#define _UIGROUPBOX_H_
+#ifndef __UIGROUPBOX_H__
+#define __UIGROUPBOX_H__
+
 #pragma once
 
 namespace DuiLib
 {
+
 	class UILIB_API CGroupBoxUI : public CVerticalLayoutUI
 	{
 		DECLARE_DUICONTROL(CGroupBoxUI)
@@ -19,7 +21,7 @@ namespace DuiLib
 		void SetFont(int index);
 		int GetFont() const;
 
-	protected:
+	protected:	
 		//Paint
 		virtual void PaintText(HDC hDC);
 		virtual void PaintBorder(HDC hDC);
@@ -35,4 +37,4 @@ namespace DuiLib
 		UINT m_uTextStyle;
 	};
 }
-#endif // __UIGROUPBOX_H_
+#endif // __UIGROUPBOX_H__

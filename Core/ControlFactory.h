@@ -1,8 +1,8 @@
-#ifndef _CONTROL_FACTORY_H_
-#define _CONTROL_FACTORY_H_
+#ifndef __CONTROL_FACTORY_H__
+#define __CONTROL_FACTORY_H__
 #pragma once
-#include <map>
 
+#include <map>
 namespace DuiLib
 {
 	typedef CControlUI* (*CreateClass)();
@@ -31,7 +31,9 @@ public:\
 
 #define IMPLEMENT_DUICONTROL(class_name)\
 	CControlUI* class_name::CreateControl()\
-	{ return new class_name; }
+	{\
+		return new class_name;\
+	}
 
 #define REGIST_DUICONTROL(class_name)\
 	CControlFactory::GetInstance()->RegistControl(_T(#class_name), (CreateClass)class_name::CreateControl);
@@ -40,4 +42,4 @@ public:\
 	RegistControl(_T(#class_name), (CreateClass)class_name::CreateControl);
 }
 
-#endif // _CONTROL_FACTORY_H_
+#endif //__CONTROL_FACTORY_H__

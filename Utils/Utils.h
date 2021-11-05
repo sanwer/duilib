@@ -1,5 +1,6 @@
-#ifndef _UTILS_H_
-#define _UTILS_H_
+#ifndef __UTILS_H__
+#define __UTILS_H__
+
 #pragma once
 #include "OAIdl.h"
 #include <vector>
@@ -98,6 +99,145 @@ namespace DuiLib
 		int m_nAllocated;
 	};
 
+	/////////////////////////////////////////////////////////////////////////////////////
+	//
+	template <typename T>
+	class UILIB_API CStdArray
+	{
+	public:
+		CStdArray(int iPreallocSize = 0)
+		{
+			m_pData = NULL;
+			m_nCount = 0;
+			m_nAllocated = iPreallocSize;
+			if (iPreallocSize > 0) {
+				m_pData = static_cast<T*>(malloc(iPreallocSize * sizeof(T)));
+			}
+		}
+
+		CStdArray(const CStdArray& src)
+		{
+			m_pData = NULL;
+			m_nCount = 0;
+			m_nAllocated = 0;
+			for (int i = 0; i < src.GetSize(); i++) {
+				Add(src.GetAt(i));
+			}
+		}
+
+		~CStdArray()
+		{
+			if (m_pData != NULL) free(m_pData);
+		}
+
+		void Empty()
+		{
+			if (m_pData != NULL) free(m_pData);
+			m_pData = NULL;
+			m_nCount = m_nAllocated = 0;
+		}
+
+		void Resize(int iSize)
+		{
+			Empty();
+			m_pData = static_cast<T*>(malloc(iSize * sizeof(T)));
+			::ZeroMemory(m_pData, iSize * sizeof(T));
+			m_nAllocated = iSize;
+			m_nCount = iSize;
+		}
+
+		bool IsEmpty() const
+		{
+			return m_nCount == 0;
+		}
+
+		int Find(T pData) const
+		{
+			for (int i = 0; i < m_nCount; i++) if (m_pData[i] == pData) return i;
+			return -1;
+		}
+
+		bool Add(T pData)
+		{
+			if (++m_nCount >= m_nAllocated) {
+				int nAllocated = m_nAllocated * 2;
+				if (nAllocated == 0) nAllocated = 11;
+				T* ppData = static_cast<T*>(realloc(m_pData, nAllocated * sizeof(T)));
+				if (ppData != NULL) {
+					m_nAllocated = nAllocated;
+					m_pData = ppData;
+				}
+				else {
+					--m_nCount;
+					return false;
+				}
+			}
+			m_pData[m_nCount - 1] = pData;
+			return true;
+		}
+
+		bool SetAt(int iIndex, T pData)
+		{
+			if (iIndex < 0 || iIndex >= m_nCount) return false;
+			m_pData[iIndex] = pData;
+			return true;
+		}
+
+		bool InsertAt(int iIndex, T pData)
+		{
+			if (iIndex == m_nCount) return Add(pData);
+			if (iIndex < 0 || iIndex > m_nCount) return false;
+			if (++m_nCount >= m_nAllocated) {
+				int nAllocated = m_nAllocated * 2;
+				if (nAllocated == 0) nAllocated = 11;
+				T* pData = static_cast<T*>(realloc(m_pData, nAllocated * sizeof(T)));
+				if (pData != NULL) {
+					m_nAllocated = nAllocated;
+					m_pData = pData;
+				}
+				else {
+					--m_nCount;
+					return false;
+				}
+			}
+			memmove(&m_pData[iIndex + 1], &m_pData[iIndex], (m_nCount - iIndex - 1) * sizeof(T));
+			m_pData[iIndex] = pData;
+			return true;
+		}
+
+		bool Remove(int iIndex)
+		{
+			if (iIndex < 0 || iIndex >= m_nCount) return false;
+			if (iIndex < --m_nCount) ::CopyMemory(m_pData + iIndex, m_pData + iIndex + 1, (m_nCount - iIndex) * sizeof(T));
+			return true;
+		}
+
+		int GetSize() const
+		{
+			return m_nCount;
+		}
+
+		T* GetData()
+		{
+			return m_pData;
+		}
+
+		T GetAt(int iIndex) const
+		{
+			if (iIndex < 0 || iIndex >= m_nCount) return NULL;
+			return m_pData[iIndex];
+		}
+
+		T operator[] (int iIndex) const
+		{
+			return m_pData[iIndex];
+		}
+
+	protected:
+		T* m_pData;
+		int m_nCount;
+		int m_nAllocated;
+	};
 
 	/////////////////////////////////////////////////////////////////////////////////////
 	//
@@ -156,11 +296,11 @@ namespace DuiLib
 		const CDuiString& operator=(const TCHAR ch);
 		const CDuiString& operator=(LPCTSTR pstr);
 #ifdef _UNICODE
-		const CDuiString& CDuiString::operator=(LPCSTR lpStr);
-		const CDuiString& CDuiString::operator+=(LPCSTR lpStr);
+		const CDuiString& operator=(LPCSTR lpStr);
+		const CDuiString& operator+=(LPCSTR lpStr);
 #else
-		const CDuiString& CDuiString::operator=(LPCWSTR lpwStr);
-		const CDuiString& CDuiString::operator+=(LPCWSTR lpwStr);
+		const CDuiString& operator=(LPCWSTR lpwStr);
+		const CDuiString& operator+=(LPCWSTR lpwStr);
 #endif
 		CDuiString operator+(const CDuiString& src) const;
 		CDuiString operator+(LPCTSTR pstr) const;
@@ -267,9 +407,9 @@ namespace DuiLib
 	class CDuiVariant : public VARIANT
 	{
 	public:
-		CDuiVariant()
-		{
-			VariantInit(this);
+		CDuiVariant() 
+		{ 
+			VariantInit(this); 
 		}
 		CDuiVariant(int i)
 		{
@@ -296,19 +436,19 @@ namespace DuiLib
 			this->pdispVal = disp;
 		}
 
-		~CDuiVariant()
-		{
-			VariantClear(this);
+		~CDuiVariant() 
+		{ 
+			VariantClear(this); 
 		}
 	};
 
 	//////////////////////////////////////////////////////////////////////////////////////
 	//
-	static char* w2a(wchar_t* lpszSrc, UINT CodePage = CP_ACP)
+	static char* w2a(wchar_t* lpszSrc, UINT   CodePage = CP_ACP)
 	{
 		if (lpszSrc != NULL)
 		{
-			int nANSILen = WideCharToMultiByte(CodePage, 0, lpszSrc, -1, NULL, 0, NULL, NULL);
+			int  nANSILen = WideCharToMultiByte(CodePage, 0, lpszSrc, -1, NULL, 0, NULL, NULL);
 			char* pANSI = new char[nANSILen + 1];
 			if (pANSI != NULL)
 			{
@@ -316,11 +456,11 @@ namespace DuiLib
 				WideCharToMultiByte(CodePage, 0, lpszSrc, -1, pANSI, nANSILen, NULL, NULL);
 				return pANSI;
 			}
-		}
+		}	
 		return NULL;
 	}
 
-	static wchar_t* a2w(char* lpszSrc, UINT CodePage = CP_ACP)
+	static wchar_t* a2w(char* lpszSrc, UINT   CodePage = CP_ACP)
 	{
 		if (lpszSrc != NULL)
 		{
@@ -335,6 +475,52 @@ namespace DuiLib
 		}
 		return NULL;
 	}
+
+	///////////////////////////////////////////////////////////////////////////////////////
+	////
+	//struct TImageInfo;
+	//class CPaintManagerUI;
+	//class UILIB_API CImageString
+	//{
+	//public:
+	//	CImageString();
+	//	CImageString(const CImageString&);
+	//	const CImageString& operator=(const CImageString&);
+	//	virtual ~CImageString();
+
+	//	const CDuiString& GetAttributeString() const;
+	//	void SetAttributeString(LPCTSTR pStrImageAttri);
+	//	void ModifyAttribute(LPCTSTR pStrModify);
+	//	bool LoadImage(CPaintManagerUI* pManager);
+	//	bool IsLoadSuccess();
+
+	//	RECT GetDest() const;
+	//	void SetDest(const RECT &rcDest);
+	//	const TImageInfo* GetImageInfo() const;
+
+	//private:
+	//	void Clone(const CImageString&);
+	//	void Clear();
+	//	void ParseAttribute(LPCTSTR pStrImageAttri);
+
+	//protected:
+	//	friend class CRenderEngine;
+	//	CDuiString	m_sImageAttribute;
+
+	//	CDuiString	m_sImage;
+	//	CDuiString	m_sResType;
+	//	TImageInfo	*m_imageInfo;
+	//	bool		m_bLoadSuccess;
+
+	//	RECT	m_rcDest;
+	//	RECT	m_rcSource;
+	//	RECT	m_rcCorner;
+	//	BYTE	m_bFade;
+	//	DWORD	m_dwMask;
+	//	bool	m_bHole;
+	//	bool	m_bTiledX;
+	//	bool	m_bTiledY;
+	//};
 }// namespace DuiLib
 
-#endif // __UTILS_H_
+#endif // __UTILS_H__

@@ -1,10 +1,11 @@
-#ifndef _UIFADEBUTTON_H_
-#define _UIFADEBUTTON_H_
-#pragma once
-#include "UIAnimation.h"
+#ifndef __UIFADEBUTTON_H__
+#define __UIFADEBUTTON_H__
 
-namespace DuiLib
-{
+#include "UIAnimation.h"
+#pragma once
+
+namespace DuiLib {
+
 	class UILIB_API CFadeButtonUI : public CButtonUI, public CUIAnimation
 	{
 		DECLARE_DUICONTROL(CFadeButtonUI)
@@ -23,7 +24,7 @@ namespace DuiLib
 		virtual void OnAnimationStart(INT nAnimationID, BOOL bFirstLoop) {}
 		virtual void OnAnimationStep(INT nTotalFrame, INT nCurFrame, INT nAnimationID);
 		virtual void OnAnimationStop(INT nAnimationID) {}
-
+		
 	protected:
 		CDuiString m_sOldImage;
 		CDuiString m_sNewImage;
@@ -41,4 +42,4 @@ namespace DuiLib
 
 } // namespace DuiLib
 
-#endif // __UIFADEBUTTON_H_
+#endif // __UIFADEBUTTON_H__

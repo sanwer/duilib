@@ -1,9 +1,8 @@
-#ifndef _UI_COLOR_PALLET_H_
-#define _UI_COLOR_PALLET_H_
+#ifndef UI_PALLET_H
+#define UI_PALLET_H
 #pragma once
 
-namespace DuiLib
-{
+namespace DuiLib {
 	/////////////////////////////////////////////////////////////////////////////////////
 	//
 	class UILIB_API CColorPaletteUI : public CControlUI
@@ -63,4 +62,4 @@ namespace DuiLib
 	};
 }
 
-#endif // _UI_COLOR_PALLET_H_
+#endif // UI_PALLET_H

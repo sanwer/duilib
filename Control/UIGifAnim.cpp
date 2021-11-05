@@ -10,8 +10,8 @@ namespace DuiLib
 	{
 		m_pGifImage			=	NULL;
 		m_pPropertyItem		=	NULL;
-		m_nFrameCount		=	0;
-		m_nFramePosition	=	0;
+		m_nFrameCount		=	0;	
+		m_nFramePosition	=	0;	
 		m_bIsAutoPlay		=	true;
 		m_bIsAutoSize		=	false;
 		m_bIsPlaying		=	false;
@@ -46,7 +46,7 @@ namespace DuiLib
 	{
 		if( !::IntersectRect( &m_rcPaint, &rcPaint, &m_rcItem ) ) return true;
 		if ( NULL == m_pGifImage )
-		{
+		{		
 			InitGifImage();
 		}
 		DrawFrame( hDC );
@@ -200,8 +200,8 @@ namespace DuiLib
 			free( m_pPropertyItem );
 			m_pPropertyItem = NULL;
 		}
-		m_nFrameCount		=	0;
-		m_nFramePosition	=	0;
+		m_nFrameCount		=	0;	
+		m_nFramePosition	=	0;	
 	}
 
 	void CGifAnimUI::OnTimer( UINT_PTR idEvent )

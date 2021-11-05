@@ -1,5 +1,6 @@
-#ifndef _GIFANIMUI_H_
-#define _GIFANIMUI_H_
+#ifndef GifAnimUI_h__
+#define GifAnimUI_h__
+
 #pragma once
 
 namespace DuiLib
@@ -7,7 +8,7 @@ namespace DuiLib
 	class UILIB_API CGifAnimUI : public CControlUI
 	{
 		enum
-		{
+		{ 
 			EVENT_TIEM_ID = 100,
 		};
 		DECLARE_DUICONTROL(CGifAnimUI)
@@ -52,4 +53,4 @@ namespace DuiLib
 	};
 }
 
-#endif // _GIFANIMUI_H_
+#endif // GifAnimUI_h__

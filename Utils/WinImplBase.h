@@ -1,5 +1,5 @@
-#ifndef _WIN_IMPL_BASE_H_
-#define _WIN_IMPL_BASE_H_
+#ifndef __WIN_IMPL_BASE_H__
+#define __WIN_IMPL_BASE_H__
 #pragma once
 
 namespace DuiLib
@@ -32,7 +32,7 @@ namespace DuiLib
 		virtual LPCTSTR GetWindowClassName(void) const = 0 ;
 		virtual LPCTSTR GetManagerName() { return NULL; }
 		virtual LRESULT ResponseDefaultKeyEvent(WPARAM wParam);
-		CPaintManagerUI m_Manager;
+		CPaintManagerUI m_pm;
 
 	public:
 		virtual UINT GetClassStyle() const;
@@ -68,4 +68,4 @@ namespace DuiLib
 	};
 }
 
-#endif // _WINDOW_IMPL_BASE_H_
+#endif // __WIN_IMPL_BASE_H__

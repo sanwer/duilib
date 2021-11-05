@@ -1,9 +1,10 @@
-#ifndef _UIBASE_H_
-#define _UIBASE_H_
+#ifndef __UIBASE_H__
+#define __UIBASE_H__
+
+
 #pragma once
 
-namespace DuiLib
-{
+namespace DuiLib {
 	/////////////////////////////////////////////////////////////////////////////////////
 	//
 
@@ -65,12 +66,15 @@ namespace DuiLib
 		HWND GetHWND() const;
 		operator HWND() const;
 
+		void EnableUnicode();
+
 		bool RegisterWindowClass();
 		bool RegisterSuperclass();
 
 		HWND Create(HWND hwndParent, LPCTSTR pstrName, DWORD dwStyle, DWORD dwExStyle, const RECT rc, HMENU hMenu = NULL);
 		HWND Create(HWND hwndParent, LPCTSTR pstrName, DWORD dwStyle, DWORD dwExStyle, int x = CW_USEDEFAULT, int y = CW_USEDEFAULT, int cx = CW_USEDEFAULT, int cy = CW_USEDEFAULT, HMENU hMenu = NULL);
 		HWND CreateDuiWindow(HWND hwndParent, LPCTSTR pstrWindowName,DWORD dwStyle =0, DWORD dwExStyle =0);
+
 		HWND Subclass(HWND hWnd);
 		void Unsubclass();
 		void ShowWindow(bool bShow = true, bool bTakeFocus = true);
@@ -98,8 +102,9 @@ namespace DuiLib
 		HWND m_hWnd;
 		WNDPROC m_OldWndProc;
 		bool m_bSubclassed;
+		bool m_bUnicode;
 	};
 
 } // namespace DuiLib
 
-#endif // __UIBASE_H_
+#endif // __UIBASE_H__

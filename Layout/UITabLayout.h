@@ -1,5 +1,6 @@
-#ifndef _UITABLAYOUT_H_
-#define _UITABLAYOUT_H_
+#ifndef __UITABLAYOUT_H__
+#define __UITABLAYOUT_H__
+
 #pragma once
 
 namespace DuiLib
@@ -29,4 +30,4 @@ namespace DuiLib
 		int m_iCurSel;
 	};
 }
-#endif // __UITABLAYOUT_H_
+#endif // __UITABLAYOUT_H__

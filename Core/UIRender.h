@@ -1,13 +1,12 @@
-#ifndef _UIRENDER_H_
-#define _UIRENDER_H_
+#ifndef __UIRENDER_H__
+#define __UIRENDER_H__
+
 #pragma once
 
 #ifdef USE_XIMAGE_EFFECT
 class CxImage;
 #endif
-
-namespace DuiLib
-{
+namespace DuiLib {
 	/////////////////////////////////////////////////////////////////////////////////////
 	//
 
@@ -46,15 +45,13 @@ namespace DuiLib
 		static Gdiplus::Image*	GdiplusLoadImage(LPCTSTR pstrPath);
 		static Gdiplus::Image* GdiplusLoadImage(LPVOID pBuf, size_t dwSize);
 
-		static bool DrawIconImageString(HDC hDC, CPaintManagerUI* pManager, const RECT& rcItem, const RECT& rcPaint, \
-			LPCTSTR pStrImage, LPCTSTR pStrModify = NULL);
-		static bool MakeFitIconDest(const RECT& rcControl,const CDuiSize& szIcon, const CDuiString& sAlign, RECT& rcDest);
+		static bool MakeImageDest(const RECT& rcControl, const CDuiSize& szImage, const CDuiString& sAlign, const RECT& rcPadding, RECT& rcDest);
 
 		static void DrawText(HDC hDC, CPaintManagerUI* pManager, RECT& rc, LPCTSTR pstrText,DWORD dwTextColor, \
 			int iFont, UINT uStyle, DWORD dwTextBKColor);
 
 		static void DrawImage(HDC hDC, HBITMAP hBitmap, const RECT& rc, const RECT& rcPaint, \
-			const RECT& rcBmpPart, const RECT& rcCorners, bool bAlpha, BYTE uFade = 255,
+			const RECT& rcBmpPart, const RECT& rcCorners, bool bAlpha, BYTE uFade = 255, 
 			bool hole = false, bool xtiled = false, bool ytiled = false);
 
 		static bool DrawImageInfo(HDC hDC, CPaintManagerUI* pManager, const RECT& rcItem, const RECT& rcPaint, const TDrawInfo* pDrawInfo, HINSTANCE instance = NULL);
@@ -69,7 +66,7 @@ namespace DuiLib
 		static void DrawRoundRect(HDC hDC, const RECT& rc, int width, int height, int nSize, DWORD dwPenColor,int nStyle = PS_SOLID);
 		static void DrawText(HDC hDC, CPaintManagerUI* pManager, RECT& rc, LPCTSTR pstrText, \
 			DWORD dwTextColor, int iFont, UINT uStyle);
-		static void DrawHtmlText(HDC hDC, CPaintManagerUI* pManager, RECT& rc, LPCTSTR pstrText,
+		static void DrawHtmlText(HDC hDC, CPaintManagerUI* pManager, RECT& rc, LPCTSTR pstrText, 
 			DWORD dwTextColor, RECT* pLinks, CDuiString* sLinks, int& nLinkRects, int iFont, UINT uStyle);
 		static HBITMAP GenerateBitmap(CPaintManagerUI* pManager, RECT rc, CControlUI* pStopControl = NULL, DWORD dwFilterColor = 0);
 		static HBITMAP GenerateBitmap(CPaintManagerUI* pManager, CControlUI* pControl, RECT rc, DWORD dwFilterColor = 0);
@@ -81,4 +78,4 @@ namespace DuiLib
 
 } // namespace DuiLib
 
-#endif // __UIRENDER_H_
+#endif // __UIRENDER_H__

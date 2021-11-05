@@ -1,9 +1,8 @@
-#ifndef _UIRESOURCE_MANAGER_H_
-#define _UIRESOURCE_MANAGER_H_
+#ifndef __UIRESOURCEMANAGER_H__
+#define __UIRESOURCEMANAGER_H__
 #pragma once
 
-namespace DuiLib
-{
+namespace DuiLib {
 	// 控件文字查询接口
 	class UILIB_API IQueryControlText
 	{
@@ -22,7 +21,7 @@ namespace DuiLib
 		{
 			static CResourceManager * p = new CResourceManager;
 			return p;
-		};
+		};	
 		void Release(void) { delete this; }
 
 	public:
@@ -36,7 +35,7 @@ namespace DuiLib
 		void SetLanguage(LPCTSTR pstrLanguage) { m_sLauguage = pstrLanguage; }
 		LPCTSTR GetLanguage() { return m_sLauguage; }
 		BOOL LoadLanguage(LPCTSTR pstrXml);
-
+		
 	public:
 		void SetTextQueryInterface(IQueryControlText* pInterface) { m_pQuerypInterface = pInterface; }
 		CDuiString GetText(LPCTSTR lpstrId, LPCTSTR lpstrType = NULL);
@@ -55,4 +54,4 @@ namespace DuiLib
 
 } // namespace DuiLib
 
-#endif // _UIRESOURCE_MANAGER_H_
+#endif // __UIRESOURCEMANAGER_H__

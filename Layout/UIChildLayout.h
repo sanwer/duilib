@@ -1,5 +1,6 @@
-#ifndef _UICHILDLAYOUT_H_
-#define _UICHILDLAYOUT_H_
+#ifndef __UICHILDLAYOUT_H__
+#define __UICHILDLAYOUT_H__
+
 #pragma once
 
 namespace DuiLib
@@ -21,4 +22,4 @@ namespace DuiLib
 		CDuiString m_pstrXMLFile;
 	};
 } // namespace DuiLib
-#endif // __UICHILDLAYOUT_H_
+#endif // __UICHILDLAYOUT_H__

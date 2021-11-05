@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "ControlFactory.h"
 
-namespace DuiLib
+namespace DuiLib 
 {
 	CControlFactory::CControlFactory()
 	{
@@ -39,6 +39,7 @@ namespace DuiLib
 		INNER_REGISTER_DUICONTROL(CTextUI);
 		INNER_REGISTER_DUICONTROL(CTreeNodeUI);
 		INNER_REGISTER_DUICONTROL(CTreeViewUI);
+		INNER_REGISTER_DUICONTROL(CWebBrowserUI);
 		INNER_REGISTER_DUICONTROL(CAnimationTabLayoutUI);
 		INNER_REGISTER_DUICONTROL(CChildLayoutUI);
 		INNER_REGISTER_DUICONTROL(CHorizontalLayoutUI);
@@ -77,7 +78,7 @@ namespace DuiLib
 		m_mapControl.insert(MAP_DUI_CTRATECLASS::value_type(strClassName, pFunc));
 	}
 
-	CControlFactory* CControlFactory::GetInstance()
+	CControlFactory* CControlFactory::GetInstance()  
 	{
 		static CControlFactory* pInstance = new CControlFactory;
 		return pInstance;

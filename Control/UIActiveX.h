@@ -1,11 +1,12 @@
-#ifndef _UIACTIVEX_H_
-#define _UIACTIVEX_H_
+#ifndef __UIACTIVEX_H__
+#define __UIACTIVEX_H__
+
 #pragma once
 
 struct IOleObject;
 
-namespace DuiLib
-{
+
+namespace DuiLib {
 	/////////////////////////////////////////////////////////////////////////////////////
 	//
 
@@ -77,4 +78,4 @@ namespace DuiLib
 
 } // namespace DuiLib
 
-#endif // __UIACTIVEX_H_
+#endif // __UIACTIVEX_H__

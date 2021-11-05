@@ -1,10 +1,11 @@
-#ifndef _UIANIMATION_H_
-#define _UIANIMATION_H_
-#pragma once
-#include "UIButton.h"
+#ifndef __UIANIMATION_H__
+#define __UIANIMATION_H__
 
-namespace DuiLib
-{
+#include "UIButton.h"
+#pragma once
+
+namespace DuiLib {
+
 	class UILIB_API IUIAnimation
 	{
 	public:
@@ -54,8 +55,11 @@ namespace DuiLib
 	{
 		struct Imp;
 	public:
-		CUIAnimation(CControlUI* pOwner);
+		CUIAnimation();
 		~CUIAnimation();
+
+	public:
+		void Attach(CControlUI* pOwner);
 
 		virtual BOOL StartAnimation(int nElapse, int nTotalFrame, int nAnimationID = 0, BOOL bLoop = FALSE);
 		virtual void StopAnimation(int nAnimationID = 0);
@@ -79,4 +83,4 @@ namespace DuiLib
 
 } // namespace DuiLib
 
-#endif // __UIANIMATION_H_
+#endif // __UIANIMATION_H__

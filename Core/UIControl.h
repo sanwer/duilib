@@ -1,9 +1,10 @@
-#ifndef _UICONTROL_H_
-#define _UICONTROL_H_
+#ifndef __UICONTROL_H__
+#define __UICONTROL_H__
+
 #pragma once
 
-namespace DuiLib
-{
+namespace DuiLib {
+
 	/////////////////////////////////////////////////////////////////////////////////////
 	//
 
@@ -27,8 +28,8 @@ namespace DuiLib
 		virtual CPaintManagerUI* GetManager() const;
 		virtual void SetManager(CPaintManagerUI* pManager, CControlUI* pParent, bool bInit = true);
 		virtual CControlUI* GetParent() const;
-		void setInstance(HINSTANCE instance = NULL) {m_instance = instance;};
-
+	    void setInstance(HINSTANCE instance = NULL) {m_instance = instance;};
+		
 		// 定时器
 		bool SetTimer(UINT nTimerID, UINT nElapse);
 		void KillTimer(UINT nTimerID);
@@ -46,6 +47,8 @@ namespace DuiLib
 		virtual bool IsDropEnabled() const;
 		virtual void SetDropEnable(bool bDrop);
 
+		virtual bool IsRichEvent() const;
+		virtual void SetRichEvent(bool bEnable);
 		// 图形相关
 		LPCTSTR GetGradient();
 		void SetGradient(LPCTSTR pStrImage);
@@ -75,6 +78,7 @@ namespace DuiLib
 		void SetBorderSize(int nSize);
 		DWORD GetBorderColor() const;
 		void SetBorderColor(DWORD dwBorderColor);
+		RECT GetBorderRectSize() const;
 		void SetBorderSize(RECT rc);
 		int GetLeftBorderSize() const;
 		void SetLeftBorderSize(int nSize);
@@ -101,6 +105,7 @@ namespace DuiLib
 		virtual void SetPadding(RECT rcPadding); // 设置外边距，由上层窗口绘制
 		virtual SIZE GetFixedXY() const;         // 实际大小位置使用GetPos获取，这里得到的是预设的参考值
 		virtual void SetFixedXY(SIZE szXY);      // 仅float为true时有效
+		virtual SIZE GetFixedSize() const;
 		virtual int GetFixedWidth() const;       // 实际大小位置使用GetPos获取，这里得到的是预设的参考值
 		virtual void SetFixedWidth(int cx);      // 预设的参考值
 		virtual int GetFixedHeight() const;      // 实际大小位置使用GetPos获取，这里得到的是预设的参考值
@@ -122,7 +127,7 @@ namespace DuiLib
 		virtual void SetToolTip(LPCTSTR pstrText);
 		virtual void SetToolTipWidth(int nWidth);
 		virtual int	  GetToolTipWidth(void);	// 多行ToolTip单行最长宽度
-
+		
 		// 光标
 		virtual WORD GetCursor();
 		virtual void SetCursor(WORD wCursor);
@@ -180,7 +185,7 @@ namespace DuiLib
 		CControlUI* ApplyAttributeList(LPCTSTR pstrList);
 
 		virtual SIZE EstimateSize(SIZE szAvailable);
-		virtual bool Paint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl = NULL);
+		virtual bool Paint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl = NULL); // 返回要不要继续绘制
 		virtual bool DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl);
 		virtual void PaintBkColor(HDC hDC);
 		virtual void PaintBkImage(HDC hDC);
@@ -220,13 +225,14 @@ namespace DuiLib
 		bool m_bInternVisible;
 		bool m_bEnabled;
 		bool m_bMouseEnabled;
-		bool m_bKeyboardEnabled ;
+		bool m_bKeyboardEnabled;
 		bool m_bFocused;
 		bool m_bFloat;
 		TPercentInfo m_piFloatPercent;
 		UINT m_uFloatAlign;
 		bool m_bSetPos; // 防止SetPos循环调用
 
+		bool m_bRichEvent;
 		bool m_bDragEnabled;
 		bool m_bDropEnabled;
 
@@ -254,11 +260,11 @@ namespace DuiLib
 		SIZE m_cxyBorderRound;
 		RECT m_rcPaint;
 		RECT m_rcBorderSize;
-		HINSTANCE m_instance;
+	    HINSTANCE m_instance;
 
 		CStdStringPtrMap m_mCustomAttrHash;
 	};
 
 } // namespace DuiLib
 
-#endif // __UICONTROL_H_
+#endif // __UICONTROL_H__

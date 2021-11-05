@@ -3,6 +3,7 @@
 
 namespace DuiLib
 {
+
 	/////////////////////////////////////////////////////////////////////////////////////
 	//
 	//
@@ -101,7 +102,7 @@ namespace DuiLib
 
 	bool CDuiRect::IsNull() const
 	{
-		return (left == 0 && right == 0 && top == 0 && bottom == 0);
+		return (left == 0 && right == 0 && top == 0 && bottom == 0); 
 	}
 
 	void CDuiRect::Join(const RECT& rc)
@@ -274,10 +275,10 @@ namespace DuiLib
 	//
 	//
 
-	CStdValArray::CStdValArray(int iElementSize, int iPreallocSize /*= 0*/) :
-	m_pVoid(NULL),
-		m_nCount(0),
-		m_iElementSize(iElementSize),
+	CStdValArray::CStdValArray(int iElementSize, int iPreallocSize /*= 0*/) : 
+	m_pVoid(NULL), 
+		m_nCount(0), 
+		m_iElementSize(iElementSize), 
 		m_nAllocated(iPreallocSize)
 	{
 		ASSERT(iElementSize>0);
@@ -291,7 +292,7 @@ namespace DuiLib
 	}
 
 	void CStdValArray::Empty()
-	{
+	{   
 		m_nCount = 0;  // NOTE: We keep the memory in place
 	}
 
@@ -365,7 +366,7 @@ namespace DuiLib
 	}
 
 	CDuiString::CDuiString(LPCTSTR lpsz, int nLen) : m_pstr(m_szBuffer)
-	{
+	{      
 		ASSERT(!::IsBadStringPtr(lpsz,-1) || lpsz==NULL);
 		m_szBuffer[0] = '\0';
 		Assign(lpsz, nLen);
@@ -383,13 +384,13 @@ namespace DuiLib
 	}
 
 	int CDuiString::GetLength() const
-	{
-		return (int) _tcslen(m_pstr);
+	{ 
+		return (int) _tcslen(m_pstr); 
 	}
 
-	CDuiString::operator LPCTSTR() const
-	{
-		return m_pstr;
+	CDuiString::operator LPCTSTR() const 
+	{ 
+		return m_pstr; 
 	}
 
 	void CDuiString::Append(LPCTSTR pstr)
@@ -433,16 +434,16 @@ namespace DuiLib
 		m_pstr[cchMax] = '\0';
 	}
 
-	bool CDuiString::IsEmpty() const
-	{
-		return m_pstr[0] == '\0';
+	bool CDuiString::IsEmpty() const 
+	{ 
+		return m_pstr[0] == '\0'; 
 	}
 
-	void CDuiString::Empty()
-	{
+	void CDuiString::Empty() 
+	{ 
 		if( m_pstr != m_szBuffer ) free(m_pstr);
 		m_pstr = m_szBuffer;
-		m_szBuffer[0] = '\0';
+		m_szBuffer[0] = '\0'; 
 	}
 
 	LPCTSTR CDuiString::GetData() const
@@ -456,18 +457,18 @@ namespace DuiLib
 	}
 
 	TCHAR CDuiString::operator[] (int nIndex) const
-	{
+	{ 
 		return m_pstr[nIndex];
-	}
+	}   
 
 	const CDuiString& CDuiString::operator=(const CDuiString& src)
-	{
+	{      
 		Assign(src);
 		return *this;
 	}
 
 	const CDuiString& CDuiString::operator=(LPCTSTR lpStr)
-	{
+	{      
 		if ( lpStr )
 		{
 			ASSERT(!::IsBadStringPtr(lpStr,-1));
@@ -509,14 +510,14 @@ namespace DuiLib
 			if( pwstr != NULL ) ::MultiByteToWideChar(::GetACP(), 0, lpStr, -1, pwstr, cchStr) ;
 			Append(pwstr);
 		}
-
+		
 		return *this;
 	}
 
 #else
 
 	const CDuiString& CDuiString::operator=(LPCWSTR lpwStr)
-	{
+	{      
 		if ( lpwStr )
 		{
 			ASSERT(!::IsBadStringPtrW(lpwStr,-1));
@@ -529,7 +530,7 @@ namespace DuiLib
 		{
 			Empty();
 		}
-
+		
 		return *this;
 	}
 
@@ -543,7 +544,7 @@ namespace DuiLib
 			if( pstr != NULL ) ::WideCharToMultiByte(::GetACP(), 0, lpwStr, -1, pstr, cchStr, NULL, NULL);
 			Append(pstr);
 		}
-
+		
 		return *this;
 	}
 
@@ -578,24 +579,24 @@ namespace DuiLib
 	}
 
 	const CDuiString& CDuiString::operator+=(const CDuiString& src)
-	{
+	{      
 		Append(src);
 		return *this;
 	}
 
 	const CDuiString& CDuiString::operator+=(LPCTSTR lpStr)
-	{
+	{      
 		if ( lpStr )
 		{
 			ASSERT(!::IsBadStringPtr(lpStr,-1));
 			Append(lpStr);
 		}
-
+		
 		return *this;
 	}
 
 	const CDuiString& CDuiString::operator+=(const TCHAR ch)
-	{
+	{      
 		TCHAR str[] = { ch, '\0' };
 		Append(str);
 		return *this;
@@ -614,24 +615,24 @@ namespace DuiLib
 		m_pstr[nIndex] = ch;
 	}
 
-	int CDuiString::Compare(LPCTSTR lpsz) const
-	{
-		return _tcscmp(m_pstr, lpsz);
+	int CDuiString::Compare(LPCTSTR lpsz) const 
+	{ 
+		return _tcscmp(m_pstr, lpsz); 
 	}
 
-	int CDuiString::CompareNoCase(LPCTSTR lpsz) const
-	{
-		return _tcsicmp(m_pstr, lpsz);
+	int CDuiString::CompareNoCase(LPCTSTR lpsz) const 
+	{ 
+		return _tcsicmp(m_pstr, lpsz); 
 	}
 
-	void CDuiString::MakeUpper()
-	{
-		_tcsupr(m_pstr);
+	void CDuiString::MakeUpper() 
+	{ 
+		_tcsupr(m_pstr); 
 	}
 
-	void CDuiString::MakeLower()
-	{
-		_tcslwr(m_pstr);
+	void CDuiString::MakeLower() 
+	{ 
+		_tcslwr(m_pstr); 
 	}
 
 	CDuiString CDuiString::Left(int iLength) const
@@ -703,18 +704,19 @@ namespace DuiLib
 		}
 		return nCount;
 	}
+    
+    int CDuiString::Format(LPCTSTR pstrFormat, ...)
+    {
+        int nRet;
+        va_list Args;
 
-	int CDuiString::Format(LPCTSTR pstrFormat, ...)
-	{
-		int nRet;
-		va_list Args;
+        va_start(Args, pstrFormat);
+        nRet = InnerFormat(pstrFormat, Args);
+        va_end(Args);
 
-		va_start(Args, pstrFormat);
-		nRet = InnerFormat(pstrFormat, Args);
-		va_end(Args);
+        return nRet;
 
-		return nRet;
-	}
+    }
 
 	int CDuiString::SmallFormat(LPCTSTR pstrFormat, ...)
 	{
@@ -727,51 +729,50 @@ namespace DuiLib
 		Assign(szBuffer);
 		return iRet;
 	}
-
-	int CDuiString::InnerFormat(LPCTSTR pstrFormat, va_list Args)
-	{
+	
+    int CDuiString::InnerFormat(LPCTSTR pstrFormat, va_list Args)
+    {
 #if _MSC_VER <= 1400
-		TCHAR *szBuffer = NULL;
-		int size = 512, nLen, counts;
-		szBuffer = (TCHAR*)malloc(size);
-		ZeroMemory(szBuffer, size);
-		while (TRUE){
-			counts = size / sizeof(TCHAR);
-			nLen = _vsntprintf (szBuffer, counts, pstrFormat, Args);
-			if (nLen != -1 && nLen < counts){
-				break;
-			}
-			if (nLen == -1){
-				size *= 2;
-			}else{
-				size += 1 * sizeof(TCHAR);
-			}
+        TCHAR *szBuffer = NULL;
+        int size = 512, nLen, counts;
+        szBuffer = (TCHAR*)malloc(size);
+        ZeroMemory(szBuffer, size);
+        while (TRUE){
+            counts = size / sizeof(TCHAR);
+            nLen = _vsntprintf (szBuffer, counts, pstrFormat, Args);
+            if (nLen != -1 && nLen < counts){
+                break;
+            }
+            if (nLen == -1){
+                size *= 2;
+            }else{
+                size += 1 * sizeof(TCHAR);
+            }
 
-			if ((szBuffer = (TCHAR*)realloc(szBuffer, size)) != NULL){
-				ZeroMemory(szBuffer, size);
-			}else{
-				break;
-			}
-		}
+            if ((szBuffer = (TCHAR*)realloc(szBuffer, size)) != NULL){
+                ZeroMemory(szBuffer, size);
+            }else{
+                break;
+            }
+        }
 
-		Assign(szBuffer);
-		free(szBuffer);
-		return nLen;
+        Assign(szBuffer);
+        free(szBuffer);
+        return nLen;
 #else
-		int nLen, totalLen;
-		TCHAR *szBuffer;
-		nLen = _vsntprintf(NULL, 0, pstrFormat, Args);
-		totalLen = (nLen + 1)*sizeof(TCHAR);
-		szBuffer = (TCHAR*)malloc(totalLen);
-		ZeroMemory(szBuffer, totalLen);
-		nLen = _vsntprintf(szBuffer, nLen + 1, pstrFormat, Args);
-		Assign(szBuffer);
-		free(szBuffer);
-		return nLen;
+        int nLen, totalLen;
+        TCHAR *szBuffer;
+        nLen = _vsntprintf(NULL, 0, pstrFormat, Args);
+        totalLen = (nLen + 1)*sizeof(TCHAR);
+        szBuffer = (TCHAR*)malloc(totalLen);
+        ZeroMemory(szBuffer, totalLen);
+        nLen = _vsntprintf(szBuffer, nLen + 1, pstrFormat, Args);
+        Assign(szBuffer);
+        free(szBuffer);
+        return nLen;
 
 #endif
-	}
-
+    }
 
 	/////////////////////////////////////////////////////////////////////////////
 	//
@@ -840,7 +841,7 @@ namespace DuiLib
 		if( nSize > 0 ) {
 			m_aT = new TITEM*[nSize];
 			memset(m_aT, 0, nSize * sizeof(TITEM*));
-		}
+		} 
 		m_nBuckets = nSize;
 		m_nCount = 0;
 	}
@@ -864,7 +865,7 @@ namespace DuiLib
 					m_aT[slot] = pItem;
 				}
 				return pItem->Data;
-			}
+			}        
 		}
 
 		return NULL;
@@ -980,4 +981,254 @@ namespace DuiLib
 	{
 		::SetCursor(m_hOrigCursor);
 	}
+
+
+	/////////////////////////////////////////////////////////////////////////////////////
+	//
+	//
+	//CImageString::CImageString()
+	//{
+	//	Clear();
+	//}
+
+	//CImageString::CImageString(const CImageString& image)
+	//{
+	//	Clone(image);
+	//}
+
+	//const CImageString& CImageString::operator=(const CImageString& image)
+	//{
+	//	Clone(image);
+	//	return *this;
+	//}
+
+	//void CImageString::Clone(const CImageString& image)
+	//{
+	//	m_sImageAttribute = image.m_sImageAttribute;
+
+	//	m_sImage = image.m_sImage;
+	//	m_sResType = image.m_sResType;
+	//	m_imageInfo = image.m_imageInfo;
+	//	m_bLoadSuccess = image.m_bLoadSuccess;
+
+	//	m_rcDest = image.m_rcDest;
+	//	m_rcSource = image.m_rcSource;
+	//	m_rcCorner = image.m_rcCorner;
+	//	m_bFade = image.m_bFade;
+	//	m_dwMask = image.m_dwMask;
+	//	m_bHole = image.m_bHole;
+	//	m_bTiledX = image.m_bTiledX;
+	//	m_bTiledY = image.m_bTiledY;
+	//}
+
+	//CImageString::~CImageString()
+	//{
+
+	//}
+
+	//const CDuiString& CImageString::GetAttributeString() const
+	//{
+	//	return m_sImageAttribute;
+	//}
+
+	//void CImageString::SetAttributeString(LPCTSTR pStrImageAttri)
+	//{
+	//	if (m_sImageAttribute == pStrImageAttri) return;
+	//	Clear();
+	//	m_sImageAttribute = pStrImageAttri;
+	//	m_sImage = m_sImageAttribute;
+	//}
+
+	//bool CImageString::LoadImage(CPaintManagerUI* pManager)
+	//{
+	//	m_imageInfo = NULL;
+	//	m_bLoadSuccess = true;
+	//	ZeroMemory(&m_rcDest, sizeof(RECT));
+	//	ZeroMemory(&m_rcSource, sizeof(RECT));
+	//	ZeroMemory(&m_rcCorner, sizeof(RECT));
+	//	m_bFade = 0xFF;
+	//	m_dwMask = 0;
+	//	m_bHole = false;
+	//	m_bTiledX = false;
+	//	m_bTiledY = false;
+	//	ParseAttribute(m_sImageAttribute,*pManager->GetDPIObj());
+	//	if (!m_bLoadSuccess) return false;
+
+	//	const TImageInfo* data = NULL;
+	//	if (m_sResType.IsEmpty())
+	//	{
+	//		data = pManager->GetImageEx((LPCTSTR)m_sImage, NULL, m_dwMask);
+	//	}
+	//	else
+	//	{
+	//		data = pManager->GetImageEx((LPCTSTR)m_sImage, (LPCTSTR)m_sResType, m_dwMask);
+	//	}
+	//	if (data == NULL)
+	//	{
+	//		m_bLoadSuccess = false;
+	//		return false;
+	//	}
+	//	else
+	//	{
+	//		m_bLoadSuccess = true;
+	//	}
+
+	//	if (m_rcSource.left == 0 && m_rcSource.right == 0 && m_rcSource.top == 0 && m_rcSource.bottom == 0)
+	//	{
+	//		m_rcSource.right = data->nX;
+	//		m_rcSource.bottom = data->nY;
+	//	}
+	//	if (m_rcSource.right > data->nX) m_rcSource.right = data->nX;
+	//	if (m_rcSource.bottom > data->nY) m_rcSource.bottom = data->nY;
+	//	m_imageInfo = const_cast<TImageInfo*>(data);
+
+	//	return true;
+	//}
+
+	//bool CImageString::IsLoadSuccess()
+	//{
+	//	return !m_sImageAttribute.IsEmpty() && m_bLoadSuccess;
+	//}
+
+	//void CImageString::ModifyAttribute(LPCTSTR pStrModify)
+	//{
+	//	//ParseAttribute(pStrModify);
+	//}
+
+	//void CImageString::Clear()
+	//{
+	//	m_sImageAttribute.Empty();
+	//	m_sImage.Empty();
+	//	m_sResType.Empty();
+	//	m_imageInfo = NULL;
+	//	m_bLoadSuccess = true;
+	//	ZeroMemory(&m_rcDest, sizeof(RECT));
+	//	ZeroMemory(&m_rcSource, sizeof(RECT));
+	//	ZeroMemory(&m_rcCorner, sizeof(RECT));
+	//	m_bFade = 0xFF;
+	//	m_dwMask = 0;
+	//	m_bHole = false;
+	//	m_bTiledX = false;
+	//	m_bTiledY = false;
+	//}
+
+	//void CImageString::ParseAttribute(LPCTSTR pStrImage)
+	//{
+	//	if (pStrImage == NULL)
+	//		return;
+
+	//	// 1¡¢aaa.jpg
+	//	// 2¡¢file='aaa.jpg' res='' restype='0' dest='0,0,0,0' source='0,0,0,0' corner='0,0,0,0' 
+	//	// mask='#FF0000' fade='255' hole='false' xtiled='false' ytiled='false'
+	//	CDuiString sItem;
+	//	CDuiString sValue;
+	//	LPTSTR pstr = NULL;
+
+	//	while (*pStrImage != _T('\0'))
+	//	{
+	//		sItem.Empty();
+	//		sValue.Empty();
+	//		while (*pStrImage > _T('\0') && *pStrImage <= _T(' ')) pStrImage = ::CharNext(pStrImage);
+	//		while (*pStrImage != _T('\0') && *pStrImage != _T('=') && *pStrImage > _T(' '))
+	//		{
+	//			LPTSTR pstrTemp = ::CharNext(pStrImage);
+	//			while (pStrImage < pstrTemp)
+	//			{
+	//				sItem += *pStrImage++;
+	//			}
+	//		}
+	//		while (*pStrImage > _T('\0') && *pStrImage <= _T(' ')) pStrImage = ::CharNext(pStrImage);
+	//		if (*pStrImage++ != _T('=')) break;
+	//		while (*pStrImage > _T('\0') && *pStrImage <= _T(' ')) pStrImage = ::CharNext(pStrImage);
+	//		if (*pStrImage++ != _T('\'')) break;
+	//		while (*pStrImage != _T('\0') && *pStrImage != _T('\''))
+	//		{
+	//			LPTSTR pstrTemp = ::CharNext(pStrImage);
+	//			while (pStrImage < pstrTemp)
+	//			{
+	//				sValue += *pStrImage++;
+	//			}
+	//		}
+	//		if (*pStrImage++ != _T('\'')) break;
+	//		if (!sValue.IsEmpty())
+	//		{
+	//			if (sItem == _T("file") || sItem == _T("res"))
+	//			{
+	//				m_sImage = sValue;
+	//				//if (g_Dpi.GetScale() != 100) {
+	//				//	std::wstringstream wss;
+	//				//	wss << L"@" << g_Dpi.GetScale() << L".";
+	//				//	std::wstring suffix = wss.str();
+	//				//	m_sImage.Replace(L".", suffix.c_str());
+	//				//}
+	//			}
+	//			else if (sItem == _T("restype"))
+	//			{					
+	//				m_sResType = sValue;
+	//			}
+	//			else if (sItem == _T("dest"))
+	//			{
+	//				m_rcDest.left = _tcstol(sValue.GetData(), &pstr, 10);  ASSERT(pstr);
+	//				m_rcDest.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+	//				m_rcDest.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
+	//				m_rcDest.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+
+	//				//g_Dpi.ScaleRect(&m_rcDest);
+	//			}
+	//			else if (sItem == _T("source"))
+	//			{
+	//				m_rcSource.left = _tcstol(sValue.GetData(), &pstr, 10);  ASSERT(pstr);
+	//				m_rcSource.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+	//				m_rcSource.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
+	//				m_rcSource.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+	//				//g_Dpi.ScaleRect(&m_rcSource);
+	//			}
+	//			else if (sItem == _T("corner"))
+	//			{
+	//				m_rcCorner.left = _tcstol(sValue.GetData(), &pstr, 10);  ASSERT(pstr);
+	//				m_rcCorner.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+	//				m_rcCorner.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
+	//				m_rcCorner.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+	//				//g_Dpi.ScaleRect(&m_rcCorner);
+	//			}
+	//			else if (sItem == _T("mask"))
+	//			{
+	//				if (sValue[0] == _T('#')) m_dwMask = _tcstoul(sValue.GetData() + 1, &pstr, 16);
+	//				else m_dwMask = _tcstoul(sValue.GetData(), &pstr, 16);
+	//			}
+	//			else if (sItem == _T("fade"))
+	//			{
+	//				m_bFade = (BYTE)_tcstoul(sValue.GetData(), &pstr, 10);
+	//			}
+	//			else if (sItem == _T("hole"))
+	//			{
+	//				m_bHole = (_tcscmp(sValue.GetData(), _T("true")) == 0);
+	//			}
+	//			else if (sItem == _T("xtiled"))
+	//			{
+	//				m_bTiledX = (_tcscmp(sValue.GetData(), _T("true")) == 0);
+	//			}
+	//			else if (sItem == _T("ytiled"))
+	//			{
+	//				m_bTiledY = (_tcscmp(sValue.GetData(), _T("true")) == 0);
+	//			}
+	//		}
+	//		if (*pStrImage++ != _T(' ')) break;
+	//	}
+	//}
+
+	//void CImageString::SetDest(const RECT &rcDest)
+	//{
+	//	m_rcDest = rcDest;
+	//}
+
+	//RECT CImageString::GetDest() const
+	//{
+	//	return m_rcDest;
+	//}
+
+	//const TImageInfo* CImageString::GetImageInfo() const
+	//{
+	//	return m_imageInfo;
+	//}
 } // namespace DuiLib

@@ -1,9 +1,9 @@
-#ifndef _UICONTAINER_H_
-#define _UICONTAINER_H_
+#ifndef __UICONTAINER_H__
+#define __UICONTAINER_H__
+
 #pragma once
 
-namespace DuiLib
-{
+namespace DuiLib {
 	/////////////////////////////////////////////////////////////////////////////////////
 	//
 
@@ -136,4 +136,4 @@ namespace DuiLib
 
 } // namespace DuiLib
 
-#endif // __UICONTAINER_H_
+#endif // __UICONTAINER_H__

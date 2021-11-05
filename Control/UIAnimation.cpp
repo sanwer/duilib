@@ -3,18 +3,17 @@
 #include <vector>
 #include <algorithm>
 
-namespace DuiLib
-{
+namespace DuiLib {
 	struct CUIAnimation::Imp
 	{
 		std::vector<CAnimationData*> m_arAnimations;
 	};
 
-	CUIAnimation::CUIAnimation(CControlUI* pOwner):m_pImp(new CUIAnimation::Imp())
+	CUIAnimation::CUIAnimation():m_pImp(new CUIAnimation::Imp())
 	{
-		ASSERT(pOwner != NULL);
-		m_pControl = pOwner;
+		m_pControl = NULL;
 	}
+
 	CUIAnimation:: ~CUIAnimation()
 	{
 		if(m_pImp)
@@ -23,10 +22,16 @@ namespace DuiLib
 			m_pImp = NULL;
 		}
 	}
+
+	void CUIAnimation::Attach(CControlUI* pOwner)
+	{
+		m_pControl = pOwner;
+	}
+
 	BOOL CUIAnimation::StartAnimation(int nElapse, int nTotalFrame, int nAnimationID /*= 0*/, BOOL bLoop/* = FALSE*/)
 	{
 		CAnimationData* pData = GetAnimationDataByID(nAnimationID);
-		if( NULL != pData
+		if( NULL != pData 
 			|| nElapse <= 0
 			|| nTotalFrame <= 0
 			|| NULL == m_pControl )
@@ -37,7 +42,7 @@ namespace DuiLib
 
 		CAnimationData* pAnimation = new CAnimationData(nElapse, nTotalFrame, nAnimationID, bLoop);
 		if( NULL == pAnimation ) return FALSE;
-
+		
 		if(m_pControl->GetManager()->SetTimer( m_pControl, nAnimationID, nElapse ))
 		{
 			m_pImp->m_arAnimations.push_back(pAnimation);
@@ -66,7 +71,7 @@ namespace DuiLib
 		}
 		else
 		{
-			int nCount = m_pImp->m_arAnimations.size();
+			size_t nCount = m_pImp->m_arAnimations.size();
 			for(int i=0; i<nCount; ++i)
 			{
 				CAnimationData* pData = m_pImp->m_arAnimations[i];
@@ -161,7 +166,7 @@ namespace DuiLib
 	CAnimationData* CUIAnimation::GetAnimationDataByID(int nAnimationID)
 	{
 		CAnimationData* pRet = NULL;
-		int nCount = m_pImp->m_arAnimations.size();
+		size_t nCount = m_pImp->m_arAnimations.size();
 		for(int i=0; i<nCount; ++i)
 		{
 			if(m_pImp->m_arAnimations[i]->m_nAnimationID == nAnimationID)

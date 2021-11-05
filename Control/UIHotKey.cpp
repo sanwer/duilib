@@ -23,8 +23,8 @@ namespace DuiLib{
 			::EnableWindow(m_hWnd, m_pOwner->IsEnabled() == true);
 			::ShowWindow(m_hWnd, SW_SHOWNOACTIVATE);
 			::SetFocus(m_hWnd);
-			m_bInit = true;
-		} while (0);
+			m_bInit = true;   
+		} while (0); 
 	}
 
 
@@ -71,7 +71,7 @@ namespace DuiLib{
 				::InvalidateRect(m_hWnd, &rcClient, FALSE);
 			}
 		}
-		else if( uMsg == WM_KEYDOWN && TCHAR(wParam) == VK_RETURN ) {
+		else if( uMsg == WM_KEYDOWN && wParam == VK_RETURN ) {
 			m_pOwner->GetManager()->SendNotify(m_pOwner, _T("return"));
 		}
 		else if ( (uMsg == WM_NCACTIVATE) || (uMsg == WM_NCACTIVATE) || (uMsg == WM_NCCALCSIZE) )
@@ -140,14 +140,14 @@ namespace DuiLib{
 
 	void CHotKeyWnd::SetHotKey(WORD wVirtualKeyCode, WORD wModifiers)
 	{
-		ASSERT(::IsWindow(m_hWnd));
+		ASSERT(::IsWindow(m_hWnd));  
 		::SendMessage(m_hWnd, HKM_SETHOTKEY, MAKEWORD(wVirtualKeyCode, wModifiers), 0L);
 	}
 
 	DWORD CHotKeyWnd::GetHotKey() const
 	{
 		ASSERT(::IsWindow(m_hWnd));
-		return (::SendMessage(m_hWnd, HKM_GETHOTKEY, 0, 0L));
+		return ((DWORD)::SendMessage(m_hWnd, HKM_GETHOTKEY, 0, 0L));
 	}
 
 	void CHotKeyWnd::GetHotKey(WORD &wVirtualKeyCode, WORD &wModifiers) const
@@ -158,9 +158,9 @@ namespace DuiLib{
 	}
 
 	void CHotKeyWnd::SetRules(WORD wInvalidComb, WORD wModifiers)
-	{
-		ASSERT(::IsWindow(m_hWnd));
-		::SendMessage(m_hWnd, HKM_SETRULES, wInvalidComb, MAKELPARAM(wModifiers, 0));
+	{ 
+		ASSERT(::IsWindow(m_hWnd));  
+		::SendMessage(m_hWnd, HKM_SETRULES, wInvalidComb, MAKELPARAM(wModifiers, 0)); 
 	}
 
 
@@ -269,7 +269,7 @@ namespace DuiLib{
 
 		if( event.Type == UIEVENT_SETCURSOR && IsEnabled() )
 		{
-			::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_IBEAM)));
+			::SetCursor(::LoadCursor(NULL, IDC_IBEAM));
 			return;
 		}
 		if( event.Type == UIEVENT_WINDOWSIZE )
@@ -280,7 +280,7 @@ namespace DuiLib{
 		{
 			if( m_pWindow != NULL ) return;
 		}
-		if( event.Type == UIEVENT_SETFOCUS && IsEnabled() )
+		if( event.Type == UIEVENT_SETFOCUS && IsEnabled() ) 
 		{
 			if( m_pWindow ) return;
 			m_pWindow = new CHotKeyWnd();
@@ -289,12 +289,12 @@ namespace DuiLib{
 			Invalidate();
 		}
 
-		if( event.Type == UIEVENT_KILLFOCUS && IsEnabled() )
+		if( event.Type == UIEVENT_KILLFOCUS && IsEnabled() ) 
 		{
 			Invalidate();
 		}
 
-		if( event.Type == UIEVENT_BUTTONDOWN || event.Type == UIEVENT_DBLCLICK || event.Type == UIEVENT_RBUTTONDOWN)
+		if( event.Type == UIEVENT_BUTTONDOWN || event.Type == UIEVENT_DBLCLICK || event.Type == UIEVENT_RBUTTONDOWN) 
 		{
 			if( IsEnabled() ) {
 				GetManager()->ReleaseCapture();
@@ -306,11 +306,11 @@ namespace DuiLib{
 			}
 			return;
 		}
-		if( event.Type == UIEVENT_MOUSEMOVE )
+		if( event.Type == UIEVENT_MOUSEMOVE ) 
 		{
 			return;
 		}
-		if( event.Type == UIEVENT_BUTTONUP )
+		if( event.Type == UIEVENT_BUTTONUP ) 
 		{
 			return;
 		}
@@ -411,8 +411,8 @@ namespace DuiLib{
 		CControlUI::SetPos(rc);
 		if( m_pWindow != NULL ) {
 			RECT rcPos = m_pWindow->CalPos();
-			::SetWindowPos(m_pWindow->GetHWND(), NULL, rcPos.left, rcPos.top, rcPos.right - rcPos.left,
-				rcPos.bottom - rcPos.top, SWP_NOZORDER | SWP_NOACTIVATE);
+			::SetWindowPos(m_pWindow->GetHWND(), NULL, rcPos.left, rcPos.top, rcPos.right - rcPos.left, 
+				rcPos.bottom - rcPos.top, SWP_NOZORDER | SWP_NOACTIVATE);        
 		}
 	}
 

@@ -10,9 +10,9 @@ namespace DuiLib
 
 	void WindowImplBase::OnFinalMessage( HWND hWnd )
 	{
-		m_Manager.RemovePreMessageFilter(this);
-		m_Manager.RemoveNotifier(this);
-		m_Manager.ReapObjects(m_Manager.GetRoot());
+		m_pm.RemovePreMessageFilter(this);
+		m_pm.RemoveNotifier(this);
+		m_pm.ReapObjects(m_pm.GetRoot());
 	}
 
 	LRESULT WindowImplBase::ResponseDefaultKeyEvent(WPARAM wParam)
@@ -89,6 +89,7 @@ namespace DuiLib
 		return 0;
 	}
 
+
 	BOOL WindowImplBase::IsInStaticControl(CControlUI *pControl)
 	{
 		BOOL bRet = FALSE;
@@ -145,7 +146,7 @@ namespace DuiLib
 
 		if (!::IsZoomed(*this))
 		{
-			RECT rcSizeBox = m_Manager.GetSizeBox();
+			RECT rcSizeBox = m_pm.GetSizeBox();
 			if (pt.y < rcClient.top + rcSizeBox.top)
 			{
 				if (pt.x < rcClient.left + rcSizeBox.left) return HTTOPLEFT;
@@ -163,8 +164,8 @@ namespace DuiLib
 			if (pt.x > rcClient.right - rcSizeBox.right) return HTRIGHT;
 		}
 
-		RECT rcCaption = m_Manager.GetCaptionRect();
-		if (-1 == rcCaption.bottom)
+		RECT rcCaption = m_pm.GetCaptionRect();
+		if (0 > rcCaption.bottom)
 		{
 			rcCaption.bottom = rcClient.bottom;
 		}
@@ -172,7 +173,7 @@ namespace DuiLib
 		if (pt.x >= rcClient.left + rcCaption.left && pt.x < rcClient.right - rcCaption.right
 			&& pt.y >= rcCaption.top && pt.y < rcCaption.bottom)
 		{
-			CControlUI* pControl = m_Manager.FindControl(pt);
+			CControlUI* pControl = m_pm.FindControl(pt);
 			if (IsInStaticControl(pControl))
 			{
 				return HTCAPTION;
@@ -197,10 +198,10 @@ namespace DuiLib
 		lpMMI->ptMaxPosition.y	= rcWork.top;
 		lpMMI->ptMaxSize.x = rcWork.right - rcWork.left;
 		lpMMI->ptMaxSize.y = rcWork.bottom - rcWork.top;
-		lpMMI->ptMaxTrackSize.x = m_Manager.GetMaxInfo().cx == 0?rcWork.right - rcWork.left:m_Manager.GetMaxInfo().cx;
-		lpMMI->ptMaxTrackSize.y = m_Manager.GetMaxInfo().cy == 0?rcWork.bottom - rcWork.top:m_Manager.GetMaxInfo().cy;
-		lpMMI->ptMinTrackSize.x = m_Manager.GetMinInfo().cx;
-		lpMMI->ptMinTrackSize.y = m_Manager.GetMinInfo().cy;
+		lpMMI->ptMaxTrackSize.x = m_pm.GetMaxInfo().cx == 0?rcWork.right - rcWork.left:m_pm.GetMaxInfo().cx;
+		lpMMI->ptMaxTrackSize.y = m_pm.GetMaxInfo().cy == 0?rcWork.bottom - rcWork.top:m_pm.GetMaxInfo().cy;
+		lpMMI->ptMinTrackSize.x = m_pm.GetMinInfo().cx;
+		lpMMI->ptMinTrackSize.y = m_pm.GetMinInfo().cy;
 
 		bHandled = TRUE;
 		return 0;
@@ -221,7 +222,7 @@ namespace DuiLib
 
 	LRESULT WindowImplBase::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 	{
-		SIZE szRoundCorner = m_Manager.GetRoundCorner();
+		SIZE szRoundCorner = m_pm.GetRoundCorner();
 #if defined(WIN32) && !defined(UNDER_CE)
 		if( !::IsIconic(*this) ) {
 			CDuiRect rcWnd;
@@ -256,15 +257,15 @@ namespace DuiLib
 		LRESULT lRes = CWindowWnd::HandleMessage(uMsg, wParam, lParam);
 		if( ::IsZoomed(*this) != bZoomed ) {
 			if( !bZoomed ) {
-				CControlUI* pControl = static_cast<CControlUI*>(m_Manager.FindControl(_T("maxbtn")));
+				CControlUI* pControl = static_cast<CControlUI*>(m_pm.FindControl(_T("maxbtn")));
 				if( pControl ) pControl->SetVisible(false);
-				pControl = static_cast<CControlUI*>(m_Manager.FindControl(_T("restorebtn")));
+				pControl = static_cast<CControlUI*>(m_pm.FindControl(_T("restorebtn")));
 				if( pControl ) pControl->SetVisible(true);
 			}
 			else {
-				CControlUI* pControl = static_cast<CControlUI*>(m_Manager.FindControl(_T("maxbtn")));
+				CControlUI* pControl = static_cast<CControlUI*>(m_pm.FindControl(_T("maxbtn")));
 				if( pControl ) pControl->SetVisible(true);
-				pControl = static_cast<CControlUI*>(m_Manager.FindControl(_T("restorebtn")));
+				pControl = static_cast<CControlUI*>(m_pm.FindControl(_T("restorebtn")));
 				if( pControl ) pControl->SetVisible(false);
 			}
 		}
@@ -280,10 +281,11 @@ namespace DuiLib
 		LONG styleValue = ::GetWindowLong(*this, GWL_STYLE);
 		styleValue &= ~WS_CAPTION;
 		::SetWindowLong(*this, GWL_STYLE, styleValue | WS_CLIPSIBLINGS | WS_CLIPCHILDREN);
+
 		// 关联UI管理器
-		m_Manager.Init(m_hWnd, GetManagerName());
+		m_pm.Init(m_hWnd, GetManagerName());
 		// 注册PreMessage回调
-		m_Manager.AddPreMessageFilter(this);
+		m_pm.AddPreMessageFilter(this);
 
 		// 创建主窗口
 		CControlUI* pRoot=NULL;
@@ -291,22 +293,22 @@ namespace DuiLib
 		CDuiString sSkinType = GetSkinType();
 		if (!sSkinType.IsEmpty()) {
 			STRINGorID xml(_ttoi(GetSkinFile().GetData()));
-			pRoot = builder.Create(xml, sSkinType, this, &m_Manager);
+			pRoot = builder.Create(xml, sSkinType, this, &m_pm);
 		}
 		else {
-			pRoot = builder.Create(GetSkinFile().GetData(), (UINT)0, this, &m_Manager);
+			pRoot = builder.Create(GetSkinFile().GetData(), (UINT)0, this, &m_pm);
 		}
 
 		if (pRoot == NULL) {
 			CDuiString sError = _T("加载资源文件失败：");
 			sError += GetSkinFile();
-			MessageBox(NULL, sError, _T("DuiLib") ,MB_OK|MB_ICONERROR);
+			MessageBox(NULL, sError, _T("Duilib") ,MB_OK|MB_ICONERROR);
 			ExitProcess(1);
 			return 0;
 		}
-		m_Manager.AttachDialog(pRoot);
+		m_pm.AttachDialog(pRoot);
 		// 添加Notify事件接口
-		m_Manager.AddNotifier(this);
+		m_pm.AddNotifier(this);
 		// 窗口初始化完毕
 		InitWindow();
 		return 0;
@@ -382,7 +384,7 @@ namespace DuiLib
 		lRes = HandleCustomMessage(uMsg, wParam, lParam, bHandled);
 		if (bHandled) return lRes;
 
-		if (m_Manager.MessageHandler(uMsg, wParam, lParam, lRes))
+		if (m_pm.MessageHandler(uMsg, wParam, lParam, lRes))
 			return lRes;
 		return CWindowWnd::HandleMessage(uMsg, wParam, lParam);
 	}
@@ -406,19 +408,19 @@ namespace DuiLib
 		CDuiString sCtrlName = msg.pSender->GetName();
 		if( sCtrlName == _T("closebtn") ) {
 			Close();
-			return;
+			return; 
 		}
-		else if( sCtrlName == _T("minbtn")) {
-			SendMessage(WM_SYSCOMMAND, SC_MINIMIZE, 0);
-			return;
+		else if( sCtrlName == _T("minbtn")) { 
+			SendMessage(WM_SYSCOMMAND, SC_MINIMIZE, 0); 
+			return; 
 		}
-		else if( sCtrlName == _T("maxbtn")) {
-			SendMessage(WM_SYSCOMMAND, SC_MAXIMIZE, 0);
-			return;
+		else if( sCtrlName == _T("maxbtn")) { 
+			SendMessage(WM_SYSCOMMAND, SC_MAXIMIZE, 0); 
+			return; 
 		}
-		else if( sCtrlName == _T("restorebtn")) {
-			SendMessage(WM_SYSCOMMAND, SC_RESTORE, 0);
-			return;
+		else if( sCtrlName == _T("restorebtn")) { 
+			SendMessage(WM_SYSCOMMAND, SC_RESTORE, 0); 
+			return; 
 		}
 		return;
 	}

@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 
-namespace DuiLib
-{
+namespace DuiLib {
+
 	/////////////////////////////////////////////////////////////////////////////////////
 	//
 	//
@@ -24,7 +24,7 @@ namespace DuiLib
 #endif
 		bool IsHitItem(POINT ptMouse);
 	public:
-		CPaintManagerUI m_Manager;
+		CPaintManagerUI m_pm;
 		CComboUI* m_pOwner;
 		CVerticalLayoutUI* m_pLayout;
 		int m_iOldSel;
@@ -48,8 +48,6 @@ namespace DuiLib
 				}
 				pCtrl = pCtrl->GetParent();
 			}
-
-			if( m_pOwner->GetManager() != NULL ) m_pOwner->GetManager()->SendNotify(msg.pSender, DUI_MSGTYPE_CLICK, 0, 0);
 		}
 	}
 
@@ -62,6 +60,7 @@ namespace DuiLib
 
 		// Position the popup window in absolute space
 		SIZE szDrop = m_pOwner->GetDropBoxSize();
+		RECT rcInset = m_pOwner->GetDropBoxInset();
 		RECT rcOwner = pOwner->GetPos();
 		RECT rc = rcOwner;
 		rc.top = rc.bottom;		// 父窗口left、bottom位置作为弹出窗口起点
@@ -69,7 +68,7 @@ namespace DuiLib
 		if( szDrop.cx > 0 ) rc.right = rc.left + szDrop.cx;	// 计算弹出窗口宽度
 
 		SIZE szAvailable = { rc.right - rc.left, rc.bottom - rc.top };
-		int cyFixed = 0;
+		int cyFixed = rcInset.top;
 		for( int it = 0; it < pOwner->GetCount(); it++ ) {
 			CControlUI* pControl = static_cast<CControlUI*>(pOwner->GetItemAt(it));
 			if( !pControl->IsVisible() ) continue;
@@ -117,7 +116,7 @@ namespace DuiLib
 
 	bool CComboWnd::IsHitItem(POINT ptMouse)
 	{
-		CControlUI* pControl = m_Manager.FindControl(ptMouse);
+		CControlUI* pControl = m_pm.FindControl(ptMouse);
 		if(pControl != NULL) {
 			LPVOID pInterface = pControl->GetInterface(DUI_CTR_SCROLLBAR);
 			if(pInterface) return false;
@@ -130,20 +129,21 @@ namespace DuiLib
 				pControl = pControl->GetParent();
 			}
 		}
-
+		
 		return false;
 	}
 
 	LRESULT CComboWnd::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		if( uMsg == WM_CREATE ) {
-			m_Manager.SetForceUseSharedRes(true);
-			m_Manager.Init(m_hWnd);
+			m_pm.SetForceUseSharedRes(true);
+			m_pm.Init(m_hWnd);
+			m_pm.SetLayered(true);
 			// The trick is to add the items to the new container. Their owner gets
 			// reassigned by this operation - which is why it is important to reassign
 			// the items back to the righfull owner/manager when the window closes.
 			m_pLayout = new CVerticalLayoutUI;
-			m_pLayout->SetManager(&m_Manager, NULL, true);
+			m_pLayout->SetManager(&m_pm, NULL, true);
 			LPCTSTR pDefaultAttributes = m_pOwner->GetManager()->GetDefaultAttributeList(_T("VerticalLayout"));
 			if( pDefaultAttributes ) {
 				m_pLayout->ApplyAttributeList(pDefaultAttributes);
@@ -159,12 +159,10 @@ namespace DuiLib
 				m_pLayout->Add(static_cast<CControlUI*>(m_pOwner->GetItemAt(i)));
 			}
 			CShadowUI *pShadow = m_pOwner->GetManager()->GetShadow();
-			if(pShadow != NULL && m_pOwner != NULL) {
-				pShadow->CopyShadow(m_Manager.GetShadow());
-				m_Manager.GetShadow()->ShowShadow(m_pOwner->IsShowShadow());
-			}
-			m_Manager.AttachDialog(m_pLayout);
-			m_Manager.AddNotifier(this);
+			pShadow->CopyShadow(m_pm.GetShadow());
+			m_pm.GetShadow()->ShowShadow(m_pOwner->IsShowShadow());
+			m_pm.AttachDialog(m_pLayout);
+			m_pm.AddNotifier(this);
 			return 0;
 		}
 		else if( uMsg == WM_CLOSE ) {
@@ -176,13 +174,13 @@ namespace DuiLib
 		else if( uMsg == WM_LBUTTONDOWN ) {
 			POINT pt = { 0 };
 			::GetCursorPos(&pt);
-			::ScreenToClient(m_Manager.GetPaintWindow(), &pt);
+			::ScreenToClient(m_pm.GetPaintWindow(), &pt);
 			m_bHitItem = IsHitItem(pt);
 		}
 		else if( uMsg == WM_LBUTTONUP ) {
 			POINT pt = { 0 };
 			::GetCursorPos(&pt);
-			::ScreenToClient(m_Manager.GetPaintWindow(), &pt);
+			::ScreenToClient(m_pm.GetPaintWindow(), &pt);
 			if(m_bHitItem && IsHitItem(pt)) {
 				PostMessage(WM_KILLFOCUS);
 			}
@@ -227,15 +225,14 @@ namespace DuiLib
 		}
 
 		LRESULT lRes = 0;
-		if( m_Manager.MessageHandler(uMsg, wParam, lParam, lRes) ) return lRes;
+		if( m_pm.MessageHandler(uMsg, wParam, lParam, lRes) ) return lRes;
 		return CWindowWnd::HandleMessage(uMsg, wParam, lParam);
 	}
 
 	void CComboWnd::EnsureVisible(int iIndex)
 	{
-		int nCurSel = m_pOwner->GetCurSel();
-		if( nCurSel < 0 ) return;
-		m_pLayout->FindSelectable(nCurSel, false);
+		if( m_pOwner->GetCurSel() < 0 ) return;
+		m_pLayout->FindSelectable(m_pOwner->GetCurSel(), false);
 		RECT rcItem = m_pLayout->GetItemAt(iIndex)->GetPos();
 		RECT rcList = m_pLayout->GetPos();
 		CScrollBarUI* pHorizontalScrollBar = m_pLayout->GetHorizontalScrollBar();
@@ -258,8 +255,10 @@ namespace DuiLib
 #if(_WIN32_WINNT >= 0x0501)
 	UINT CComboWnd::GetClassStyle() const
 	{
+		return __super::GetClassStyle();
 		if(m_pOwner->IsShowShadow()) {
 			return __super::GetClassStyle();
+
 		}
 		else {
 			return __super::GetClassStyle() | CS_DROPSHADOW;
@@ -278,9 +277,11 @@ namespace DuiLib
 		, m_iCurSel(-1)
 		, m_uButtonState(0)
 		, m_bScrollSelect(true)
+		, m_bShowShadow(false)
 	{
 		m_szDropBox = CDuiSize(0, 150);
 		::ZeroMemory(&m_rcTextPadding, sizeof(m_rcTextPadding));
+		::ZeroMemory(&m_rcDropBox, sizeof(m_rcDropBox));
 
 		m_ListInfo.nColumns = 0;
 		m_ListInfo.nFont = -1;
@@ -299,6 +300,9 @@ namespace DuiLib
 		m_ListInfo.bMultiExpandable = false;
 		::ZeroMemory(&m_ListInfo.rcTextPadding, sizeof(m_ListInfo.rcTextPadding));
 		::ZeroMemory(&m_ListInfo.rcColumn, sizeof(m_ListInfo.rcColumn));
+
+		m_pCompareFunc = NULL;
+		m_compareData = NULL;
 	}
 
 	LPCTSTR CComboUI::GetClass() const
@@ -412,12 +416,12 @@ namespace DuiLib
 	{
 		return SelectItem(iIndex, bTakeFocus);
 	}
-
+	
 	bool CComboUI::UnSelectItem(int iIndex, bool bOthers)
 	{
 		return false;
 	}
-
+		
 	bool CComboUI::SetItemIndex(CControlUI* pControl, int iIndex)
 	{
 		int iOrginIndex = GetItemIndex(pControl);
@@ -425,7 +429,7 @@ namespace DuiLib
 		if( iOrginIndex == iIndex ) return true;
 
 		IListItemUI* pSelectedListItem = NULL;
-		if( m_iCurSel >= 0 ) pSelectedListItem =
+		if( m_iCurSel >= 0 ) pSelectedListItem = 
 			static_cast<IListItemUI*>(GetItemAt(m_iCurSel)->GetInterface(_T("ListItem")));
 		if( !CContainerUI::SetItemIndex(pControl, iIndex) ) return false;
 		int iMinIndex = min(iOrginIndex, iIndex);
@@ -444,7 +448,7 @@ namespace DuiLib
 	bool CComboUI::Add(CControlUI* pControl)
 	{
 		IListItemUI* pListItem = static_cast<IListItemUI*>(pControl->GetInterface(_T("ListItem")));
-		if( pListItem != NULL )
+		if( pListItem != NULL ) 
 		{
 			pListItem->SetOwner(this);
 			pListItem->SetIndex(m_items.GetSize());
@@ -531,11 +535,11 @@ namespace DuiLib
 			return;
 		}
 
-		if( event.Type == UIEVENT_SETFOCUS )
+		if( event.Type == UIEVENT_SETFOCUS ) 
 		{
 			Invalidate();
 		}
-		if( event.Type == UIEVENT_KILLFOCUS )
+		if( event.Type == UIEVENT_KILLFOCUS ) 
 		{
 			Invalidate();
 		}
@@ -638,13 +642,9 @@ namespace DuiLib
 
 	CDuiString CComboUI::GetText() const
 	{
-		if( m_iCurSel < 0 || m_iCurSel >= m_items.GetSize()) {
-			return __super::GetText();
-		}
-		else {
-			CControlUI* pControl = static_cast<CControlUI*>(m_items[m_iCurSel]);
-			return pControl->GetText();
-		}
+		if( m_iCurSel < 0 ) return _T("");
+		CControlUI* pControl = static_cast<CControlUI*>(m_items[m_iCurSel]);
+		return pControl->GetText();
 	}
 
 	void CComboUI::SetEnabled(bool bEnable)
@@ -673,6 +673,15 @@ namespace DuiLib
 		m_szDropBox = szDropBox;
 	}
 
+	RECT CComboUI::GetDropBoxInset() const
+	{
+		return m_rcDropBox;
+	}
+
+	void CComboUI::SetDropBoxInset(RECT rcDropBox)
+	{
+		m_rcDropBox = rcDropBox;
+	}
 	void CComboUI::SetTextStyle(UINT uStyle)
 	{
 		m_uTextStyle = uStyle;
@@ -719,7 +728,9 @@ namespace DuiLib
 
 	RECT CComboUI::GetTextPadding() const
 	{
-		return m_rcTextPadding;
+		RECT rcTextPadding = m_rcTextPadding;
+		if(m_pManager != NULL) m_pManager->GetDPIObj()->Scale(&rcTextPadding);
+		return rcTextPadding;
 	}
 
 	void CComboUI::SetTextPadding(RECT rc)
@@ -1034,7 +1045,7 @@ namespace DuiLib
 				m_uTextStyle |= (DT_TOP | DT_SINGLELINE);
 			}
 			if( _tcsstr(pstrValue, _T("vcenter")) != NULL ) {
-				m_uTextStyle &= ~(DT_TOP | DT_BOTTOM );
+				m_uTextStyle &= ~(DT_TOP | DT_BOTTOM );            
 				m_uTextStyle |= (DT_VCENTER | DT_SINGLELINE);
 			}
 			if( _tcsstr(pstrValue, _T("bottom")) != NULL ) {
@@ -1045,7 +1056,7 @@ namespace DuiLib
 		else if( _tcsicmp(pstrName, _T("endellipsis")) == 0 ) {
 			if( _tcsicmp(pstrValue, _T("true")) == 0 ) m_uTextStyle |= DT_END_ELLIPSIS;
 			else m_uTextStyle &= ~DT_END_ELLIPSIS;
-		}
+		}   
 		else if( _tcsicmp(pstrName, _T("wordbreak")) == 0 ) {
 			if( _tcsicmp(pstrValue, _T("true")) == 0 ) {
 				m_uTextStyle &= ~DT_SINGLELINE;
@@ -1055,7 +1066,7 @@ namespace DuiLib
 				m_uTextStyle &= ~DT_WORDBREAK & ~DT_EDITCONTROL;
 				m_uTextStyle |= DT_SINGLELINE;
 			}
-		}
+		}    
 		else if( _tcsicmp(pstrName, _T("font")) == 0 ) SetFont(_ttoi(pstrValue));
 		else if( _tcsicmp(pstrName, _T("textcolor")) == 0 ) {
 			if( *pstrValue == _T('#')) pstrValue = ::CharNext(pstrValue);
@@ -1072,10 +1083,10 @@ namespace DuiLib
 		else if( _tcsicmp(pstrName, _T("textpadding")) == 0 ) {
 			RECT rcTextPadding = { 0 };
 			LPTSTR pstr = NULL;
-			rcTextPadding.left = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);
-			rcTextPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
-			rcTextPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
-			rcTextPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+			rcTextPadding.left = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);    
+			rcTextPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);    
+			rcTextPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);    
+			rcTextPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);    
 			SetTextPadding(rcTextPadding);
 		}
 		else if( _tcsicmp(pstrName, _T("showhtml")) == 0 ) SetShowHtml(_tcsicmp(pstrValue, _T("true")) == 0);
@@ -1091,9 +1102,18 @@ namespace DuiLib
 		{
 			SIZE szDropBoxSize = { 0 };
 			LPTSTR pstr = NULL;
-			szDropBoxSize.cx = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);
-			szDropBoxSize.cy = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+			szDropBoxSize.cx = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);    
+			szDropBoxSize.cy = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);    
 			SetDropBoxSize(szDropBoxSize);
+		}
+		else if( _tcsicmp(pstrName, _T("dropboxinset")) == 0 ) {
+			RECT rcTextPadding = { 0 };
+			LPTSTR pstr = NULL;
+			rcTextPadding.left = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);    
+			rcTextPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);    
+			rcTextPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);    
+			rcTextPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);    
+			SetDropBoxInset(rcTextPadding);
 		}
 		else if( _tcsicmp(pstrName, _T("itemfont")) == 0 ) SetItemFont(_ttoi(pstrValue));
 		else if( _tcsicmp(pstrName, _T("itemalign")) == 0 ) {
@@ -1127,14 +1147,14 @@ namespace DuiLib
 		else if( _tcsicmp(pstrName, _T("itemendellipsis")) == 0 ) {
 			if( _tcsicmp(pstrValue, _T("true")) == 0 ) m_ListInfo.uTextStyle |= DT_END_ELLIPSIS;
 			else m_ListInfo.uTextStyle &= ~DT_END_ELLIPSIS;
-		}
+		}   
 		else if( _tcsicmp(pstrName, _T("itemtextpadding")) == 0 ) {
 			RECT rcTextPadding = { 0 };
 			LPTSTR pstr = NULL;
-			rcTextPadding.left = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);
-			rcTextPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
-			rcTextPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
-			rcTextPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+			rcTextPadding.left = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);    
+			rcTextPadding.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);    
+			rcTextPadding.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);    
+			rcTextPadding.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);    
 			SetItemTextPadding(rcTextPadding);
 		}
 		else if( _tcsicmp(pstrName, _T("itemtextcolor")) == 0 ) {
@@ -1271,4 +1291,89 @@ namespace DuiLib
 		}
 	}
 
+	BOOL CComboUI::SortItems(PULVCompareFunc pfnCompare, UINT_PTR dwData)
+	{
+		if (!pfnCompare)
+			return FALSE;
+		m_pCompareFunc = pfnCompare;
+		m_compareData = dwData;
+
+		qsort_s(m_items.GetData(), m_items.GetSize(), sizeof(CControlUI*), CComboUI::ItemComareFunc, this);
+		IListItemUI* pItem = NULL;
+		for (int i = 0; i < m_items.GetSize(); ++i)
+		{
+			pItem = (IListItemUI*)(static_cast<CControlUI*>(m_items[i])->GetInterface(TEXT("ListItem")));
+			if (pItem)
+			{
+				pItem->SetIndex(i);
+				pItem->Select(false);
+			}
+		}
+
+		if (m_pManager)
+		{
+			SetPos(GetPos());
+			Invalidate();
+		}
+
+		return TRUE;
+	}
+
+	static int __cdecl ComareFunc(void* pvlocale, const void* item1, const void* item2)
+	{
+		CComboUI* pThis = (CComboUI*)pvlocale;
+
+		if (!pThis || !item1 || !item2)
+			return 0;
+
+		CControlUI* pControl1 = *(CControlUI**)item1;
+		CControlUI* pControl2 = *(CControlUI**)item2;
+		if (!pControl1 || !pControl2)
+		{
+			return 0;
+		}
+		return pControl1->GetText().Compare(pControl2->GetText());
+	}
+
+	void CComboUI::SortItems()
+	{
+		qsort_s(m_items.GetData(), m_items.GetSize(), sizeof(CControlUI*), ComareFunc, this);
+		IListItemUI* pItem = NULL;
+		for (int i = 0; i < m_items.GetSize(); ++i)
+		{
+			pItem = (IListItemUI*)(static_cast<CControlUI*>(m_items[i])->GetInterface(TEXT("ListItem")));
+			if (pItem)
+			{
+				pItem->SetIndex(i);
+				pItem->Select(false);
+			}
+		}
+
+		if (m_pManager)
+		{
+			SetPos(GetPos());
+			Invalidate();
+		}
+
+		return ;
+	}
+
+	int __cdecl CComboUI::ItemComareFunc(void* pvlocale, const void* item1, const void* item2)
+	{
+		CComboUI* pThis = (CComboUI*)pvlocale;
+		if (!pThis || !item1 || !item2)
+			return 0;
+		return pThis->ItemComareFunc(item1, item2);
+	}
+
+	int __cdecl CComboUI::ItemComareFunc(const void* item1, const void* item2)
+	{
+		if (!m_pCompareFunc)
+		{
+			return 0;
+		}
+		CControlUI* pControl1 = *(CControlUI**)item1;
+		CControlUI* pControl2 = *(CControlUI**)item2;
+		return m_pCompareFunc((UINT_PTR)pControl1, (UINT_PTR)pControl2, m_compareData);
+	}
 } // namespace DuiLib

@@ -1,11 +1,13 @@
-#ifndef _UIIPADDRESSEX_H_
-#define _UIIPADDRESSEX_H_
+#ifndef __UIIPADDRESSEX_H__
+#define __UIIPADDRESSEX_H__
+
 #pragma once
 
 //给该控件添加一个属性dtstyle
 
 namespace DuiLib
 {
+	
     /// IP输入控件
     class UILIB_API CIPAddressExUI : public CEditUI
     {
@@ -18,7 +20,7 @@ namespace DuiLib
         void DoEvent(TEventUI& event);
         void PaintText(HDC hDC);
 
-        void SetIP(LPCWSTR lpIP);
+        void SetIP(LPCTSTR lpIP);
         CDuiString GetIP();
 
     private:
@@ -39,4 +41,4 @@ namespace DuiLib
         CDuiString m_strNum;
     };
 }
-#endif // __UIIPADDRESSEX_H_
+#endif // __UIIPADDRESSEX_H__

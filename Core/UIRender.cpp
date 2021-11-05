@@ -2,6 +2,7 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "..\Utils\stb_image.h"
+
 #ifdef USE_XIMAGE_EFFECT
 #	include "../../3rd/CxImage/ximage.h"
 #	include "../../3rd/CxImage/ximage.cpp"
@@ -16,8 +17,7 @@
 #endif
 
 ///////////////////////////////////////////////////////////////////////////////////////
-namespace DuiLib
-{
+namespace DuiLib {
 	static int g_iFontID = MAX_FONT_ID;
 
 	/////////////////////////////////////////////////////////////////////////////////////
@@ -118,8 +118,8 @@ namespace DuiLib
 
 	static COLORREF PixelAlpha(COLORREF clrSrc, double src_darken, COLORREF clrDest, double dest_darken)
 	{
-		return RGB (GetRValue (clrSrc) * src_darken + GetRValue (clrDest) * dest_darken,
-			GetGValue (clrSrc) * src_darken + GetGValue (clrDest) * dest_darken,
+		return RGB (GetRValue (clrSrc) * src_darken + GetRValue (clrDest) * dest_darken, 
+			GetGValue (clrSrc) * src_darken + GetGValue (clrDest) * dest_darken, 
 			GetBValue (clrSrc) * src_darken + GetBValue (clrDest) * dest_darken);
 	}
 
@@ -156,7 +156,7 @@ namespace DuiLib
 			hSrcDC, lpbiSrc, DIB_RGB_COLORS, (void **)&pSrcBits,
 			NULL, NULL);
 
-		if ((NULL == hSrcDib) || (NULL == pSrcBits))
+		if ((NULL == hSrcDib) || (NULL == pSrcBits)) 
 		{
 			delete [] lpbiSrc;
 			::DeleteDC(hTempDC);
@@ -251,7 +251,7 @@ namespace DuiLib
 		else {
 			data = pManager->GetImageEx((LPCTSTR)sImageName, (LPCTSTR)sImageResType, dwMask, false, instance);
 		}
-		if( !data ) return false;
+		if( !data ) return false;    
 
 		if( rcBmpPart.left == 0 && rcBmpPart.right == 0 && rcBmpPart.top == 0 && rcBmpPart.bottom == 0 ) {
 			rcBmpPart.right = data->nX;
@@ -277,7 +277,7 @@ namespace DuiLib
 		float L1 = L / 100.0f;
 		RGBtoHSL(dwColor, &fH, &fS, &fL);
 		fH += (H - 180);
-		fH = fH > 0 ? fH : fH + 360;
+		fH = fH > 0 ? fH : fH + 360; 
 		fS *= S1;
 		fL *= L1;
 		HSLtoRGB(&dwColor, fH, fS, fL);
@@ -288,7 +288,7 @@ namespace DuiLib
 	{
 		LPBYTE pData = NULL;
 		DWORD dwSize = 0;
-		do
+		do 
 		{
 			if( type == NULL ) {
 				CDuiString sFile = CPaintManagerUI::GetResourcePath();
@@ -327,8 +327,8 @@ namespace DuiLib
 #endif
 					}
 					if( hz == NULL ) break;
-					ZIPENTRY ze;
-					int i = 0;
+					ZIPENTRY ze; 
+					int i = 0; 
 					CDuiString key = bitmap.m_lpstr;
 					key.Replace(_T("\\"), _T("/"));
 					if( FindZipItem(hz, key, true, &i, &ze) != 0 ) break;
@@ -347,12 +347,10 @@ namespace DuiLib
 			}
 			else {
 				HINSTANCE dllinstance = NULL;
-				if (instance)
-				{
+				if (instance) {
 					dllinstance = instance;
 				}
-				else
-				{
+				else {
 					dllinstance = CPaintManagerUI::GetResourceDll();
 				}
 				HRSRC hResource = ::FindResource(dllinstance, bitmap.m_lpstr, type);
@@ -367,7 +365,7 @@ namespace DuiLib
 				if( dwSize == 0 ) break;
 				pData = new BYTE[ dwSize ];
 				::CopyMemory(pData, (LPBYTE)::LockResource(hGlobal), dwSize);
-				::FreeResource(hResource);
+				::FreeResource(hGlobal);
 			}
 		} while (0);
 
@@ -421,27 +419,27 @@ namespace DuiLib
 			return NULL;
 		}
 
-		for( int i = 0; i < x * y; i++ )
+		for( int i = 0; i < x * y; i++ ) 
 		{
 			pDest[i*4 + 3] = pImage[i*4 + 3];
 			if( pDest[i*4 + 3] < 255 )
 			{
 				pDest[i*4] = (BYTE)(DWORD(pImage[i*4 + 2])*pImage[i*4 + 3]/255);
 				pDest[i*4 + 1] = (BYTE)(DWORD(pImage[i*4 + 1])*pImage[i*4 + 3]/255);
-				pDest[i*4 + 2] = (BYTE)(DWORD(pImage[i*4])*pImage[i*4 + 3]/255);
+				pDest[i*4 + 2] = (BYTE)(DWORD(pImage[i*4])*pImage[i*4 + 3]/255); 
 				bAlphaChannel = true;
 			}
 			else
 			{
 				pDest[i*4] = pImage[i*4 + 2];
 				pDest[i*4 + 1] = pImage[i*4 + 1];
-				pDest[i*4 + 2] = pImage[i*4];
+				pDest[i*4 + 2] = pImage[i*4]; 
 			}
 
 			if( *(DWORD*)(&pDest[i*4]) == mask ) {
 				pDest[i*4] = (BYTE)0;
 				pDest[i*4 + 1] = (BYTE)0;
-				pDest[i*4 + 2] = (BYTE)0;
+				pDest[i*4 + 2] = (BYTE)0; 
 				pDest[i*4 + 3] = (BYTE)0;
 				bAlphaChannel = true;
 			}
@@ -458,14 +456,13 @@ namespace DuiLib
 		data->bAlpha = bAlphaChannel;
 		return data;
 	}
-
 #ifdef USE_XIMAGE_EFFECT
 	static DWORD LoadImage2Memory(const STRINGorID &bitmap, LPCTSTR type,LPBYTE &pData)
 	{
 		assert(pData == NULL);
 		pData = NULL;
 		DWORD dwSize(0U);
-		do
+		do 
 		{
 			if( type == NULL )
 			{
@@ -478,12 +475,14 @@ namespace DuiLib
 					if( hFile == INVALID_HANDLE_VALUE ) break;
 					dwSize = ::GetFileSize(hFile, NULL);
 					if( dwSize == 0 ) break;
+
 					DWORD dwRead = 0;
 					pData = new BYTE[ dwSize + 1 ];
 					memset(pData,0,dwSize+1);
 					::ReadFile( hFile, pData, dwSize, &dwRead, NULL );
 					::CloseHandle( hFile );
-					if( dwRead != dwSize )
+
+					if( dwRead != dwSize ) 
 					{
 						delete[] pData;
 						pData = NULL;
@@ -491,11 +490,11 @@ namespace DuiLib
 						break;
 					}
 				}
-				else
+				else 
 				{
 					sFile += CPaintManagerUI::GetResourceZip();
 					HZIP hz = NULL;
-					if( CPaintManagerUI::IsCachedResourceZip() )
+					if( CPaintManagerUI::IsCachedResourceZip() ) 
 						hz = (HZIP)CPaintManagerUI::GetResourceZipHandle();
 					else {
 						CDuiString sFilePwd = CPaintManagerUI::GetResourceZipPwd();
@@ -508,10 +507,10 @@ namespace DuiLib
 #endif
 					}
 					if( hz == NULL ) break;
-					ZIPENTRY ze;
-					int i = 0;
+					ZIPENTRY ze; 
+					int i = 0; 
 					CDuiString key = bitmap.m_lpstr;
-					key.Replace(_T("\\"), _T("/"));
+					key.Replace(_T("\\"), _T("/")); 
 					if( FindZipItem(hz, key, true, &i, &ze) != 0 ) break;
 					dwSize = ze.unc_size;
 					if( dwSize == 0 ) break;
@@ -530,22 +529,23 @@ namespace DuiLib
 						CloseZip(hz);
 				}
 			}
-			else
+			else 
 			{
 				HINSTANCE hDll = CPaintManagerUI::GetResourceDll();
 				HRSRC hResource = ::FindResource(hDll, bitmap.m_lpstr, type);
 				if( hResource == NULL ) break;
 				HGLOBAL hGlobal = ::LoadResource(hDll, hResource);
-				if( hGlobal == NULL )
+				if( hGlobal == NULL ) 
 				{
 					FreeResource(hResource);
 					break;
 				}
+
 				dwSize = ::SizeofResource(hDll, hResource);
 				if( dwSize == 0 ) break;
 				pData = new BYTE[ dwSize ];
 				::CopyMemory(pData, (LPBYTE)::LockResource(hGlobal), dwSize);
-				::FreeResource(hResource);
+				::FreeResource(hGlobal);
 			}
 		} while (0);
 
@@ -557,11 +557,13 @@ namespace DuiLib
 			if( hFile == INVALID_HANDLE_VALUE ) break;
 			dwSize = ::GetFileSize(hFile, NULL);
 			if( dwSize == 0 ) break;
+
 			DWORD dwRead = 0;
 			pData = new BYTE[ dwSize ];
 			::ReadFile( hFile, pData, dwSize, &dwRead, NULL );
 			::CloseHandle( hFile );
-			if( dwRead != dwSize )
+
+			if( dwRead != dwSize ) 
 			{
 				delete[] pData;
 				pData = NULL;
@@ -571,7 +573,6 @@ namespace DuiLib
 		}
 		return dwSize;
 	}
-
 	CxImage* CRenderEngine::LoadGifImageX(STRINGorID bitmap, LPCTSTR type , DWORD mask)
 	{
 		//write by wangji
@@ -579,7 +580,6 @@ namespace DuiLib
 		DWORD dwSize = LoadImage2Memory(bitmap,type,pData);
 		if(dwSize == 0U || !pData)
 			return NULL;
-
 		CxImage * pImg = NULL;
 		if(pImg = new CxImage())
 		{
@@ -596,15 +596,20 @@ namespace DuiLib
 	}
 #endif//USE_XIMAGE_EFFECT
 
-	Gdiplus::Image* CRenderEngine::GdiplusLoadImage(LPCTSTR pstrPath)
+	Gdiplus::Image* CRenderEngine::GdiplusLoadImage(LPCTSTR pstrPath1)
 	{
+		tagTDrawInfo drawInfo;
+		drawInfo.Parse(pstrPath1, NULL, NULL);
+		CDuiString sImageName = drawInfo.sImageName;
+
 		LPBYTE pData = NULL;
 		DWORD dwSize = 0;
-		do
+
+		do 
 		{
 			CDuiString sFile = CPaintManagerUI::GetResourcePath();
 			if( CPaintManagerUI::GetResourceZip().IsEmpty() ) {
-				sFile += pstrPath;
+				sFile += sImageName;
 				HANDLE hFile = ::CreateFile(sFile.GetData(), GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, \
 					FILE_ATTRIBUTE_NORMAL, NULL);
 				if( hFile == INVALID_HANDLE_VALUE ) break;
@@ -637,9 +642,9 @@ namespace DuiLib
 #endif
 				}
 				if( hz == NULL ) break;
-				ZIPENTRY ze;
-				int i = 0;
-				CDuiString key = pstrPath;
+				ZIPENTRY ze; 
+				int i = 0; 
+				CDuiString key = sImageName;
 				key.Replace(_T("\\"), _T("/"));
 				if( FindZipItem(hz, key, true, &i, &ze) != 0 ) break;
 				dwSize = ze.unc_size;
@@ -654,12 +659,13 @@ namespace DuiLib
 				}
 				if( !CPaintManagerUI::IsCachedResourceZip() ) CloseZip(hz);
 			}
+
 		} while (0);
 
 		while (!pData)
 		{
 			//读不到图片, 则直接去读取bitmap.m_lpstr指向的路径
-			HANDLE hFile = ::CreateFile(pstrPath, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+			HANDLE hFile = ::CreateFile(sImageName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 			if( hFile == INVALID_HANDLE_VALUE ) break;
 			dwSize = ::GetFileSize(hFile, NULL);
 			if( dwSize == 0 ) break;
@@ -723,193 +729,54 @@ namespace DuiLib
 		}
 	}
 
-	bool CRenderEngine::DrawIconImageString(HDC hDC, CPaintManagerUI* pManager, const RECT& rc, const RECT& rcPaint, LPCTSTR pStrImage, LPCTSTR pStrModify)
+	bool CRenderEngine::MakeImageDest(const RECT& rcControl, const CDuiSize& szImage, const CDuiString& sAlign, const RECT& rcPadding, RECT& rcDest)
 	{
-		if ((pManager == NULL) || (hDC == NULL))
-			return false;
-
-		// 1、aaa.jpg
-		// 2、file='aaa.jpg' res='' restype='0' dest='0,0,0,0' source='0,0,0,0' corner='0,0,0,0'
-		// mask='#FF0000' fade='255' hole='FALSE' xtiled='FALSE' ytiled='FALSE'
-
-		CDuiString sImageName = pStrImage;
-		CDuiString sImageResType;
-		RECT rcItem = rc;
-		RECT rcBmpPart = {0};
-		RECT rcCorner = {0};
-		DWORD dwMask = 0;
-		BYTE bFade = 0xFF;
-		bool bHole = false;
-		bool bTiledX = true;
-		bool bTiledY = true;
-		CDuiSize szIcon(0,0);
-
-		int image_count = 0;
-
-		CDuiString sItem;
-		CDuiString sValue;
-		LPTSTR pstr = NULL;
-
-		for( int i = 0; i < 2; ++i,image_count = 0 ) {
-			if( i == 1)
-				pStrImage = pStrModify;
-
-			if( !pStrImage ) continue;
-
-			while( *pStrImage != _T('\0') ) {
-				sItem.Empty();
-				sValue.Empty();
-				while( *pStrImage > _T('\0') && *pStrImage <= _T(' ') ) pStrImage = ::CharNext(pStrImage);
-				while( *pStrImage != _T('\0') && *pStrImage != _T('=') && *pStrImage > _T(' ') ) {
-					LPTSTR pstrTemp = ::CharNext(pStrImage);
-					while( pStrImage < pstrTemp) {
-						sItem += *pStrImage++;
-					}
-				}
-				while( *pStrImage > _T('\0') && *pStrImage <= _T(' ') ) pStrImage = ::CharNext(pStrImage);
-				if( *pStrImage++ != _T('=') ) break;
-				while( *pStrImage > _T('\0') && *pStrImage <= _T(' ') ) pStrImage = ::CharNext(pStrImage);
-				if( *pStrImage++ != _T('\'') ) break;
-				while( *pStrImage != _T('\0') && *pStrImage != _T('\'') ) {
-					LPTSTR pstrTemp = ::CharNext(pStrImage);
-					while( pStrImage < pstrTemp) {
-						sValue += *pStrImage++;
-					}
-				}
-				if( *pStrImage++ != _T('\'') )
-					break;
-
-				if( !sValue.IsEmpty() )
-				{
-					if( sItem == _T("file") || sItem == _T("res") )
-					{
-						if( image_count > 0 )
-							DuiLib::DrawImage(hDC, pManager, rc, rcPaint, sImageName, sImageResType,
-							rcItem, rcBmpPart, rcCorner, dwMask, bFade, bHole, bTiledX, bTiledY);
-
-						sImageName = sValue;
-						++image_count;
-					}
-					else if( sItem == _T("restype") )
-					{
-						if( image_count > 0 )
-							DuiLib::DrawImage(hDC, pManager, rc, rcPaint, sImageName, sImageResType,
-							rcItem, rcBmpPart, rcCorner, dwMask, bFade, bHole, bTiledX, bTiledY);
-
-						sImageResType = sValue;
-						++image_count;
-					}
-					else if( sItem == _T("dest") )
-					{
-						rcItem.left = rc.left + _tcstol(sValue.GetData(), &pstr, 10);  ASSERT(pstr);
-						rcItem.top = rc.top + _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
-						rcItem.right = rc.left + _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
-
-						if (rcItem.right > rc.right)
-							rcItem.right = rc.right;
-
-						rcItem.bottom = rc.top + _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
-						if (rcItem.bottom > rc.bottom)
-							rcItem.bottom = rc.bottom;
-					}
-					else if( sItem == _T("source") )
-					{
-						rcBmpPart.left = _tcstol(sValue.GetData(), &pstr, 10);  ASSERT(pstr);
-						rcBmpPart.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
-						rcBmpPart.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
-						rcBmpPart.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
-					}
-					else if( sItem == _T("corner") )
-					{
-						rcCorner.left = _tcstol(sValue.GetData(), &pstr, 10);  ASSERT(pstr);
-						rcCorner.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
-						rcCorner.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
-						rcCorner.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
-					}
-					else if( sItem == _T("mask") )
-					{
-						if( sValue[0] == _T('#')) dwMask = _tcstoul(sValue.GetData() + 1, &pstr, 16);
-						else dwMask = _tcstoul(sValue.GetData(), &pstr, 16);
-					}
-					else if( sItem == _T("fade") )
-					{
-						bFade = (BYTE)_tcstoul(sValue.GetData(), &pstr, 10);
-					}
-					else if( sItem == _T("hole") )
-					{
-						bHole = (_tcsicmp(sValue.GetData(), _T("TRUE")) == 0);
-					}
-					else if( sItem == _T("xtiled") )
-					{
-						bTiledX = (_tcsicmp(sValue.GetData(), _T("TRUE")) == 0);
-					}
-					else if( sItem == _T("ytiled") )
-					{
-						bTiledY = (_tcsicmp(sValue.GetData(), _T("TRUE")) == 0);
-					}
-					else if( sItem == _T("iconsize") )
-					{
-						szIcon.cx = _tcstol(sValue.GetData(), &pstr, 10);  ASSERT(pstr);
-						szIcon.cy = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
-					}
-					else if( sItem == _T("iconalign") )
-					{
-						MakeFitIconDest(rcItem, szIcon, sValue, rcItem);
-					}
-				}
-				if( *pStrImage++ != _T(' ') )
-					break;
-			}
+		if(sAlign.Find(_T("left")) != -1)
+		{
+			rcDest.left = rcControl.left;  
+			rcDest.right = rcDest.left + szImage.cx;
+		}
+		else if(sAlign.Find(_T("center")) != -1)
+		{
+			rcDest.left = rcControl.left + ((rcControl.right - rcControl.left) - szImage.cx)/2;  
+			rcDest.right = rcDest.left + szImage.cx;
+		}
+		else if(sAlign.Find(_T("right")) != -1)
+		{
+			rcDest.left = rcControl.right - szImage.cx;  
+			rcDest.right = rcDest.left + szImage.cx;
 		}
 
-		DuiLib::DrawImage(hDC, pManager, rc, rcPaint, sImageName, sImageResType, rcItem, rcBmpPart, rcCorner, dwMask, bFade, bHole, bTiledX, bTiledY);
-
-		return true;
-	}
-
-	bool CRenderEngine::MakeFitIconDest(const RECT& rcControl,const CDuiSize& szIcon, const CDuiString& sAlign, RECT& rcDest)
-	{
-		ASSERT(!sAlign.IsEmpty());
-		if(sAlign == _T("left"))
+		if(sAlign.Find(_T("top")) != -1)
 		{
-			rcDest.left = rcControl.left;
 			rcDest.top = rcControl.top;
-			rcDest.right = rcDest.left + szIcon.cx;
-			rcDest.bottom = rcDest.top + szIcon.cy;
+			rcDest.bottom = rcDest.top + szImage.cy;
 		}
-		else if( sAlign == _T("center") )
+		else if(sAlign.Find(_T("vcenter")) != -1)
 		{
-			rcDest.left = rcControl.left + ((rcControl.right - rcControl.left) - szIcon.cx)/2;
-			rcDest.top = rcControl.top + ((rcControl.bottom - rcControl.top) - szIcon.cy)/2;
-			rcDest.right = rcDest.left + szIcon.cx;
-			rcDest.bottom = rcDest.top + szIcon.cy;
+			rcDest.top = rcControl.top + ((rcControl.bottom - rcControl.top) - szImage.cy)/2;
+			rcDest.bottom = rcDest.top + szImage.cy;
 		}
-		else if( sAlign == _T("vcenter") )
+		else if(sAlign.Find(_T("bottom")) != -1)
 		{
-			rcDest.left = rcControl.left;
-			rcDest.top = rcControl.top + ((rcControl.bottom - rcControl.top) - szIcon.cy)/2;
-			rcDest.right = rcDest.left + szIcon.cx;
-			rcDest.bottom = rcDest.top + szIcon.cy;
-		}
-		else if( sAlign == _T("hcenter") )
-		{
-			rcDest.left = rcControl.left + ((rcControl.right - rcControl.left) - szIcon.cx)/2;
-			rcDest.top = rcControl.top;
-			rcDest.right = rcDest.left + szIcon.cx;
-			rcDest.bottom = rcDest.top + szIcon.cy;
+			rcDest.top = rcControl.bottom - szImage.cy;
+			rcDest.bottom = rcDest.top + rcDest.top;
 		}
 
-		if (rcDest.right > rcControl.right)
+		::OffsetRect(&rcDest, rcPadding.left, rcPadding.top);		
+		::OffsetRect(&rcDest, -rcPadding.right, -rcPadding.bottom);
+
+		if (rcDest.right > rcControl.right) 
 			rcDest.right = rcControl.right;
 
-		if (rcDest.bottom > rcControl.bottom)
+		if (rcDest.bottom > rcControl.bottom) 
 			rcDest.bottom = rcControl.bottom;
 
 		return true;
 	}
 
 	TImageInfo* CRenderEngine::LoadImage(LPCTSTR pStrImage, LPCTSTR type, DWORD mask, HINSTANCE instance)
-	{
+	{	
 		if(pStrImage == NULL) return NULL;
 
 		CDuiString sStrPath = pStrImage;
@@ -942,7 +809,7 @@ namespace DuiLib
 	}
 
 	void CRenderEngine::DrawImage(HDC hDC, HBITMAP hBitmap, const RECT& rc, const RECT& rcPaint,
-		const RECT& rcBmpPart, const RECT& rcCorners, bool bAlpha,
+		const RECT& rcBmpPart, const RECT& rcCorners, bool bAlpha, 
 		BYTE uFade, bool hole, bool xtiled, bool ytiled)
 	{
 		ASSERT(::GetObjectType(hDC)==OBJ_DC || ::GetObjectType(hDC)==OBJ_MEMDC);
@@ -999,8 +866,8 @@ namespace DuiLib
 									lDrawWidth -= lDestRight - rcDest.right;
 									lDestRight = rcDest.right;
 								}
-								lpAlphaBlend(hDC, rcDest.left + lWidth * i, rcDest.top + lHeight * j,
-									lDestRight - lDestLeft, lDestBottom - lDestTop, hCloneDC,
+								lpAlphaBlend(hDC, rcDest.left + lWidth * i, rcDest.top + lHeight * j, 
+									lDestRight - lDestLeft, lDestBottom - lDestTop, hCloneDC, 
 									rcBmpPart.left + rcCorners.left, rcBmpPart.top + rcCorners.top, lDrawWidth, lDrawHeight, bf);
 							}
 						}
@@ -1016,7 +883,7 @@ namespace DuiLib
 								lDrawWidth -= lDestRight - rcDest.right;
 								lDestRight = rcDest.right;
 							}
-							lpAlphaBlend(hDC, lDestLeft, rcDest.top, lDestRight - lDestLeft, rcDest.bottom,
+							lpAlphaBlend(hDC, lDestLeft, rcDest.top, lDestRight - lDestLeft, rcDest.bottom, 
 								hCloneDC, rcBmpPart.left + rcCorners.left, rcBmpPart.top + rcCorners.top, \
 								lDrawWidth, rcBmpPart.bottom - rcBmpPart.top - rcCorners.top - rcCorners.bottom, bf);
 						}
@@ -1032,9 +899,9 @@ namespace DuiLib
 								lDrawHeight -= lDestBottom - rcDest.bottom;
 								lDestBottom = rcDest.bottom;
 							}
-							lpAlphaBlend(hDC, rcDest.left, rcDest.top + lHeight * i, rcDest.right, lDestBottom - lDestTop,
+							lpAlphaBlend(hDC, rcDest.left, rcDest.top + lHeight * i, rcDest.right, lDestBottom - lDestTop, 
 								hCloneDC, rcBmpPart.left + rcCorners.left, rcBmpPart.top + rcCorners.top, \
-								rcBmpPart.right - rcBmpPart.left - rcCorners.left - rcCorners.right, lDrawHeight, bf);
+								rcBmpPart.right - rcBmpPart.left - rcCorners.left - rcCorners.right, lDrawHeight, bf);                    
 						}
 					}
 				}
@@ -1166,7 +1033,7 @@ namespace DuiLib
 				}
 			}
 		}
-		else
+		else 
 		{
 			if (rc.right - rc.left == rcBmpPart.right - rcBmpPart.left \
 				&& rc.bottom - rc.top == rcBmpPart.bottom - rcBmpPart.top \
@@ -1234,7 +1101,7 @@ namespace DuiLib
 									lDrawWidth -= lDestRight - rcDest.right;
 									lDestRight = rcDest.right;
 								}
-								::StretchBlt(hDC, lDestLeft, rcDest.top, lDestRight - lDestLeft, rcDest.bottom,
+								::StretchBlt(hDC, lDestLeft, rcDest.top, lDestRight - lDestLeft, rcDest.bottom, 
 									hCloneDC, rcBmpPart.left + rcCorners.left, rcBmpPart.top + rcCorners.top, \
 									lDrawWidth, rcBmpPart.bottom - rcBmpPart.top - rcCorners.top - rcCorners.bottom, SRCCOPY);
 							}
@@ -1250,9 +1117,9 @@ namespace DuiLib
 									lDrawHeight -= lDestBottom - rcDest.bottom;
 									lDestBottom = rcDest.bottom;
 								}
-								::StretchBlt(hDC, rcDest.left, rcDest.top + lHeight * i, rcDest.right, lDestBottom - lDestTop,
+								::StretchBlt(hDC, rcDest.left, rcDest.top + lHeight * i, rcDest.right, lDestBottom - lDestTop, 
 									hCloneDC, rcBmpPart.left + rcCorners.left, rcBmpPart.top + rcCorners.top, \
-									rcBmpPart.right - rcBmpPart.left - rcCorners.left - rcCorners.right, lDrawHeight, SRCCOPY);
+									rcBmpPart.right - rcBmpPart.left - rcCorners.left - rcCorners.right, lDrawHeight, SRCCOPY);                    
 							}
 						}
 					}
@@ -1394,6 +1261,7 @@ namespace DuiLib
 	{
 		if( pManager == NULL || hDC == NULL || pDrawInfo == NULL ) return false;
 		RECT rcDest = rcItem;
+		// 计算绘制目标区域
 		if( pDrawInfo->rcDest.left != 0 || pDrawInfo->rcDest.top != 0 ||
 			pDrawInfo->rcDest.right != 0 || pDrawInfo->rcDest.bottom != 0 ) {
 				rcDest.left = rcItem.left + pDrawInfo->rcDest.left;
@@ -1403,6 +1271,11 @@ namespace DuiLib
 				rcDest.bottom = rcItem.top + pDrawInfo->rcDest.bottom;
 				if( rcDest.bottom > rcItem.bottom ) rcDest.bottom = rcItem.bottom;
 		}
+		// 根据对齐方式计算目标区域
+		if(pDrawInfo->szImage.cx > 0 && pDrawInfo->szImage.cy > 0) {
+			MakeImageDest(rcItem, pDrawInfo->szImage, pDrawInfo->sAlign, pDrawInfo->rcPadding, rcDest);
+		}
+
 		bool bRet = DuiLib::DrawImage(hDC, pManager, rcItem, rcPaint, pDrawInfo->sImageName, pDrawInfo->sResType, rcDest, \
 			pDrawInfo->rcSource, pDrawInfo->rcCorner, pDrawInfo->dwMask, pDrawInfo->uFade, pDrawInfo->bHole, pDrawInfo->bTiledX, pDrawInfo->bTiledY, instance);
 
@@ -1451,15 +1324,15 @@ namespace DuiLib
 			ASSERT(hPaintBitmap);
 			hOldPaintBitmap = (HBITMAP) ::SelectObject(hPaintDC, hPaintBitmap);
 		}
-		if( lpGradientFill != NULL )
+		if( lpGradientFill != NULL ) 
 		{
-			TRIVERTEX triv[2] =
+			TRIVERTEX triv[2] = 
 			{
-				{ rcPaint.left, rcPaint.top,
+				{ rcPaint.left, rcPaint.top, 
 				static_cast<COLOR16>(GetBValue(dwFirst) << 8),
 				static_cast<COLOR16>(GetGValue(dwFirst) << 8),
 				static_cast<COLOR16>(GetRValue(dwFirst) << 8), 0xFF00 },
-				{ rcPaint.right, rcPaint.bottom,
+				{ rcPaint.right, rcPaint.bottom, 
 				static_cast<COLOR16>(GetBValue(dwSecond) << 8),
 				static_cast<COLOR16>(GetGValue(dwSecond) << 8),
 				static_cast<COLOR16>(GetRValue(dwSecond) << 8), 0xFF00 }
@@ -1467,7 +1340,7 @@ namespace DuiLib
 			GRADIENT_RECT grc = { 0, 1 };
 			lpGradientFill(hPaintDC, triv, 2, &grc, 1, bVertical ? GRADIENT_FILL_RECT_V : GRADIENT_FILL_RECT_H);
 		}
-		else
+		else 
 		{
 			// Determine how many shades
 			int nShift = 1;
@@ -1526,7 +1399,7 @@ namespace DuiLib
 
 	void CRenderEngine::DrawRect(HDC hDC, const RECT& rc, int nSize, DWORD dwPenColor,int nStyle /*= PS_SOLID*/)
 	{
-#if USE_GDI_RENDER
+#ifdef USE_GDI_RENDER
 		ASSERT(::GetObjectType(hDC) == OBJ_DC || ::GetObjectType(hDC) == OBJ_MEMDC);
 		HPEN hPen = ::CreatePen(PS_SOLID | PS_INSIDEFRAME, nSize, RGB(GetBValue(dwPenColor), GetGValue(dwPenColor), GetRValue(dwPenColor)));
 		HPEN hOldPen = (HPEN)::SelectObject(hDC, hPen);
@@ -1544,8 +1417,52 @@ namespace DuiLib
 #endif
 	}
 
+	// 绘制及填充圆角矩形
+	void DrawRoundRectangle(HDC hDC, float x, float y, float width, float height, float arcSize, float lineWidth, Gdiplus::Color lineColor, bool fillPath, Gdiplus::Color fillColor)
+	{
+		float arcDiameter = arcSize * 2;
+		// 创建GDI+对象
+		Gdiplus::Graphics  g(hDC);
+		//设置画图时的滤波模式为消除锯齿现象
+		g.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
+
+		// 绘图路径
+		Gdiplus::GraphicsPath roundRectPath;
+
+		// 保存绘图路径
+		roundRectPath.AddLine(x + arcSize, y, x + width - arcSize, y);  // 顶部横线
+		roundRectPath.AddArc(x + width - arcDiameter, y, arcDiameter, arcDiameter, 270, 90); // 右上圆角
+
+		roundRectPath.AddLine(x + width, y + arcSize, x + width, y + height - arcSize);  // 右侧竖线
+		roundRectPath.AddArc(x + width - arcDiameter, y + height - arcDiameter, arcDiameter, arcDiameter, 0, 90); // 右下圆角
+
+		roundRectPath.AddLine(x + width - arcSize, y + height, x + arcSize, y + height);  // 底部横线
+		roundRectPath.AddArc(x, y + height - arcDiameter, arcDiameter, arcDiameter, 90, 90); // 左下圆角
+
+		roundRectPath.AddLine(x, y + height - arcSize, x, y + arcSize);  // 左侧竖线
+		roundRectPath.AddArc(x, y, arcDiameter, arcDiameter, 180, 90); // 左上圆角
+
+		//创建画笔
+		Gdiplus::Pen pen(lineColor, lineWidth);
+		// 绘制矩形
+		g.DrawPath(&pen, &roundRectPath);
+
+		// 是否填充
+		if(fillPath) {
+			if(fillColor.GetAlpha() == 0) {
+				fillColor = lineColor; // 若未指定填充色，则用线条色填充
+			}
+
+			// 创建画刷
+			Gdiplus::SolidBrush brush(fillColor);
+
+			// 填充
+			g.FillPath(&brush, &roundRectPath);
+		}
+	}
 	void CRenderEngine::DrawRoundRect(HDC hDC, const RECT& rc, int nSize, int width, int height, DWORD dwPenColor,int nStyle /*= PS_SOLID*/)
 	{
+#ifdef USE_GDI_RENDER
 		ASSERT(::GetObjectType(hDC)==OBJ_DC || ::GetObjectType(hDC)==OBJ_MEMDC);
 		HPEN hPen = ::CreatePen(nStyle, nSize, RGB(GetBValue(dwPenColor), GetGValue(dwPenColor), GetRValue(dwPenColor)));
 		HPEN hOldPen = (HPEN)::SelectObject(hDC, hPen);
@@ -1553,6 +1470,9 @@ namespace DuiLib
 		::RoundRect(hDC, rc.left, rc.top, rc.right, rc.bottom, width, height);
 		::SelectObject(hDC, hOldPen);
 		::DeleteObject(hPen);
+#else
+		DrawRoundRectangle(hDC, (float)rc.left, (float)rc.top, (float)(rc.right - rc.left - 1), (float)(rc.bottom - rc.top - 1), (float)(width / 2), (float)nSize, Gdiplus::Color(dwPenColor), false, Gdiplus::Color(dwPenColor));
+#endif
 	}
 
 	void CRenderEngine::DrawText(HDC hDC, CPaintManagerUI* pManager, RECT& rc, LPCTSTR pstrText, DWORD dwTextColor, int iFont, UINT uStyle)
@@ -1566,7 +1486,7 @@ namespace DuiLib
 			Gdiplus::Graphics graphics( hDC );
 			Gdiplus::Font font(hDC, pManager->GetFont(iFont));
 			Gdiplus::TextRenderingHint trh = Gdiplus::TextRenderingHintSystemDefault;
-			switch(pManager->GetGdiplusTextRenderingHint())
+			switch(pManager->GetGdiplusTextRenderingHint()) 
 			{
 			case 0: {trh = Gdiplus::TextRenderingHintSystemDefault; break;}
 			case 1: {trh = Gdiplus::TextRenderingHintSingleBitPerPixelGridFit; break;}
@@ -1576,7 +1496,7 @@ namespace DuiLib
 			case 5: {trh = Gdiplus::TextRenderingHintClearTypeGridFit; break;}
 			}
 			graphics.SetTextRenderingHint(trh);
-			graphics.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality);
+			graphics.SetSmoothingMode(Gdiplus::SmoothingModeHighQuality); 
 			graphics.SetInterpolationMode(Gdiplus::InterpolationModeHighQualityBicubic);
 
 			Gdiplus::RectF rectF((Gdiplus::REAL)rc.left, (Gdiplus::REAL)rc.top, (Gdiplus::REAL)(rc.right - rc.left), (Gdiplus::REAL)(rc.bottom - rc.top));
@@ -1699,13 +1619,13 @@ namespace DuiLib
 		//   Italic:           <i>text</i>
 		//   Image:            <i x y z>            where x = image name and y = imagelist num and z(optional) = imagelist id
 		//   Link:             <a x>text</a>        where x(optional) = link content, normal like app:notepad or http:www.xxx.com
-		//   NewLine           <n>
+		//   NewLine           <n>                  
 		//   Paragraph:        <p x>text</p>        where x = extra pixels indent in p
 		//   Raw Text:         <r>text</r>
 		//   Selected:         <s>text</s>
 		//   Underline:        <u>text</u>
 		//   X Indent:         <x i>                where i = hor indent in pixels
-		//   Y Indent:         <y i>                where i = ver indent in pixels
+		//   Y Indent:         <y i>                where i = ver indent in pixels 
 
 		ASSERT(::GetObjectType(hDC)==OBJ_DC || ::GetObjectType(hDC)==OBJ_MEMDC);
 		if( pstrText == NULL || pManager == NULL ) return;
@@ -1714,14 +1634,15 @@ namespace DuiLib
 		bool bDraw = (uStyle & DT_CALCRECT) == 0;
 
 		CStdPtrArray aFontArray(10);
-		CStdPtrArray aColorArray(10);
-		CStdPtrArray aPIndentArray(10);
+		CStdArray<DWORD> aColorArray(10);
+		CStdArray<int> aPIndentArray(10);
 
 		RECT rcClip = { 0 };
 		::GetClipBox(hDC, &rcClip);
 		HRGN hOldRgn = ::CreateRectRgnIndirect(&rcClip);
 		HRGN hRgn = ::CreateRectRgnIndirect(&rc);
 		if( bDraw ) ::ExtSelectClipRgn(hDC, hRgn, RGN_AND);
+
 		TFontInfo* pDefFontInfo = pManager->GetFontInfo(iFont);
 		if(pDefFontInfo == NULL) {
 			pDefFontInfo = pManager->GetDefaultFontInfo();
@@ -1769,7 +1690,7 @@ namespace DuiLib
 
 		POINT pt = { rc.left, rc.top };
 		int iLinkIndex = 0;
-		int cyLine = pTm->tmHeight + pTm->tmExternalLeading + (int)aPIndentArray.GetAt(aPIndentArray.GetSize() - 1);
+		int cyLine = pTm->tmHeight + pTm->tmExternalLeading + aPIndentArray.GetAt(aPIndentArray.GetSize() - 1);
 		int cyMinHeight = 0;
 		int cxMaxWidth = 0;
 		POINT ptLinkStart = { 0 };
@@ -1853,18 +1774,18 @@ namespace DuiLib
 							//    if( ::PtInRect(&rc, ptMouse) )
 							//        clrColor = pManager->GetDefaultLinkHoverFontColor();
 							//}
-							aColorArray.Add((LPVOID)clrColor);
+							aColorArray.Add(clrColor);
 							::SetTextColor(hDC,  RGB(GetBValue(clrColor), GetGValue(clrColor), GetRValue(clrColor)));
 							TFontInfo* pFontInfo = pDefFontInfo;
 							if( aFontArray.GetSize() > 0 ) pFontInfo = (TFontInfo*)aFontArray.GetAt(aFontArray.GetSize() - 1);
 							if( pFontInfo->bUnderline == false ) {
-								HFONT hFont = pManager->GetFont(pFontInfo->sFontName, pFontInfo->iSize, pFontInfo->bBold, true, pFontInfo->bItalic, pFontInfo->bStrikeOut);
-								if( hFont == NULL ) hFont = pManager->AddFont(g_iFontID, pFontInfo->sFontName, pFontInfo->iSize, pFontInfo->bBold, true, pFontInfo->bItalic, pFontInfo->bStrikeOut);
+								HFONT hFont = pManager->GetFont(pFontInfo->sFontName, pFontInfo->iSize, pFontInfo->bBold, true, pFontInfo->bItalic);
+								if( hFont == NULL ) hFont = pManager->AddFont(g_iFontID, pFontInfo->sFontName, pFontInfo->iSize, pFontInfo->bBold, true, pFontInfo->bItalic);
 								pFontInfo = pManager->GetFontInfo(hFont);
 								aFontArray.Add(pFontInfo);
 								pTm = &pFontInfo->tm;
 								::SelectObject(hDC, pFontInfo->hFont);
-								cyLine = MAX(cyLine, pTm->tmHeight + pTm->tmExternalLeading + (int)aPIndentArray.GetAt(aPIndentArray.GetSize() - 1));
+								cyLine = MAX(cyLine, pTm->tmHeight + pTm->tmExternalLeading + aPIndentArray.GetAt(aPIndentArray.GetSize() - 1));
 							}
 							ptLinkStart = pt;
 							bInLink = true;
@@ -1876,13 +1797,13 @@ namespace DuiLib
 							TFontInfo* pFontInfo = pDefFontInfo;
 							if( aFontArray.GetSize() > 0 ) pFontInfo = (TFontInfo*)aFontArray.GetAt(aFontArray.GetSize() - 1);
 							if( pFontInfo->bBold == false ) {
-								HFONT hFont = pManager->GetFont(pFontInfo->sFontName, pFontInfo->iSize, true, pFontInfo->bUnderline, pFontInfo->bItalic, pFontInfo->bStrikeOut);
-								if( hFont == NULL ) hFont = pManager->AddFont(g_iFontID, pFontInfo->sFontName, pFontInfo->iSize, true, pFontInfo->bUnderline, pFontInfo->bItalic, pFontInfo->bStrikeOut);
+								HFONT hFont = pManager->GetFont(pFontInfo->sFontName, pFontInfo->iSize, true, pFontInfo->bUnderline, pFontInfo->bItalic);
+								if( hFont == NULL ) hFont = pManager->AddFont(g_iFontID, pFontInfo->sFontName, pFontInfo->iSize, true, pFontInfo->bUnderline, pFontInfo->bItalic);
 								pFontInfo = pManager->GetFontInfo(hFont);
 								aFontArray.Add(pFontInfo);
 								pTm = &pFontInfo->tm;
 								::SelectObject(hDC, pFontInfo->hFont);
-								cyLine = MAX(cyLine, pTm->tmHeight + pTm->tmExternalLeading + (int)aPIndentArray.GetAt(aPIndentArray.GetSize() - 1));
+								cyLine = MAX(cyLine, pTm->tmHeight + pTm->tmExternalLeading + aPIndentArray.GetAt(aPIndentArray.GetSize() - 1));
 							}
 						}
 						break;
@@ -1892,7 +1813,7 @@ namespace DuiLib
 							while( *pstrText > _T('\0') && *pstrText <= _T(' ') ) pstrText = ::CharNext(pstrText);
 							if( *pstrText == _T('#')) pstrText++;
 							DWORD clrColor = _tcstol(pstrText, const_cast<LPTSTR*>(&pstrText), 16);
-							aColorArray.Add((LPVOID)clrColor);
+							aColorArray.Add(clrColor);
 							::SetTextColor(hDC, RGB(GetBValue(clrColor), GetGValue(clrColor), GetRValue(clrColor)));
 						}
 						break;
@@ -1902,7 +1823,6 @@ namespace DuiLib
 							while( *pstrText > _T('\0') && *pstrText <= _T(' ') ) pstrText = ::CharNext(pstrText);
 							LPCTSTR pstrTemp = pstrText;
 							int iFont = (int) _tcstol(pstrText, const_cast<LPTSTR*>(&pstrText), 10);
-
 							if( pstrTemp != pstrText ) {
 								TFontInfo* pFontInfo = pManager->GetFontInfo(iFont);
 								aFontArray.Add(pFontInfo);
@@ -1916,7 +1836,6 @@ namespace DuiLib
 								bool bBold = false;
 								bool bUnderline = false;
 								bool bItalic = false;
-								bool bStrikeOut = false;
 								while( *pstrText != _T('\0') && *pstrText != _T('>') && *pstrText != _T('}') && *pstrText != _T(' ') ) {
 									pstrTemp = ::CharNext(pstrText);
 									while( pstrText < pstrTemp) {
@@ -1938,19 +1857,18 @@ namespace DuiLib
 								if( sFontAttr.Find(_T("bold")) >= 0 ) bBold = true;
 								if( sFontAttr.Find(_T("underline")) >= 0 ) bUnderline = true;
 								if( sFontAttr.Find(_T("italic")) >= 0 ) bItalic = true;
-								if( sFontAttr.Find(_T("strikeout")) >= 0 ) bStrikeOut = true;
-								HFONT hFont = pManager->GetFont(sFontName, iFontSize, bBold, bUnderline, bItalic, bStrikeOut);
-								if( hFont == NULL ) hFont = pManager->AddFont(g_iFontID, sFontName, iFontSize, bBold, bUnderline, bItalic, bStrikeOut);
+								HFONT hFont = pManager->GetFont(sFontName, iFontSize, bBold, bUnderline, bItalic);
+								if( hFont == NULL ) hFont = pManager->AddFont(g_iFontID, sFontName, iFontSize, bBold, bUnderline, bItalic);
 								TFontInfo* pFontInfo = pManager->GetFontInfo(hFont);
 								aFontArray.Add(pFontInfo);
 								pTm = &pFontInfo->tm;
 								::SelectObject(hDC, pFontInfo->hFont);
 							}
-							cyLine = MAX(cyLine, pTm->tmHeight + pTm->tmExternalLeading + (int)aPIndentArray.GetAt(aPIndentArray.GetSize() - 1));
+							cyLine = MAX(cyLine, pTm->tmHeight + pTm->tmExternalLeading + aPIndentArray.GetAt(aPIndentArray.GetSize() - 1));
 						}
 						break;
 					case _T('i'):  // Italic or Image
-						{
+						{    
 							pstrNextStart = pstrText - 1;
 							pstrText++;
 							CDuiString sImageString = pstrText;
@@ -1970,13 +1888,13 @@ namespace DuiLib
 								TFontInfo* pFontInfo = pDefFontInfo;
 								if( aFontArray.GetSize() > 0 ) pFontInfo = (TFontInfo*)aFontArray.GetAt(aFontArray.GetSize() - 1);
 								if( pFontInfo->bItalic == false ) {
-									HFONT hFont = pManager->GetFont(pFontInfo->sFontName, pFontInfo->iSize, pFontInfo->bBold, pFontInfo->bUnderline, pFontInfo->bStrikeOut, true);
-									if( hFont == NULL ) hFont = pManager->AddFont(g_iFontID, pFontInfo->sFontName, pFontInfo->iSize, pFontInfo->bBold, pFontInfo->bUnderline, pFontInfo->bStrikeOut, true);
+									HFONT hFont = pManager->GetFont(pFontInfo->sFontName, pFontInfo->iSize, pFontInfo->bBold, pFontInfo->bUnderline, true);
+									if( hFont == NULL ) hFont = pManager->AddFont(g_iFontID, pFontInfo->sFontName, pFontInfo->iSize, pFontInfo->bBold, pFontInfo->bUnderline, true);
 									pFontInfo = pManager->GetFontInfo(hFont);
 									aFontArray.Add(pFontInfo);
 									pTm = &pFontInfo->tm;
 									::SelectObject(hDC, pFontInfo->hFont);
-									cyLine = MAX(cyLine, pTm->tmHeight + pTm->tmExternalLeading + (int)aPIndentArray.GetAt(aPIndentArray.GetSize() - 1));
+									cyLine = MAX(cyLine, pTm->tmHeight + pTm->tmExternalLeading + aPIndentArray.GetAt(aPIndentArray.GetSize() - 1));
 								}
 							}
 							else {
@@ -2042,7 +1960,7 @@ namespace DuiLib
 										pstrNextStart = NULL;
 										if( bDraw && bLineDraw ) {
 											CDuiRect rcImage(pt.x, pt.y + cyLineHeight - iHeight, pt.x + iWidth, pt.y + cyLineHeight);
-											if( iHeight < cyLineHeight ) {
+											if( iHeight < cyLineHeight ) { 
 												rcImage.bottom -= (cyLineHeight - iHeight) / 2;
 												rcImage.top = rcImage.bottom -  iHeight;
 											}
@@ -2077,7 +1995,7 @@ namespace DuiLib
 							if( pt.x > rc.left ) bLineEnd = true;
 							while( *pstrText > _T('\0') && *pstrText <= _T(' ') ) pstrText = ::CharNext(pstrText);
 							int cyLineExtra = (int)_tcstol(pstrText, const_cast<LPTSTR*>(&pstrText), 10);
-							aPIndentArray.Add((LPVOID)cyLineExtra);
+							aPIndentArray.Add(cyLineExtra);
 							cyLine = MAX(cyLine, pTm->tmHeight + pTm->tmExternalLeading + cyLineExtra);
 						}
 						break;
@@ -2103,13 +2021,13 @@ namespace DuiLib
 							TFontInfo* pFontInfo = pDefFontInfo;
 							if( aFontArray.GetSize() > 0 ) pFontInfo = (TFontInfo*)aFontArray.GetAt(aFontArray.GetSize() - 1);
 							if( pFontInfo->bUnderline == false ) {
-								HFONT hFont = pManager->GetFont(pFontInfo->sFontName, pFontInfo->iSize, pFontInfo->bBold, true, pFontInfo->bItalic, pFontInfo->bStrikeOut);
-								if( hFont == NULL ) hFont = pManager->AddFont(g_iFontID, pFontInfo->sFontName, pFontInfo->iSize, pFontInfo->bBold, true, pFontInfo->bItalic, pFontInfo->bStrikeOut);
+								HFONT hFont = pManager->GetFont(pFontInfo->sFontName, pFontInfo->iSize, pFontInfo->bBold, true, pFontInfo->bItalic);
+								if( hFont == NULL ) hFont = pManager->AddFont(g_iFontID, pFontInfo->sFontName, pFontInfo->iSize, pFontInfo->bBold, true, pFontInfo->bItalic);
 								pFontInfo = pManager->GetFontInfo(hFont);
 								aFontArray.Add(pFontInfo);
 								pTm = &pFontInfo->tm;
 								::SelectObject(hDC, pFontInfo->hFont);
-								cyLine = MAX(cyLine, pTm->tmHeight + pTm->tmExternalLeading + (int)aPIndentArray.GetAt(aPIndentArray.GetSize() - 1));
+								cyLine = MAX(cyLine, pTm->tmHeight + pTm->tmExternalLeading + aPIndentArray.GetAt(aPIndentArray.GetSize() - 1));
 							}
 						}
 						break;
@@ -2147,7 +2065,7 @@ namespace DuiLib
 						pstrText++;
 						aColorArray.Remove(aColorArray.GetSize() - 1);
 						DWORD clrColor = dwTextColor;
-						if( aColorArray.GetSize() > 0 ) clrColor = (int)aColorArray.GetAt(aColorArray.GetSize() - 1);
+						if (aColorArray.GetSize() > 0) clrColor = aColorArray.GetAt(aColorArray.GetSize() - 1);
 						::SetTextColor(hDC, RGB(GetBValue(clrColor), GetGValue(clrColor), GetRValue(clrColor)));
 					}
 					break;
@@ -2155,7 +2073,7 @@ namespace DuiLib
 					pstrText++;
 					if( pt.x > rc.left ) bLineEnd = true;
 					aPIndentArray.Remove(aPIndentArray.GetSize() - 1);
-					cyLine = MAX(cyLine, pTm->tmHeight + pTm->tmExternalLeading + (int)aPIndentArray.GetAt(aPIndentArray.GetSize() - 1));
+					cyLine = MAX(cyLine, pTm->tmHeight + pTm->tmExternalLeading + aPIndentArray.GetAt(aPIndentArray.GetSize() - 1));
 					break;
 				case _T('s'):
 					{
@@ -2175,7 +2093,7 @@ namespace DuiLib
 						}
 						aColorArray.Remove(aColorArray.GetSize() - 1);
 						DWORD clrColor = dwTextColor;
-						if( aColorArray.GetSize() > 0 ) clrColor = (int)aColorArray.GetAt(aColorArray.GetSize() - 1);
+						if (aColorArray.GetSize() > 0) clrColor = aColorArray.GetAt(aColorArray.GetSize() - 1);
 						::SetTextColor(hDC, RGB(GetBValue(clrColor), GetGValue(clrColor), GetRValue(clrColor)));
 						bInLink = false;
 					}
@@ -2195,7 +2113,7 @@ namespace DuiLib
 						}
 						pTm = &pFontInfo->tm;
 						::SelectObject(hDC, pFontInfo->hFont);
-						cyLine = MAX(cyLine, pTm->tmHeight + pTm->tmExternalLeading + (int)aPIndentArray.GetAt(aPIndentArray.GetSize() - 1));
+						cyLine = MAX(cyLine, pTm->tmHeight + pTm->tmExternalLeading + aPIndentArray.GetAt(aPIndentArray.GetSize() - 1));
 					}
 					break;
 				}
@@ -2248,7 +2166,7 @@ namespace DuiLib
 					// slow when repeated so often.
 					// TODO: Rewrite and use GetTextExtentExPoint() instead!
 					if( bInRaw ) {
-						if( ( *p == _T('<') || *p == _T('{') ) && p[1] == _T('/')
+						if( ( *p == _T('<') || *p == _T('{') ) && p[1] == _T('/') 
 							&& p[2] == _T('r') && ( p[3] == _T('>') || p[3] == _T('}') ) ) {
 								p += 4;
 								bInRaw = false;
@@ -2272,7 +2190,7 @@ namespace DuiLib
 						}
 						if( (uStyle & DT_WORDBREAK) != 0 && cchLastGoodWord > 0 ) {
 							cchChars = cchLastGoodWord;
-							cchSize = cchLastGoodSize;
+							cchSize = cchLastGoodSize;                 
 						}
 						if( (uStyle & DT_END_ELLIPSIS) != 0 && cchChars > 0 ) {
 							cchChars -= 1;
@@ -2282,7 +2200,7 @@ namespace DuiLib
 								pstrPrev = ::CharPrev(pstrText, pstrPrev);
 								cchSize -= (int)(p - pstrPrev);
 							}
-							else
+							else 
 								cchSize -= (int)(p - pstrPrev);
 							pt.x = rc.right;
 						}
@@ -2310,7 +2228,7 @@ namespace DuiLib
 						ptPos.x += (rc.right - rc.left - szText.cx);
 					}
 					::TextOut(hDC, ptPos.x, ptPos.y + cyLineHeight - pTm->tmHeight - pTm->tmExternalLeading, pstrText, cchSize);
-					if( pt.x >= rc.right && (uStyle & DT_END_ELLIPSIS) != 0 )
+					if( pt.x >= rc.right && (uStyle & DT_END_ELLIPSIS) != 0 ) 
 						::TextOut(hDC, ptPos.x + szText.cx, ptPos.y, _T("..."), 3);
 				}
 				pt.x += szText.cx;
@@ -2334,7 +2252,7 @@ namespace DuiLib
 					bInSelected = bLineInSelected;
 
 					DWORD clrColor = dwTextColor;
-					if( aColorArray.GetSize() > 0 ) clrColor = (int)aColorArray.GetAt(aColorArray.GetSize() - 1);
+					if (aColorArray.GetSize() > 0) clrColor = aColorArray.GetAt(aColorArray.GetSize() - 1);
 					::SetTextColor(hDC, RGB(GetBValue(clrColor), GetGValue(clrColor), GetRValue(clrColor)));
 					TFontInfo* pFontInfo = (TFontInfo*)aFontArray.GetAt(aFontArray.GetSize() - 1);
 					if( pFontInfo == NULL ) pFontInfo = pDefFontInfo;
@@ -2376,13 +2294,12 @@ namespace DuiLib
 	HBITMAP CRenderEngine::GenerateBitmap(CPaintManagerUI* pManager, RECT rc, CControlUI* pStopControl, DWORD dwFilterColor)
 	{
 		if (pManager == NULL) return NULL;
-
 		int cx = rc.right - rc.left;
 		int cy = rc.bottom - rc.top;
+
 		bool bUseOffscreenBitmap = true;
 		HDC hPaintDC = ::CreateCompatibleDC(pManager->GetPaintDC());
 		ASSERT(hPaintDC);
-
 		HBITMAP hPaintBitmap = NULL;
 		//if (pStopControl == NULL && !pManager->IsLayered()) hPaintBitmap = pManager->Get();
 		if( hPaintBitmap == NULL ) {
@@ -2416,7 +2333,7 @@ namespace DuiLib
 			RECT rcClone = {0, 0, cx, cy};
 			if (dwFilterColor > 0x00FFFFFF) DrawColor(hCloneDC, rcClone, dwFilterColor);
 			::SelectObject(hCloneDC, hOldBitmap);
-			::DeleteDC(hCloneDC);
+			::DeleteDC(hCloneDC);  
 			::GdiFlush();
 		}
 
@@ -2424,6 +2341,7 @@ namespace DuiLib
 		::SelectObject(hPaintDC, hOldPaintBitmap);
 		if (!bUseOffscreenBitmap) ::DeleteObject(hPaintBitmap);
 		::DeleteDC(hPaintDC);
+
 		return hBitmap;
 	}
 
@@ -2432,6 +2350,7 @@ namespace DuiLib
 		if (pManager == NULL || pControl == NULL) return NULL;
 		int cx = rc.right - rc.left;
 		int cy = rc.bottom - rc.top;
+
 		HDC hPaintDC = ::CreateCompatibleDC(pManager->GetPaintDC());
 		HBITMAP hPaintBitmap = ::CreateCompatibleBitmap(pManager->GetPaintDC(), rc.right, rc.bottom);
 		ASSERT(hPaintDC);
@@ -2459,7 +2378,7 @@ namespace DuiLib
 			RECT rcClone = {0, 0, cx, cy};
 			if (dwFilterColor > 0x00FFFFFF) DrawColor(hCloneDC, rcClone, dwFilterColor);
 			::SelectObject(hCloneDC, hOldBitmap);
-			::DeleteDC(hCloneDC);
+			::DeleteDC(hCloneDC);  
 			::GdiFlush();
 		}
 
@@ -2478,7 +2397,7 @@ namespace DuiLib
 		if( pstrText == NULL || pManager == NULL ) return size;
 		::SetBkMode(hDC, TRANSPARENT);
 		HFONT hOldFont = (HFONT)::SelectObject(hDC, pManager->GetFont(iFont));
-		GetTextExtentPoint32(hDC, pstrText, _tcslen(pstrText) , &size);
+		GetTextExtentPoint32(hDC, pstrText, (int)_tcslen(pstrText), &size);
 		::SelectObject(hDC, hOldFont);
 		return size;
 	}
@@ -2519,8 +2438,8 @@ namespace DuiLib
 
 	void CRenderEngine::AdjustImage(bool bUseHSL, TImageInfo* imageInfo, short H, short S, short L)
 	{
-		if( imageInfo == NULL || imageInfo->bUseHSL == false || imageInfo->hBitmap == NULL ||
-			imageInfo->pBits == NULL || imageInfo->pSrcBits == NULL )
+		if( imageInfo == NULL || imageInfo->bUseHSL == false || imageInfo->hBitmap == NULL || 
+			imageInfo->pBits == NULL || imageInfo->pSrcBits == NULL ) 
 			return;
 		if( bUseHSL == false || (H == 180 && S == 100 && L == 100)) {
 			::CopyMemory(imageInfo->pBits, imageInfo->pSrcBits, imageInfo->nX * imageInfo->nY * 4);
@@ -2533,10 +2452,11 @@ namespace DuiLib
 		for( int i = 0; i < imageInfo->nX * imageInfo->nY; i++ ) {
 			RGBtoHSL(*(DWORD*)(imageInfo->pSrcBits + i*4), &fH, &fS, &fL);
 			fH += (H - 180);
-			fH = fH > 0 ? fH : fH + 360;
+			fH = fH > 0 ? fH : fH + 360; 
 			fS *= S1;
 			fL *= L1;
 			HSLtoRGB((DWORD*)(imageInfo->pBits + i*4), fH, fS, fL);
 		}
 	}
+
 } // namespace DuiLib

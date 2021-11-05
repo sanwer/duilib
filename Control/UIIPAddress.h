@@ -1,5 +1,6 @@
-#ifndef _UIIPADDRESS_H_
-#define _UIIPADDRESS_H_
+#ifndef __UIIPADDRESS_H__
+#define __UIIPADDRESS_H__
+
 #pragma once
 
 //给该控件添加一个属性dtstyle
@@ -39,4 +40,4 @@ namespace DuiLib
 		CIPAddressWnd* m_pWindow;
 	};
 }
-#endif // __UIIPADDRESS_H_
+#endif // __UIIPADDRESS_H__

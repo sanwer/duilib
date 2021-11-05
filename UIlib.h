@@ -1,5 +1,5 @@
-#ifndef _UILIB_H_
-#define _UILIB_H_
+#ifndef __UILIB_H__
+#define __UILIB_H__
 #pragma once
 
 #ifdef UILIB_STATIC
@@ -100,6 +100,7 @@
 #include "Control/UIIPAddressEx.h"
 
 #include "Control/UIActiveX.h"
+#include "Control/UIWebBrowser.h"
 #include "Control/UIFlash.h"
 
 #include "Control/UIMenu.h"
@@ -112,7 +113,8 @@
 #include "Control/UIRing.h"
 
 #pragma comment( lib, "comctl32.lib" )
+#pragma comment( lib, "Gdi32.lib" )
 #pragma comment( lib, "GdiPlus.lib" )
 #pragma comment( lib, "Imm32.lib" )
 
-#endif
+#endif // __UILIB_H__

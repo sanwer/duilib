@@ -1,11 +1,12 @@
 #include "StdAfx.h"
 #include "UIResourceManager.h"
 
-namespace DuiLib
-{
+namespace DuiLib {
+	
 	CResourceManager::CResourceManager(void)
 	{
 		m_pQuerypInterface = NULL;
+		
 	}
 
 	CResourceManager::~CResourceManager(void)
@@ -15,13 +16,13 @@ namespace DuiLib
 
 	BOOL CResourceManager::LoadResource(STRINGorID xml, LPCTSTR type)
 	{
-		if( HIWORD(xml.m_lpstr) != NULL )
+		if( HIWORD(xml.m_lpstr) != NULL ) 
 		{
-			if( *(xml.m_lpstr) == _T('<') )
+			if( *(xml.m_lpstr) == _T('<') ) 
 			{
 				if( !m_xml.Load(xml.m_lpstr) ) return NULL;
 			}
-			else
+			else 
 			{
 				if( !m_xml.LoadFromFile(xml.m_lpstr) ) return NULL;
 			}
@@ -31,7 +32,7 @@ namespace DuiLib
 			HRSRC hResource = ::FindResource(CPaintManagerUI::GetResourceDll(), xml.m_lpstr, type);
 			if( hResource == NULL ) return NULL;
 			HGLOBAL hGlobal = ::LoadResource(CPaintManagerUI::GetResourceDll(), hResource);
-			if( hGlobal == NULL )
+			if( hGlobal == NULL ) 
 			{
 				FreeResource(hResource);
 				return NULL;
@@ -40,7 +41,7 @@ namespace DuiLib
 			if( !m_xml.LoadFromMem((BYTE*)::LockResource(hGlobal), ::SizeofResource(CPaintManagerUI::GetResourceDll(), hResource) )) {
 				return NULL;
 			}
-			::FreeResource(hResource);
+			::FreeResource(hGlobal);
 		}
 
 		return LoadResource(m_xml.GetRoot());
@@ -59,7 +60,7 @@ namespace DuiLib
 		//加载图片资源
 		LPCTSTR pstrId = NULL;
 		LPCTSTR pstrPath = NULL;
-		for( CMarkupNode node = Root.GetChild() ; node.IsValid(); node = node.GetSibling() )
+		for( CMarkupNode node = Root.GetChild() ; node.IsValid(); node = node.GetSibling() ) 
 		{
 			pstrClass = node.GetName();
 			CMarkupNode ChildNode = node.GetChild();
@@ -68,16 +69,16 @@ namespace DuiLib
 			{
 				//加载图片资源
 				nAttributes = node.GetAttributeCount();
-				for( int i = 0; i < nAttributes; i++ )
+				for( int i = 0; i < nAttributes; i++ ) 
 				{
 					pstrName = node.GetAttributeName(i);
 					pstrValue = node.GetAttributeValue(i);
 
-					if( _tcsicmp(pstrName, _T("id")) == 0 )
+					if( _tcsicmp(pstrName, _T("id")) == 0 ) 
 					{
 						pstrId = pstrValue;
 					}
-					else if( _tcsicmp(pstrName, _T("path")) == 0 )
+					else if( _tcsicmp(pstrName, _T("path")) == 0 ) 
 					{
 						pstrPath = pstrValue;
 					}
@@ -90,16 +91,16 @@ namespace DuiLib
 			else if( _tcsicmp(pstrClass,_T("Xml")) == 0 && node.HasAttributes()) {
 				//加载XML配置文件
 				nAttributes = node.GetAttributeCount();
-				for( int i = 0; i < nAttributes; i++ )
+				for( int i = 0; i < nAttributes; i++ ) 
 				{
 					pstrName = node.GetAttributeName(i);
 					pstrValue = node.GetAttributeValue(i);
 
-					if( _tcsicmp(pstrName, _T("id")) == 0 )
+					if( _tcsicmp(pstrName, _T("id")) == 0 ) 
 					{
 						pstrId = pstrValue;
 					}
-					else if( _tcsicmp(pstrName, _T("path")) == 0 )
+					else if( _tcsicmp(pstrName, _T("path")) == 0 ) 
 					{
 						pstrPath = pstrValue;
 					}
@@ -179,23 +180,23 @@ namespace DuiLib
 		//加载图片资源
 		LPCTSTR pstrId = NULL;
 		LPCTSTR pstrText = NULL;
-		for( CMarkupNode node = Root.GetChild() ; node.IsValid(); node = node.GetSibling() )
+		for( CMarkupNode node = Root.GetChild() ; node.IsValid(); node = node.GetSibling() ) 
 		{
 			pstrClass = node.GetName();
 			if ((_tcsicmp(pstrClass,_T("Text")) == 0) && node.HasAttributes())
 			{
 				//加载图片资源
 				nAttributes = node.GetAttributeCount();
-				for( int i = 0; i < nAttributes; i++ )
+				for( int i = 0; i < nAttributes; i++ ) 
 				{
 					pstrName = node.GetAttributeName(i);
 					pstrValue = node.GetAttributeValue(i);
 
-					if( _tcsicmp(pstrName, _T("id")) == 0 )
+					if( _tcsicmp(pstrName, _T("id")) == 0 ) 
 					{
 						pstrId = pstrValue;
 					}
-					else if( _tcsicmp(pstrName, _T("value")) == 0 )
+					else if( _tcsicmp(pstrName, _T("value")) == 0 ) 
 					{
 						pstrText = pstrValue;
 					}
@@ -223,8 +224,11 @@ namespace DuiLib
 		CDuiString *lpstrFind = static_cast<CDuiString *>(m_mTextResourceHashMap.Find(lpstrId));
 		if (lpstrFind == NULL && m_pQuerypInterface)
 		{
-			lpstrFind = new CDuiString(m_pQuerypInterface->QueryControlText(lpstrId, lpstrType));
-			m_mTextResourceHashMap.Insert(lpstrId, (LPVOID)lpstrFind);
+			LPCTSTR lpText = m_pQuerypInterface->QueryControlText(lpstrId, lpstrType);
+			if(lpText != NULL) {
+				lpstrFind = new CDuiString(lpText);
+				m_mTextResourceHashMap.Insert(lpstrId, (LPVOID)lpstrFind);
+			}
 		}
 		return lpstrFind == NULL ? lpstrId : *lpstrFind;
 	}
@@ -246,7 +250,6 @@ namespace DuiLib
 			}
 		}
 	}
-
 	void CResourceManager::ResetTextMap()
 	{
 		CDuiString * lpStr;
@@ -259,4 +262,6 @@ namespace DuiLib
 			}
 		}
 	}
+
+	
 } // namespace DuiLib

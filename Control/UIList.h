@@ -1,9 +1,7 @@
-#ifndef _UILIST_H_
-#define _UILIST_H_
-#pragma once
+#ifndef __UILIST_H__
+#define __UILIST_H__
 
-namespace DuiLib
-{
+namespace DuiLib {
 	/////////////////////////////////////////////////////////////////////////////////////
 	//
 
@@ -49,6 +47,7 @@ namespace DuiLib
 	{
 	public:
 		virtual LPCTSTR GetItemText(CControlUI* pList, int iItem, int iSubItem) = 0;
+		virtual DWORD GetItemTextColor(CControlUI* pList, int iItem, int iSubItem, int iState) = 0;// iState：0-正常、1-激活、2-选择、3-禁用
 	};
 
 	class IListOwnerUI
@@ -134,7 +133,7 @@ namespace DuiLib
 		bool IsFixedScrollbar();
 		void SetFixedScrollbar(bool bFixed);
 
-		CListHeaderUI* GetHeader() const;
+		CListHeaderUI* GetHeader() const;  
 		CContainerUI* GetList() const;
 		UINT GetListType();
 		TListInfoUI* GetListInfo();
@@ -166,7 +165,7 @@ namespace DuiLib
 		void SetAlternateBk(bool bAlternateBk);
 		void SetSelectedItemTextColor(DWORD dwTextColor);
 		void SetSelectedItemBkColor(DWORD dwBkColor);
-		void SetSelectedItemImage(LPCTSTR pStrImage);
+		void SetSelectedItemImage(LPCTSTR pStrImage); 
 		void SetHotItemTextColor(DWORD dwTextColor);
 		void SetHotItemBkColor(DWORD dwBkColor);
 		void SetHotItemImage(LPCTSTR pStrImage);
@@ -196,7 +195,7 @@ namespace DuiLib
 		LPCTSTR GetDisabledItemImage() const;
 		DWORD GetItemLineColor() const;
 
-		void SetMultiExpanding(bool bMultiExpandable);
+		void SetMultiExpanding(bool bMultiExpandable); 
 		int GetExpandedItem() const;
 		bool ExpandItem(int iIndex, bool bExpand = true);
 
@@ -240,16 +239,16 @@ namespace DuiLib
 	protected:
 		bool m_bFixedScrollbar;
 		bool m_bScrollSelect;
-		int m_iCurSel;
 		bool m_bMultiSel;
-		CStdPtrArray m_aSelItems;
+		int m_iCurSel;
+		int m_iFirstSel;
+		CStdArray<int> m_aSelItems;
 		int m_iCurSelActivate;  // 双击的列
 		int m_iExpandedItem;
 		IListCallbackUI* m_pCallback;
 		CListBodyUI* m_pList;
 		CListHeaderUI* m_pHeader;
 		TListInfoUI m_ListInfo;
-
 	};
 
 	/////////////////////////////////////////////////////////////////////////////////////
@@ -283,6 +282,7 @@ namespace DuiLib
 		DECLARE_DUICONTROL(CListHeaderUI)
 	public:
 		CListHeaderUI();
+		virtual ~CListHeaderUI();
 
 		LPCTSTR GetClass() const;
 		LPVOID GetInterface(LPCTSTR pstrName);
@@ -294,6 +294,8 @@ namespace DuiLib
 		void SetScaleHeader(bool bIsScale);
 		bool IsScaleHeader() const;
 
+		void DoInit();
+		void DoPostPaint(HDC hDC, const RECT& rcPaint);
 	private:
 		bool m_bIsScaleHeader;
 	};
@@ -449,6 +451,9 @@ namespace DuiLib
 		LPCTSTR GetText(int iIndex) const;
 		void SetText(int iIndex, LPCTSTR pstrText);
 
+		DWORD GetTextColor(int iIndex) const;
+		void SetTextColor(int iIndex, DWORD dwTextColor);
+
 		void SetOwner(CControlUI* pOwner);
 		CDuiString* GetLinkContent(int iIndex);
 
@@ -465,6 +470,7 @@ namespace DuiLib
 		int m_nHoverLink;
 		IListUI* m_pOwner;
 		CStdPtrArray m_aTexts;
+		CStdArray<DWORD> m_aTextColors;
 	};
 
 	/////////////////////////////////////////////////////////////////////////////////////
@@ -501,7 +507,7 @@ namespace DuiLib
 		void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
 		bool DoPaint(HDC hDC, const RECT& rcPaint, CControlUI* pStopControl);
 
-		virtual void DrawItemText(HDC hDC, const RECT& rcItem);
+		virtual void DrawItemText(HDC hDC, const RECT& rcItem);    
 		virtual void DrawItemBk(HDC hDC, const RECT& rcItem);
 
 		void SetPos(RECT rc, bool bNeedInvalidate = true);
@@ -515,4 +521,4 @@ namespace DuiLib
 
 } // namespace DuiLib
 
-#endif // __UILIST_H_
+#endif // __UILIST_H__

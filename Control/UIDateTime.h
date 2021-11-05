@@ -1,5 +1,6 @@
-#ifndef _UIDATETIME_H_
-#define _UIDATETIME_H_
+#ifndef __UIDATETIME_H__
+#define __UIDATETIME_H__
+
 #pragma once
 
 namespace DuiLib
@@ -11,6 +12,7 @@ namespace DuiLib
 	{
 		DECLARE_DUICONTROL(CDateTimeUI)
 		friend class CDateTimeWnd;
+
 	public:
 		CDateTimeUI();
 		LPCTSTR GetClass() const;
@@ -19,19 +21,24 @@ namespace DuiLib
 		SYSTEMTIME& GetTime();
 		void SetTime(SYSTEMTIME* pst);
 
-		void SetReadOnly(bool bReadOnly);
+		void SetReadOny(bool bReadOnly);
 		bool IsReadOnly() const;
+		void SetShowTime(bool bShowTime);
+		bool IsShowTime() const;
 
 		void UpdateText();
 
 		void DoEvent(TEventUI& event);
+		void SetPos(RECT rc, bool bNeedInvalidate = true);
+
+		void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
 
 	protected:
 		SYSTEMTIME m_sysTime;
-		int        m_nDTUpdateFlag;
-		bool       m_bReadOnly;
-
+		int m_nDTUpdateFlag;
+		bool m_bReadOnly;
+		bool m_bShowTime;
 		CDateTimeWnd* m_pWindow;
 	};
 }
-#endif // __UIDATETIME_H_
+#endif // __UIDATETIME_H__

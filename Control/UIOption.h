@@ -1,5 +1,6 @@
-#ifndef _UIOPTION_H_
-#define _UIOPTION_H_
+#ifndef __UIOPTION_H__
+#define __UIOPTION_H__
+
 #pragma once
 
 namespace DuiLib
@@ -95,8 +96,8 @@ namespace DuiLib
 		virtual void Selected(bool bSelected, bool bMsg = true);
 
 	protected:
-		bool m_bAutoCheck;
+		bool m_bAutoCheck; 
 	};
 } // namespace DuiLib
 
-#endif // __UIOPTION_H_
+#endif // __UIOPTION_H__

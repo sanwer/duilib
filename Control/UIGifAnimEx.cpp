@@ -53,7 +53,7 @@ namespace DuiLib
 			m_nFrameCount	=	m_pGifImage->GetNumFrames();
 			m_nFramePosition = 0;
 			m_nDelay = m_pGifImage->GetFrameDelay();
-			if (m_nDelay <= 0 )
+			if (m_nDelay <= 0 ) 
 				m_nDelay = 100;
 			if(!m_bAutoStart)
 				m_bRealStop = true;
@@ -138,13 +138,13 @@ namespace DuiLib
 	}
 	LPVOID CGifAnimExUI::GetInterface( LPCTSTR pstrName )
 	{
-			if( _tcscmp(pstrName, _T("GifAnim")) == 0 )
+			if( _tcscmp(pstrName, _T("GifAnim")) == 0 ) 
 				return static_cast<CGifAnimExUI*>(this);
 			return CLabelUI::GetInterface(pstrName);
 	}
 	void CGifAnimExUI::SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue)
 	{
-		if( _tcscmp(pstrName, _T("auto")) == 0 )
+		if( _tcscmp(pstrName, _T("auto")) == 0 ) 
 			m_pImp->SetAutoStart(_tcscmp(pstrValue, _T("true")) == 0);
 		else
 			__super::SetAttribute(pstrName, pstrValue);

@@ -1,5 +1,5 @@
-#ifndef _UIHOTKEY_H_
-#define _UIHOTKEY_H_
+#ifndef __UIHOTKEY_H__
+#define __UIHOTKEY_H__
 #pragma once
 
 namespace DuiLib{

@@ -1,9 +1,9 @@
-#ifndef _UICOMBO_H_
-#define _UICOMBO_H_
+#ifndef __UICOMBO_H__
+#define __UICOMBO_H__
+
 #pragma once
 
-namespace DuiLib
-{
+namespace DuiLib {
 	/////////////////////////////////////////////////////////////////////////////////////
 	//
 
@@ -44,10 +44,12 @@ namespace DuiLib
 		void SetDropBoxAttributeList(LPCTSTR pstrList);
 		SIZE GetDropBoxSize() const;
 		void SetDropBoxSize(SIZE szDropBox);
+		RECT GetDropBoxInset() const;
+		void SetDropBoxInset(RECT szDropBox);
 
 		UINT GetListType();
 		TListInfoUI* GetListInfo();
-		int GetCurSel() const;
+		int GetCurSel() const;  
 		const CDuiString& GetCurUserData();
 		bool SelectUserData(LPCTSTR pstrText);
 		UINT_PTR GetCurTag() const;
@@ -124,10 +126,22 @@ namespace DuiLib
 		void PaintText(HDC hDC);
 		void PaintStatusImage(HDC hDC);
 
+	public:
+		void SortItems();
+		BOOL SortItems(PULVCompareFunc pfnCompare, UINT_PTR dwData);
+
+	protected:
+		static int __cdecl ItemComareFunc(void* pvlocale, const void* item1, const void* item2);
+		int __cdecl ItemComareFunc(const void* item1, const void* item2);
+
+	protected:
+		PULVCompareFunc m_pCompareFunc;
+		UINT_PTR m_compareData;
+
 	protected:
 		CComboWnd* m_pWindow;
 
-		int		m_iCurSel;
+		int m_iCurSel;
 		DWORD	m_dwTextColor;
 		DWORD	m_dwDisabledTextColor;
 		int		m_iFont;
@@ -138,6 +152,7 @@ namespace DuiLib
 		CDuiString m_sDropBoxAttributes;
 		CDuiString m_sCurUserData;
 		SIZE m_szDropBox;
+		RECT m_rcDropBox;
 		UINT m_uButtonState;
 
 		CDuiString m_sNormalImage;
@@ -152,4 +167,4 @@ namespace DuiLib
 
 } // namespace DuiLib
 
-#endif // __UICOMBO_H_
+#endif // __UICOMBO_H__

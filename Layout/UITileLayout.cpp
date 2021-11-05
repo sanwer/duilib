@@ -22,6 +22,7 @@ namespace DuiLib
 
 	SIZE CTileLayoutUI::GetItemSize() const
 	{
+		if(m_pManager != NULL) return m_pManager->GetDPIObj()->Scale(m_szItem);
 		return m_szItem;
 	}
 
@@ -50,8 +51,8 @@ namespace DuiLib
 		if( _tcsicmp(pstrName, _T("itemsize")) == 0 ) {
 			SIZE szItem = { 0 };
 			LPTSTR pstr = NULL;
-			szItem.cx = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);
-			szItem.cy = _tcstol(pstr + 1, &pstr, 10);   ASSERT(pstr);
+			szItem.cx = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);    
+			szItem.cy = _tcstol(pstr + 1, &pstr, 10);   ASSERT(pstr);     
 			SetItemSize(szItem);
 		}
 		else if( _tcsicmp(pstrName, _T("columns")) == 0 ) SetColumns(_ttoi(pstrValue));
@@ -63,11 +64,12 @@ namespace DuiLib
 		CControlUI::SetPos(rc, bNeedInvalidate);
 		rc = m_rcItem;
 
+		RECT rcInset = GetInset();
 		// Adjust for inset
-		rc.left += m_rcInset.left;
-		rc.top += m_rcInset.top;
-		rc.right -= m_rcInset.right;
-		rc.bottom -= m_rcInset.bottom;
+		rc.left += rcInset.left;
+		rc.top += rcInset.top;
+		rc.right -= rcInset.right;
+		rc.bottom -= rcInset.bottom;
 
 		if( m_items.GetSize() == 0) {
 			ProcessScrollBar(rc, 0, 0);
@@ -77,13 +79,14 @@ namespace DuiLib
 		if( m_pVerticalScrollBar && m_pVerticalScrollBar->IsVisible() ) rc.right -= m_pVerticalScrollBar->GetFixedWidth();
 		if( m_pHorizontalScrollBar && m_pHorizontalScrollBar->IsVisible() ) rc.bottom -= m_pHorizontalScrollBar->GetFixedHeight();
 
+		SIZE szItem = GetItemSize();
 		// Position the elements
-		if( m_szItem.cx > 0 ) m_nColumns = (rc.right - rc.left) / m_szItem.cx;
+		if( szItem.cx > 0 ) m_nColumns = (rc.right - rc.left) / szItem.cx;
 		if( m_nColumns == 0 ) m_nColumns = 1;
 
 		int cyNeeded = 0;
 		int cxWidth = (rc.right - rc.left) / m_nColumns;
-		if( m_pHorizontalScrollBar && m_pHorizontalScrollBar->IsVisible() )
+		if( m_pHorizontalScrollBar && m_pHorizontalScrollBar->IsVisible() ) 
 			cxWidth = (rc.right - rc.left + m_pHorizontalScrollBar->GetScrollRange() ) / m_nColumns; ;
 
 		int cyHeight = 0;

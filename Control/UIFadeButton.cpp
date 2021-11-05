@@ -1,12 +1,12 @@
 #include "StdAfx.h"
 #include "UIFadeButton.h"
 
-namespace DuiLib
-{
+namespace DuiLib {
 	IMPLEMENT_DUICONTROL(CFadeButtonUI)
 
-	CFadeButtonUI::CFadeButtonUI() : CUIAnimation( &(*this) ), m_bMouseHove( FALSE ), m_bMouseLeave( FALSE )
+	CFadeButtonUI::CFadeButtonUI(): m_bMouseHove( FALSE ), m_bMouseLeave( FALSE )
 	{
+		Attach(this);
 	}
 
 	CFadeButtonUI::~CFadeButtonUI()
@@ -21,7 +21,7 @@ namespace DuiLib
 
 	LPVOID CFadeButtonUI::GetInterface(LPCTSTR pstrName)
 	{
-		if( _tcscmp(pstrName, _T("FadeButton")) == 0 )
+		if( _tcscmp(pstrName, _T("FadeButton")) == 0 ) 
 			return static_cast<CFadeButtonUI*>(this);
 		return CButtonUI::GetInterface(pstrName);
 	}
@@ -34,27 +34,28 @@ namespace DuiLib
 
 	void CFadeButtonUI::DoEvent(TEventUI& event)
 	{
-		if( event.Type == UIEVENT_MOUSEENTER && !IsAnimationRunning( FADE_IN_ID ) )
-		{
-			m_bFadeAlpha = 0;
-			m_bMouseHove = TRUE;
-			StopAnimation( FADE_OUT_ID );
-			StartAnimation( FADE_ELLAPSE, FADE_FRAME_COUNT, FADE_IN_ID );
-			Invalidate();
-			return;
+		if( event.Type == UIEVENT_TIMER ) {
+			OnTimer((int)event.wParam);
 		}
-		else if( event.Type == UIEVENT_MOUSELEAVE && !IsAnimationRunning( FADE_OUT_ID ) )
-		{
-			m_bFadeAlpha = 0;
-			m_bMouseLeave = TRUE;
-			StopAnimation(FADE_IN_ID);
-			StartAnimation(FADE_ELLAPSE, FADE_FRAME_COUNT, FADE_OUT_ID);
-			Invalidate();
-			return;
-		}
-		else if( event.Type == UIEVENT_TIMER )
-		{
-			OnTimer(  event.wParam );
+		else if(IsEnabled()) {
+			if( event.Type == UIEVENT_MOUSEENTER && !IsAnimationRunning( FADE_IN_ID ) )
+			{
+				m_bFadeAlpha = 0;
+				m_bMouseHove = TRUE;
+				StopAnimation(FADE_OUT_ID);
+				StartAnimation(FADE_ELLAPSE, FADE_FRAME_COUNT, FADE_IN_ID);
+				Invalidate();
+				return;
+			}
+			else if( event.Type == UIEVENT_MOUSELEAVE && !IsAnimationRunning( FADE_OUT_ID ) )
+			{
+				m_bFadeAlpha = 0;
+				m_bMouseLeave = TRUE;
+				StopAnimation(FADE_IN_ID);
+				StartAnimation(FADE_ELLAPSE, FADE_FRAME_COUNT, FADE_OUT_ID);
+				Invalidate();
+				return;
+			}
 		}
 		CButtonUI::DoEvent( event );
 	}
@@ -89,23 +90,18 @@ namespace DuiLib
 				else return;
 			}
 		}
-
 		if( !m_sNormalImage.IsEmpty() ) {
+			if( m_bMouseHove ) {
+				m_bMouseHove = FALSE;
+				m_sLastImage = m_sHotImage;
+			}
+
+			if( m_bMouseLeave ) {
+				m_bMouseLeave = FALSE;
+				m_sLastImage = m_sNormalImage;
+			}
+
 			if( IsAnimationRunning(FADE_IN_ID) || IsAnimationRunning(FADE_OUT_ID)) {
-				if( m_bMouseHove ) {
-					m_bMouseHove = FALSE;
-					m_sLastImage = m_sHotImage;
-					if( !DrawImage(hDC, (LPCTSTR)m_sNormalImage) ) {}
-					return;
-				}
-
-				if( m_bMouseLeave ) {
-					m_bMouseLeave = FALSE;
-					m_sLastImage = m_sNormalImage;
-					if( !DrawImage(hDC, (LPCTSTR)m_sHotImage) ) {}
-					return;
-				}
-
 				m_sOldImage = m_sNormalImage;
 				m_sNewImage = m_sHotImage;
 				if( IsAnimationRunning(FADE_OUT_ID) ) {
@@ -120,20 +116,6 @@ namespace DuiLib
 				return;
 			}
 			else {
-				if( m_bMouseHove ) {
-					m_bMouseHove = FALSE;
-					m_sLastImage = m_sHotImage;
-					if( !DrawImage(hDC, (LPCTSTR)m_sNormalImage) ) {}
-					return;
-				}
-
-				if( m_bMouseLeave ) {
-					m_bMouseLeave = FALSE;
-					m_sLastImage = m_sNormalImage;
-					if( !DrawImage(hDC, (LPCTSTR)m_sHotImage) ) {}
-					return;
-				}
-
 				if(m_sLastImage.IsEmpty()) m_sLastImage = m_sNormalImage;
 				if( !DrawImage(hDC, (LPCTSTR)m_sLastImage) ) {}
 				return;

@@ -1,9 +1,8 @@
-#ifndef _UIMANAGER_H_
-#define _UIMANAGER_H_
-#pragma once
+#ifndef __UIMANAGER_H__
+#define __UIMANAGER_H__
 
-namespace DuiLib
-{
+#pragma once
+namespace DuiLib {
 	/////////////////////////////////////////////////////////////////////////////////////
 	//
 
@@ -53,7 +52,7 @@ namespace DuiLib
 		UIEVENT_SETCURSOR,
 		UIEVENT_TIMER,
 		UIEVENT__LAST,
-	};
+	}UIEVENT;
 
 
 	/////////////////////////////////////////////////////////////////////////////////////
@@ -65,7 +64,7 @@ namespace DuiLib
 		UIMSG_SET_DPI,				 // DPI
 		WM_MENUCLICK,				 // 菜单消息
 		UIMSG_USER = WM_USER + 100,	 // 程序自定义消息
-	};
+	}UIMSG;
 
 	/////////////////////////////////////////////////////////////////////////////////////
 	//
@@ -106,7 +105,6 @@ namespace DuiLib
 		bool bBold;
 		bool bUnderline;
 		bool bItalic;
-		bool bStrikeOut;
 		TEXTMETRIC tm;
 	} TFontInfo;
 
@@ -121,12 +119,13 @@ namespace DuiLib
 		bool bUseHSL;
 		CDuiString sResType;
 		DWORD dwMask;
+
 	} TImageInfo;
 
 	typedef struct UILIB_API tagTDrawInfo
 	{
 		tagTDrawInfo();
-		void Parse(LPCTSTR pStrImage, LPCTSTR pStrModify, CPaintManagerUI* pManager);
+		void Parse(LPCTSTR pStrImage, LPCTSTR pStrModify, CPaintManagerUI *pManager);
 		void Clear();
 
 		CDuiString sDrawString;
@@ -142,6 +141,10 @@ namespace DuiLib
 		bool bTiledX;
 		bool bTiledY;
 		bool bHSL;
+
+		CDuiSize szImage;
+		RECT rcPadding;
+		CDuiString sAlign;
 	} TDrawInfo;
 
 	typedef struct UILIB_API tagTPercentInfo
@@ -239,14 +242,16 @@ namespace DuiLib
 		SIZE GetInitSize();
 		void SetInitSize(int cx, int cy);
 		RECT& GetSizeBox();
+		void GetSizeBox(RECT& rcSizeBox);
 		void SetSizeBox(RECT& rcSizeBox);
 		RECT& GetCaptionRect();
+		void GetCaptionRect(RECT& rcCaption);
 		void SetCaptionRect(RECT& rcCaption);
-		SIZE GetRoundCorner() const;
+		SIZE GetRoundCorner();
 		void SetRoundCorner(int cx, int cy);
-		SIZE GetMinInfo() const;
+		SIZE GetMinInfo();
 		void SetMinInfo(int cx, int cy);
-		SIZE GetMaxInfo() const;
+		SIZE GetMaxInfo();
 		void SetMaxInfo(int cx, int cy);
 		bool IsShowUpdateRect() const;
 		void SetShowUpdateRect(bool show);
@@ -291,7 +296,7 @@ namespace DuiLib
 		static void SetResourceType(int nType);
 		static int GetResourceType();
 		static bool GetHSL(short* H, short* S, short* L);
-		static void SetHSL(bool bUseHSL, short H, short S, short L); // H:0~360, S:0~200, L:0~200
+		static void SetHSL(bool bUseHSL, short H, short S, short L); // H:0~360, S:0~200, L:0~200 
 		static void ReloadSkin();
 		static CPaintManagerUI* GetPaintManager(LPCTSTR pstrName);
 		static CStdPtrArray* GetPaintManagers();
@@ -300,7 +305,7 @@ namespace DuiLib
 
 		bool IsForceUseSharedRes() const;
 		void SetForceUseSharedRes(bool bForce);
-
+		// 注意：只支持简单类型指针，因为只释放内存，不会调用类对象的析构函数
 		void DeletePtr(void* ptr);
 
 		DWORD GetDefaultDisabledColor() const;
@@ -314,14 +319,14 @@ namespace DuiLib
 		DWORD GetDefaultSelectedBkColor() const;
 		void SetDefaultSelectedBkColor(DWORD dwColor, bool bShared = false);
 		TFontInfo* GetDefaultFontInfo();
-		void SetDefaultFont(LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnderline, bool bItalic, bool bStrikeOut, bool bShared = false);
+		void SetDefaultFont(LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnderline, bool bItalic, bool bShared = false);
 		DWORD GetCustomFontCount(bool bShared = false) const;
 		void AddFontArray(LPCTSTR pstrPath);
-		HFONT AddFont(int id, LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnderline, bool bItalic, bool bStrikeOut, bool bShared = false);
+		HFONT AddFont(int id, LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnderline, bool bItalic, bool bShared = false);
 		HFONT GetFont(int id);
-		HFONT GetFont(LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnderline, bool bItalic, bool bStrikeOut);
+		HFONT GetFont(LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnderline, bool bItalic);
 		int GetFontIndex(HFONT hFont, bool bShared = false);
-		int GetFontIndex(LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnderline, bool bItalic, bool bStrikeOut, bool bShared = false);
+		int GetFontIndex(LPCTSTR pStrFontName, int nSize, bool bBold, bool bUnderline, bool bItalic, bool bShared = false);
 		void RemoveFont(HFONT hFont, bool bShared = false);
 		void RemoveFont(int id, bool bShared = false);
 		void RemoveAllFonts(bool bShared = false);
@@ -361,7 +366,7 @@ namespace DuiLib
 		const TImageInfo* GetImageString(LPCTSTR pStrImage, LPCTSTR pStrModify = NULL);
 
 		// 初始化拖拽
-		bool InitDragDrop();
+		bool EnableDragDrop(bool bEnable);
 		virtual bool OnDrop(FORMATETC* pFmtEtc, STGMEDIUM& medium,DWORD *pdwEffect);
 
 		bool AttachDialog(CControlUI* pControl);
@@ -392,7 +397,7 @@ namespace DuiLib
 		void SetPainting(bool bIsPainting);
 
 		bool AddNotifier(INotifyUI* pControl);
-		bool RemoveNotifier(INotifyUI* pControl);
+		bool RemoveNotifier(INotifyUI* pControl);   
 		void SendNotify(TNotifyUI& Msg, bool bAsync = false);
 		void SendNotify(CControlUI* pControl, LPCTSTR pstrMessage, WPARAM wParam = 0, LPARAM lParam = 0, bool bAsync = false);
 
@@ -470,23 +475,12 @@ namespace DuiLib
 		HBITMAP m_hbmpBackground;
 		COLORREF* m_pBackgroundBits;
 
-		CDPI* m_pDPI;
-
-		// 是否开启Gdiplus
-		bool m_bUseGdiplusText;
-		int m_trh;
-		ULONG_PTR m_gdiplusToken;
-		Gdiplus::GdiplusStartupInput *m_pGdiplusStartupInput;
-
 		// 提示信息
 		HWND m_hwndTooltip;
 		TOOLINFO m_ToolTip;
 		int m_iHoverTime;
 		bool m_bNoActivate;
 		bool m_bShowUpdateRect;
-
-		// 窗口阴影
-		CShadowUI m_shadow;
 
 		//
 		CControlUI* m_pRoot;
@@ -508,7 +502,7 @@ namespace DuiLib
 		bool m_bUpdateNeeded;
 		bool m_bFocusNeeded;
 		bool m_bOffscreenPaint;
-
+		
 		BYTE m_nOpacity;
 		bool m_bLayered;
 		RECT m_rcLayeredInset;
@@ -539,14 +533,26 @@ namespace DuiLib
 		CStdStringPtrMap m_mNameHash;
 		CStdStringPtrMap m_mWindowCustomAttrHash;
 		CStdStringPtrMap m_mOptionGroup;
-
+		
 		bool m_bForceUseSharedRes;
 		TResInfo m_ResInfo;
+		
+		// 窗口阴影
+		CShadowUI m_shadow;
+		
+		// DPI管理器
+		CDPI* m_pDPI;
+		// 是否开启Gdiplus
+		bool m_bUseGdiplusText;
+		int m_trh;
+		ULONG_PTR m_gdiplusToken;
+		Gdiplus::GdiplusStartupInput *m_pGdiplusStartupInput;
 
 		// 拖拽
+		bool m_bDragDrop;
 		bool m_bDragMode;
 		HBITMAP m_hDragBitmap;
-
+		
 		//
 		static HINSTANCE m_hInstance;
 		static HINSTANCE m_hResourceInstance;
@@ -567,4 +573,4 @@ namespace DuiLib
 
 } // namespace DuiLib
 
-#endif // __UIMANAGER_H_
+#endif // __UIMANAGER_H__

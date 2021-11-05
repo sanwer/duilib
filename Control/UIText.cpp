@@ -51,7 +51,7 @@ namespace DuiLib
 		if( event.Type == UIEVENT_SETCURSOR ) {
 			for( int i = 0; i < m_nLinks; i++ ) {
 				if( ::PtInRect(&m_rcLinks[i], event.ptMouse) ) {
-					::SetCursor(::LoadCursor(NULL, MAKEINTRESOURCE(IDC_HAND)));
+					::SetCursor(::LoadCursor(NULL, IDC_HAND));
 					return;
 				}
 			}
@@ -90,7 +90,7 @@ namespace DuiLib
 				m_nHoverLink = nHoverLink;
 				Invalidate();
 				return;
-			}
+			}      
 		}
 		if( event.Type == UIEVENT_MOUSELEAVE ) {
 			if( m_nLinks > 0 && IsEnabled() ) {
@@ -114,7 +114,7 @@ namespace DuiLib
 		rcText.left += m_rcTextPadding.left;
 		rcText.right -= m_rcTextPadding.right;
 
-		if( m_bShowHtml ) {
+		if( m_bShowHtml ) {   
 			int nLinks = 0;
 			CRenderEngine::DrawHtmlText(m_pManager->GetPaintDC(), m_pManager, rcText, sText, m_dwTextColor, NULL, NULL, nLinks, m_iFont, DT_CALCRECT | m_uTextStyle);
 		}
@@ -123,10 +123,10 @@ namespace DuiLib
 		}
 		SIZE cXY = {rcText.right - rcText.left + m_rcTextPadding.left + m_rcTextPadding.right,
 			rcText.bottom - rcText.top + m_rcTextPadding.top + m_rcTextPadding.bottom};
-
+		
 		if (m_bAutoCalcWidth)
 		{
-			m_cxyFixed.cx = MulDiv(cXY.cx, 100.0, GetManager()->GetDPIObj()->GetScale());
+			m_cxyFixed.cx = MulDiv(cXY.cx, 100, GetManager()->GetDPIObj()->GetScale());
 		}
 
 		return CControlUI::EstimateSize(szAvailable);

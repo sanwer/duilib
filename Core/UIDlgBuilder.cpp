@@ -1,13 +1,13 @@
 #include "StdAfx.h"
 
-namespace DuiLib
-{
+namespace DuiLib {
+
 	CDialogBuilder::CDialogBuilder() : m_pCallback(NULL), m_pstrtype(NULL)
 	{
 		m_instance = NULL;
 	}
 
-	CControlUI* CDialogBuilder::Create(STRINGorID xml, LPCTSTR type, IDialogBuilderCallback* pCallback,
+	CControlUI* CDialogBuilder::Create(STRINGorID xml, LPCTSTR type, IDialogBuilderCallback* pCallback, 
 		CPaintManagerUI* pManager, CControlUI* pParent)
 	{
 		//资源ID为0-65535，两个字节；字符串指针为4个字节
@@ -47,7 +47,7 @@ namespace DuiLib
 
 			m_pCallback = pCallback;
 			if( !m_xml.LoadFromMem((BYTE*)::LockResource(hGlobal), ::SizeofResource(dll_instence, hResource) )) return NULL;
-			::FreeResource(hResource);
+			::FreeResource(hGlobal);
 			m_pstrtype = type;
 		}
 
@@ -101,7 +101,6 @@ namespace DuiLib
 					bool bold = false;
 					bool underline = false;
 					bool italic = false;
-					bool strikeout = false;
 					bool defaultfont = false;
 					bool shared = false;
 					for( int i = 0; i < nAttributes; i++ ) {
@@ -125,9 +124,6 @@ namespace DuiLib
 						else if( _tcsicmp(pstrName, _T("italic")) == 0 ) {
 							italic = (_tcsicmp(pstrValue, _T("true")) == 0);
 						}
-						else if( _tcsicmp(pstrName, _T("strikeout")) == 0 ) {
-							strikeout = (_tcsicmp(pstrValue, _T("true")) == 0);
-						}
 						else if( _tcsicmp(pstrName, _T("default")) == 0 ) {
 							defaultfont = (_tcsicmp(pstrValue, _T("true")) == 0);
 						}
@@ -136,8 +132,8 @@ namespace DuiLib
 						}
 					}
 					if( id >= 0 ) {
-						pManager->AddFont(id, pFontName, size, bold, underline, italic, strikeout, shared);
-						if( defaultfont ) pManager->SetDefaultFont(pFontName, pManager->GetDPIObj()->Scale(size), bold, underline, italic, strikeout, shared);
+						pManager->AddFont(id, pFontName, size, bold, underline, italic, shared);
+						if( defaultfont ) pManager->SetDefaultFont(pFontName, size, bold, underline, italic, shared);
 					}
 				}
 				else if( _tcsicmp(pstrClass, _T("Default")) == 0 ) {
@@ -209,62 +205,62 @@ namespace DuiLib
 						pstrValue = root.GetAttributeValue(i);
 						if( _tcsicmp(pstrName, _T("size")) == 0 ) {
 							LPTSTR pstr = NULL;
-							int cx = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);
-							int cy = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+							int cx = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);    
+							int cy = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr); 
 							pManager->SetInitSize(pManager->GetDPIObj()->Scale(cx), pManager->GetDPIObj()->Scale(cy));
-						}
+						} 
 						else if( _tcsicmp(pstrName, _T("sizebox")) == 0 ) {
 							RECT rcSizeBox = { 0 };
 							LPTSTR pstr = NULL;
-							rcSizeBox.left = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);
-							rcSizeBox.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
-							rcSizeBox.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
-							rcSizeBox.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+							rcSizeBox.left = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);    
+							rcSizeBox.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);    
+							rcSizeBox.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);    
+							rcSizeBox.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);    
 							pManager->SetSizeBox(rcSizeBox);
 						}
 						else if( _tcsicmp(pstrName, _T("caption")) == 0 ) {
 							RECT rcCaption = { 0 };
 							LPTSTR pstr = NULL;
-							rcCaption.left = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);
-							rcCaption.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
-							rcCaption.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
-							rcCaption.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+							rcCaption.left = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);    
+							rcCaption.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);    
+							rcCaption.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);    
+							rcCaption.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);    
 							pManager->SetCaptionRect(rcCaption);
 						}
 						else if( _tcsicmp(pstrName, _T("roundcorner")) == 0 ) {
 							LPTSTR pstr = NULL;
-							int cx = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);
-							int cy = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+							int cx = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);    
+							int cy = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr); 
 							pManager->SetRoundCorner(cx, cy);
-						}
+						} 
 						else if( _tcsicmp(pstrName, _T("mininfo")) == 0 ) {
 							LPTSTR pstr = NULL;
-							int cx = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);
-							int cy = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+							int cx = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);    
+							int cy = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr); 
 							pManager->SetMinInfo(cx, cy);
 						}
 						else if( _tcsicmp(pstrName, _T("maxinfo")) == 0 ) {
 							LPTSTR pstr = NULL;
-							int cx = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);
-							int cy = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+							int cx = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);    
+							int cy = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr); 
 							pManager->SetMaxInfo(cx, cy);
 						}
 						else if( _tcsicmp(pstrName, _T("showdirty")) == 0 ) {
 							pManager->SetShowUpdateRect(_tcsicmp(pstrValue, _T("true")) == 0);
-						}
+						} 
 						else if( _tcsicmp(pstrName, _T("opacity")) == 0 || _tcsicmp(pstrName, _T("alpha")) == 0 ) {
 							pManager->SetOpacity(_ttoi(pstrValue));
-						}
+						} 
 						else if( _tcscmp(pstrName, _T("layeredopacity")) == 0 ) {
 							pManager->SetLayeredOpacity(_ttoi(pstrValue));
-						}
+						} 
 						else if( _tcscmp(pstrName, _T("layered")) == 0 || _tcscmp(pstrName, _T("bktrans")) == 0) {
 							pManager->SetLayered(_tcsicmp(pstrValue, _T("true")) == 0);
 						}
 						else if( _tcscmp(pstrName, _T("layeredimage")) == 0 ) {
 							pManager->SetLayered(true);
 							pManager->SetLayeredImage(pstrValue);
-						}
+						} 
 						else if( _tcscmp(pstrName, _T("noactivate")) == 0 ) {
 							pManager->SetNoActivate(_tcsicmp(pstrValue, _T("true")) == 0);
 						}
@@ -273,7 +269,7 @@ namespace DuiLib
 							LPTSTR pstr = NULL;
 							DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
 							pManager->SetDefaultDisabledColor(clrColor);
-						}
+						} 
 						else if( _tcsicmp(pstrName, _T("defaultfontcolor")) == 0 ) {
 							if( *pstrValue == _T('#')) pstrValue = ::CharNext(pstrValue);
 							LPTSTR pstr = NULL;
@@ -285,19 +281,19 @@ namespace DuiLib
 							LPTSTR pstr = NULL;
 							DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
 							pManager->SetDefaultLinkFontColor(clrColor);
-						}
+						} 
 						else if( _tcsicmp(pstrName, _T("linkhoverfontcolor")) == 0 ) {
 							if( *pstrValue == _T('#')) pstrValue = ::CharNext(pstrValue);
 							LPTSTR pstr = NULL;
 							DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
 							pManager->SetDefaultLinkHoverFontColor(clrColor);
-						}
+						} 
 						else if( _tcsicmp(pstrName, _T("selectedcolor")) == 0 ) {
 							if( *pstrValue == _T('#')) pstrValue = ::CharNext(pstrValue);
 							LPTSTR pstr = NULL;
 							DWORD clrColor = _tcstoul(pstrValue, &pstr, 16);
 							pManager->SetDefaultSelectedBkColor(clrColor);
-						}
+						} 
 						else if( _tcsicmp(pstrName, _T("shadowsize")) == 0 ) {
 							pManager->GetShadow()->SetSize(_ttoi(pstrValue));
 						}
@@ -309,8 +305,8 @@ namespace DuiLib
 						}
 						else if( _tcsicmp(pstrName, _T("shadowposition")) == 0 ) {
 							LPTSTR pstr = NULL;
-							int cx = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);
-							int cy = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
+							int cx = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);    
+							int cy = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr); 
 							pManager->GetShadow()->SetPosition(cx, cy);
 						}
 						else if( _tcsicmp(pstrName, _T("shadowcolor")) == 0 ) {
@@ -322,10 +318,10 @@ namespace DuiLib
 						else if( _tcsicmp(pstrName, _T("shadowcorner")) == 0 ) {
 							RECT rcCorner = { 0 };
 							LPTSTR pstr = NULL;
-							rcCorner.left = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);
-							rcCorner.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);
-							rcCorner.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);
-							rcCorner.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);
+							rcCorner.left = _tcstol(pstrValue, &pstr, 10);  ASSERT(pstr);    
+							rcCorner.top = _tcstol(pstr + 1, &pstr, 10);    ASSERT(pstr);    
+							rcCorner.right = _tcstol(pstr + 1, &pstr, 10);  ASSERT(pstr);    
+							rcCorner.bottom = _tcstol(pstr + 1, &pstr, 10); ASSERT(pstr);    
 							pManager->GetShadow()->SetShadowCorner(rcCorner);
 						}
 						else if( _tcsicmp(pstrName, _T("shadowimage")) == 0 ) {
@@ -333,16 +329,16 @@ namespace DuiLib
 						}
 						else if( _tcsicmp(pstrName, _T("showshadow")) == 0 ) {
 							pManager->GetShadow()->ShowShadow(_tcsicmp(pstrValue, _T("true")) == 0);
-						}
+						} 
 						else if( _tcsicmp(pstrName, _T("gdiplustext")) == 0 ) {
 							pManager->SetUseGdiplusText(_tcsicmp(pstrValue, _T("true")) == 0);
-						}
+						} 
 						else if( _tcsicmp(pstrName, _T("textrenderinghint")) == 0 ) {
 							pManager->SetGdiplusTextRenderingHint(_ttoi(pstrValue));
-						}
+						} 
 						else if( _tcsicmp(pstrName, _T("tooltiphovertime")) == 0 ) {
 							pManager->SetHoverTime(_ttoi(pstrValue));
-						}
+						} 
 					}
 				}
 			}
@@ -389,7 +385,7 @@ namespace DuiLib
 				for ( int i = 0; i < count; i++ ) {
 					CDialogBuilder builder;
 					if( m_pstrtype != NULL ) { // 使用资源dll，从资源中读取
-						WORD id = (WORD)_tcstol(szValue, &pstr, 10);
+						WORD id = (WORD)_tcstol(szValue, &pstr, 10); 
 						pControl = builder.Create((UINT)id, m_pstrtype, m_pCallback, pManager, pParent);
 					}
 					else {
@@ -423,9 +419,10 @@ namespace DuiLib
 
 			if( pControl == NULL ) {
 #ifdef _DEBUG
-				OutputDebugString(pstrClass);
-#endif
+				DUITRACE(_T("未知控件:%s"), pstrClass);
+#else
 				continue;
+#endif
 			}
 
 			// Add children
@@ -491,8 +488,6 @@ namespace DuiLib
 			}
 			// Process attributes
 			if( node.HasAttributes() ) {
-				TCHAR szValue[500] = { 0 };
-				SIZE_T cchLen = lengthof(szValue) - 1;
 				// Set ordinary attributes
 				int nAttributes = node.GetAttributeCount();
 				for( int i = 0; i < nAttributes; i++ ) {
@@ -509,4 +504,5 @@ namespace DuiLib
 		}
 		return pReturn;
 	}
+
 } // namespace DuiLib

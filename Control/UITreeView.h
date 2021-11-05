@@ -1,8 +1,10 @@
-#ifndef _UITREE_VIEW_H_
-#define _UITREE_VIEW_H_
-#pragma once
+#ifndef UITreeView_h__
+#define UITreeView_h__
+
 #include <vector>
 using namespace std;
+
+#pragma once
 
 namespace DuiLib
 {
@@ -37,7 +39,7 @@ namespace DuiLib
 		void CheckBoxSelected(bool _Selected);
 		bool IsCheckBoxSelected() const;
 		bool IsHasChild() const;
-		long GetTreeLevel() const;
+		long GetTreeLevel();
 		bool AddChildNode(CTreeNodeUI* _pTreeNodeUI);
 		bool RemoveAt(CTreeNodeUI* _pTreeNodeUI);
 		void SetParentNode(CTreeNodeUI* _pParentTreeNode);
@@ -128,7 +130,7 @@ namespace DuiLib
 		virtual void SetItemHotTextColor(DWORD _dwItemHotTextColor);
 		virtual void SetSelItemTextColor(DWORD _dwSelItemTextColor);
 		virtual void SetSelItemHotTextColor(DWORD _dwSelHotItemTextColor);
-
+		
 		virtual void SetAttribute(LPCTSTR pstrName, LPCTSTR pstrValue);
 	private:
 		UINT m_uItemMinWidth;
@@ -137,4 +139,5 @@ namespace DuiLib
 	};
 }
 
-#endif // _UITREE_VIEW_H_
+
+#endif // UITreeView_h__

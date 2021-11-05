@@ -69,7 +69,7 @@ namespace DuiLib
 		if(_Hicon) m_hIcon = _Hicon;
 		m_trayData.uFlags = NIF_ICON;
 		m_trayData.hIcon = _Hicon;
-
+		
 		if (!m_bEnabled) return FALSE;
 		return Shell_NotifyIcon(NIM_MODIFY, &m_trayData) == TRUE;
 

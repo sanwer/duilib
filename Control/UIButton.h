@@ -1,5 +1,6 @@
-#ifndef _UIBUTTON_H_
-#define _UIBUTTON_H_
+#ifndef __UIBUTTON_H__
+#define __UIBUTTON_H__
+
 #pragma once
 
 namespace DuiLib
@@ -100,4 +101,4 @@ namespace DuiLib
 
 }	// namespace DuiLib
 
-#endif // __UIBUTTON_H_
+#endif // __UIBUTTON_H__

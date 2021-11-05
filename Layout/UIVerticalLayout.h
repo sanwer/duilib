@@ -1,5 +1,6 @@
-#ifndef _UIVERTICALLAYOUT_H_
-#define _UIVERTICALLAYOUT_H_
+#ifndef __UIVERTICALLAYOUT_H__
+#define __UIVERTICALLAYOUT_H__
+
 #pragma once
 
 namespace DuiLib
@@ -34,4 +35,4 @@ namespace DuiLib
 		bool m_bImmMode;
 	};
 }
-#endif // __UIVERTICALLAYOUT_H_
+#endif // __UIVERTICALLAYOUT_H__

@@ -1,8 +1,7 @@
 #include "StdAfx.h"
 #include <math.h>
 
-namespace DuiLib
-{
+namespace DuiLib {
 #define HSLMAX   255	/* H,L, and S vary over 0-HSLMAX */
 #define RGBMAX   255    /* R,G, and B vary over 0-RGBMAX */
 #define HSLUNDEFINED (HSLMAX*2/3)
@@ -33,7 +32,7 @@ namespace DuiLib
 		float G = (float)(GetGValue(clr) / 255.0f);
 		float B = (float)(GetBValue(clr) / 255.0f);
 
-		float H, S, L;
+		float H = 0, S = 0, L = 0;
 
 		float fMin = min(R, min(G, B));		//Min. value of RGB
 		float fMax = max(R, max(G, B));		//Max. value of RGB
@@ -126,7 +125,7 @@ namespace DuiLib
 		, m_pBits(NULL)
 	{
 		memset(&m_bmInfo, 0, sizeof(m_bmInfo));
-
+	
 		m_hMemBitmap=NULL;
 	}
 
@@ -146,7 +145,7 @@ namespace DuiLib
 		return 0xFF << 24 | GetRValue(dwColor) << 16 | GetGValue(dwColor) << 8 | GetBValue(dwColor);
 	}
 
-	void CColorPaletteUI::SetSelectColor(DWORD dwColor)
+	void CColorPaletteUI::SetSelectColor(DWORD dwColor) 
 	{
 		float H = 0, S = 0, B = 0;
 		COLORREF dwBkClr = RGB(GetBValue(dwColor),GetGValue(dwColor),GetRValue(dwColor));
@@ -342,7 +341,7 @@ namespace DuiLib
 	{
 		PaintPallet(hDC);
 	}
-
+	
 	void CColorPaletteUI::PaintPallet(HDC hDC)
 	{
 		int nSaveDC = ::SaveDC(hDC);

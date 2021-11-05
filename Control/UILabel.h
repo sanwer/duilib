@@ -1,5 +1,6 @@
-#ifndef _UILABEL_H_
-#define _UILABEL_H_
+#ifndef __UILABEL_H__
+#define __UILABEL_H__
+
 #pragma once
 
 namespace DuiLib
@@ -39,7 +40,7 @@ namespace DuiLib
 		virtual bool GetAutoCalcHeight() const;
 		virtual void SetAutoCalcHeight(bool bAutoCalcHeight);
 		virtual void SetText(LPCTSTR pstrText);
-
+		
 	protected:
 		DWORD	m_dwTextColor;
 		DWORD	m_dwDisabledTextColor;
@@ -56,4 +57,4 @@ namespace DuiLib
 	};
 }
 
-#endif // __UILABEL_H_
+#endif // __UILABEL_H__

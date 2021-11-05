@@ -5,7 +5,7 @@ namespace DuiLib
 {
 	IMPLEMENT_DUICONTROL(CProgressUI)
 
-		CProgressUI::CProgressUI() : m_bShowText(false), m_bHorizontal(true), m_nMin(0), m_nMax(100), m_nValue(0), m_bStretchForeImage(true)
+	CProgressUI::CProgressUI() : m_bShowText(false), m_bHorizontal(true), m_nMin(0), m_nMax(100), m_nValue(0), m_bStretchForeImage(true)
 	{
 		m_uTextStyle = DT_SINGLELINE | DT_CENTER;
 		SetFixedHeight(12);
@@ -21,7 +21,7 @@ namespace DuiLib
 		if( _tcsicmp(pstrName, DUI_CTR_PROGRESS) == 0 ) return static_cast<CProgressUI*>(this);
 		return CLabelUI::GetInterface(pstrName);
 	}
-
+	
 	bool CProgressUI::IsShowText()
 	{
 		return m_bShowText;
@@ -108,9 +108,9 @@ namespace DuiLib
 		}
 		else {
 			rc.bottom = m_rcItem.top + (m_rcItem.bottom - m_rcItem.top) * (m_nMax - m_nValue) / (m_nMax - m_nMin);
-
+		
 		}
-
+		
 		CRenderEngine::DrawColor(hDC, rc, GetAdjustColor(m_dwForeColor));
 	}
 
@@ -122,11 +122,11 @@ namespace DuiLib
 
 		RECT rc = {0};
 		if( m_bHorizontal ) {
-			rc.right = (m_nValue - m_nMin) * (m_rcItem.right - m_rcItem.left) / (m_nMax - m_nMin);
+			rc.right = (LONG)((m_nValue - m_nMin) * (m_rcItem.right - m_rcItem.left) * 1.0f / (m_nMax - m_nMin));
 			rc.bottom = m_rcItem.bottom - m_rcItem.top;
 		}
 		else {
-			rc.top = (m_rcItem.bottom - m_rcItem.top) * (m_nMax - m_nValue) / (m_nMax - m_nMin);
+			rc.top = (LONG)((m_rcItem.bottom - m_rcItem.top) * (m_nMax - m_nValue) * 1.0f / (m_nMax - m_nMin));
 			rc.right = m_rcItem.right - m_rcItem.left;
 			rc.bottom = m_rcItem.bottom - m_rcItem.top;
 		}
